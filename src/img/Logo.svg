@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="6.822 119.12 461.168 193.541" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+  <style>
+    @font-face {
+      font-family: 'Round-Regular';
+      src: url('./fonts/VarelaRound-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    text {
+      font-family: 'Round-Regular', sans-serif;
+    }
+  </style>
+  </defs>
+  <path d="M 123.493 173.708 Q 149.747 126.45 176.106 173.708 L 206.019 227.336 Q 232.378 274.594 179.765 274.594 L 120.059 274.594 Q 67.446 274.594 93.7 227.336 Z" style="stroke: rgb(255, 0, 0); fill: rgb(8, 8, 8);" transform="matrix(0, 1, -1, 0, 308.187077, 68.366029)" />
+  <text style="font-size: 84px; font-weight: 700; letter-spacing: 0.1px; paint-order: word-spacing: -1.5px; white-space: pre;" transform="matrix(1.384669, 0, 0.007969, 1.718472, -122.637728, -140.208254)" x="223.035" y="238.399">iSEE</text>
+  <path d="M 71.404 98.86 Q 88.834 69.706 106.334 98.86 L 120.353 122.217 Q 137.853 151.371 102.923 151.371 L 74.941 151.371 Q 40.011 151.371 57.441 122.217 Z" style="stroke: rgb(255, 0, 0); fill: rgb(8, 8, 8); stroke-width: 9px;" transform="matrix(0, 1, -1, 0, 209.209857, 130.74486)" />
+</svg>
