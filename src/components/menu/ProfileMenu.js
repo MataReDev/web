@@ -31,10 +31,10 @@ function ProfileMenu() {
         <div className="absolute right-0 mt-4 w-40 bg-gray-200 rounded-lg shadow-xl z-10">
           <div className="m-2">
             <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
-              <Link to="/profile">Ma chaine</Link>
+              <Link to="/chanel">Ma chaine</Link>
             </button>
             <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
-              <Link to="/">Paramètres</Link>
+              <Link to="/profile">Paramètres du compte</Link>
             </button>
             <hr className="border-gray-400"/>
             <button onClick={handleLogout} className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">

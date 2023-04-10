@@ -1,40 +1,34 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import VideoPlayer from "../components/VideoPage/VideoPlayer";
-
-import video from "../videos/video1.mp4";
+import { listOfVideo } from "./videoData";
+import LiveChat from "../components/VideoPage/LiveChat";
+import Commentaires from "../components/VideoPage/Commentaires";
+import VideoSimilaires from "../components/VideoPage/VideoSimilaires";
 
 function VideoPage() {
-  const { videoId } = useParams();
+  const videoId = window.location.pathname.split("/")[2];
 
-  // Get video by its videoId
-  const videoRef = {
-    videoId: videoId,
-    video: video,
-    title: "Top 5 capybara",
-    creator: "squewe",
-    nbView: "713497",
-  };
+  console.log(videoId);
+  const video = listOfVideo[videoId-1]
 
   const videoJsOptions = {
     controls: true,
     sources: [
       {
-        src: videoRef.video,
-        type: "video/mp4",
+        src: video.video_path,
       },
     ],
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-full px-5 md:px-28 py-5 space-x-5">
-      <div className="flex flex-col  w-full md:max-w-full space-y-5">
+    <div className="flex flex-col md:flex-row w-full px-5 md:px-28 py-5 gap-5">
+      <div className="flex flex-col  w-full md:max-w-full gap-5">
         <div className="aspect-video align-top block m-auto w-full">
-          <VideoPlayer options={videoJsOptions} video={videoId} />
+          <VideoPlayer options={videoJsOptions} video={video} />
         </div>
         <div className="bg-gray-300 w-full rounded-xl p-5">
-          <p className="text-2xl font-bold">{videoRef.title}</p>
-          <p>{videoRef.nbView} vues</p>
+          <p className="text-2xl font-bold">{video.titre}</p>
+          <p>{video.nb_vues} vues</p>
           <div className="flex flex-row space-x-5 align-middle">
             <div className="flex profile-icon">
               <img
@@ -49,11 +43,11 @@ function VideoPage() {
             </div>
           </div>
         </div>
-        <div className="">Comments</div>
+        <div className=""><Commentaires/></div>
       </div>
-      <div className="flex flex-col md:w-1/4">
-        <div className="w-full">LiveChat</div>
-        <div className="w-full">Videos Similaires</div>
+      <div className="flex flex-col md:w-1/4 gap-5">
+        <div className="w-full"><LiveChat /></div>
+        <div className="w-full"><VideoSimilaires /></div>
       </div>
     </div>
   );

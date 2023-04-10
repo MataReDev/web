@@ -1,14 +1,24 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // logic to submit form data
-  };
-
+  const handleSubmit = () => {
+    axios.post('/api/login', {
+      email: email.toString(),
+      password: password.toString()
+    })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  
+  
   return (
     <form
       onSubmit={handleSubmit}
@@ -28,10 +38,7 @@ function LoginForm() {
         />
       </div>
       <div className="mb-6">
-        <label
-          htmlFor="password"
-          className="block text-black font-bold mb-2"
-        >
+        <label htmlFor="password" className="block text-black font-bold mb-2">
           Password:
         </label>
         <input
@@ -54,14 +61,24 @@ function LoginForm() {
 }
 
 function SignupForm() {
-  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // logic to submit form data
-  };
+  const handleSubmit = () => {
+    axios.post('/api/login', {
+      email: email.toString(),
+      username: username.toString(),
+      password: password.toString()
+    })
+    .then((response) => {
+      console.log(response);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  
 
   return (
     <form
@@ -75,8 +92,8 @@ function SignupForm() {
         <input
           type="text"
           id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
@@ -130,14 +147,22 @@ function LoginSignupForm() {
           <button
             onClick={() => setActiveTab("login")}
             disabled={activeTab === "login"}
-            className={`px-4 py-2 text-black border ${activeTab === 'login' ? 'border-black border-2 bg-gray-200' : 'bg-white border-black'} rounded mr-2`}
+            className={`px-4 py-2 text-black border ${
+              activeTab === "login"
+                ? "border-black border-2 bg-gray-200"
+                : "bg-white border-black"
+            } rounded mr-2`}
           >
             Login
           </button>
           <button
             onClick={() => setActiveTab("signup")}
             disabled={activeTab === "signup"}
-            className={`px-4 py-2 text-black border ${activeTab === 'signup' ? 'border-black border-2 bg-gray-200' : 'bg-white border-black'} rounded`}
+            className={`px-4 py-2 text-black border ${
+              activeTab === "signup"
+                ? "border-black border-2 bg-gray-200"
+                : "bg-white border-black"
+            } rounded`}
           >
             Signup
           </button>
@@ -147,7 +172,4 @@ function LoginSignupForm() {
     </div>
   );
 }
-
-
-
 export default LoginSignupForm;

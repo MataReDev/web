@@ -4,7 +4,7 @@ import "video.js/dist/video-js.css";
 
 import "../../styles/customTheme.scss";
 
-const VideoPlayer = ({ options, themeName = "city", video }) => {
+const VideoPlayer = ({ options, video }) => {
   const videoRef = useRef(null);
   const playerRef = useRef(null);
 
@@ -29,7 +29,7 @@ const VideoPlayer = ({ options, themeName = "city", video }) => {
     <div data-vjs-player>
       <video
         ref={videoRef}
-        poster="//vjs.zencdn.net/v/oceans.png"
+        poster={video.miniature}
         preload="auto"
         className={`w-full h-full video-js vjs-big-play-centered`}
       />

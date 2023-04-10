@@ -1,9 +1,0 @@
-import React, { Component } from 'react'
-
-export default class EditProfilePage extends Component {
-  render() {
-    return (
-      <div>EditProfilePage</div>
-    )
-  }
-}

@@ -9,6 +9,7 @@ import logo from "../../img/Logo.svg";
 function HeaderBar({ toggleSidebar }) {
   let { isLoggedIn, logout } = useContext(AuthContext);
   let isAdmin = true;
+  isLoggedIn = true;
 
 
   const handleLogout = () => {
