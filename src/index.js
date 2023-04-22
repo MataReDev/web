@@ -29,7 +29,7 @@ function App() {
     if (localStorage.getItem("authToken")) {
       return true;
     }
-    return true;
+    return false;
   }
 
   const handleLogin = () => {};
@@ -42,17 +42,11 @@ function App() {
     <Router>
       <HeaderBar user={user} onLogout={handleLogout} />
       <div className="relative">
-        {isAuth() ? (
-          <Routes>
-            <Route exact path="/profile" element={<ProfilePage />} />
-            <Route exact path="/upload-video" element={<UploadVideoPage />} />
-            <Route exact path="/admin/dashboard" element={<Dashboard />} />
-          </Routes>
-        ) : (
-          <Routes>
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </Routes>
-        )}
+        <Routes>
+          <Route exact path="/profile" element={isAuth() ? (<ProfilePage />):(<Navigate to="/login" replace />)} />
+          <Route exact path="/upload-video" element={isAuth() ? (<UploadVideoPage />):(<Navigate to="/login" replace />)} />
+          <Route exact path="/admin/dashboard" element={isAuth() ? (<Dashboard />):(<Navigate to="/login" replace />)} />
+        </Routes>
         <Routes>
           <Route exact path="/" element={<HomePage />} />
           <Route exact path="/search" element={<SearchPage />} />
