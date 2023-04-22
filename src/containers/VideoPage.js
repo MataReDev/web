@@ -7,8 +7,6 @@ import VideoSimilaires from "../components/VideoPage/VideoSimilaires";
 
 function VideoPage() {
   const videoId = window.location.pathname.split("/")[2];
-
-  console.log(videoId);
   const video = listOfVideo[videoId-1]
 
   const videoJsOptions = {
