@@ -4,40 +4,42 @@ import io from "socket.io-client";
 import { fakeMessage } from "./fakeMessage";
 
 function LiveChat({ videoId }) {
-  const [messages, setMessages] = useState(fakeMessage);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const socket = io("http://localhost:3000");
   const chatListRef = useRef(null);
 
   useEffect(() => {
+    console.log("New message",messages.length)
     // Join the room for the specific video
-    socket.emit("join video", videoId);
+    socket.emit("join video chat", videoId);
 
     // Listen for new messages from the server for the specific video
-    socket.on("new message", (message) => {
+    socket.on("chat message", (message) => {
       setMessages([...messages, message]);
     });
 
     // Send an API request to get all messages for the specific video since the user joined
-    fetch(`/api/messages?videoId=${videoId}`)
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  })
-  .then((data) => {
-    setMessages(data);
-  })
-  .catch((error) => {
-    console.error("Error fetching messages:", error);
-  });
+    //   fetch(`/api/messages?videoId=${videoId}`)
+    // .then((response) => {
+    //   if (!response.ok) {
+    //     throw new Error("Network response was not ok");
+    //   }
+    //   return response.json();
+    // })
+    // .then((data) => {
+    //   setMessages(data);
+    // })
+    // .catch((error) => {
+    //   console.error("Error fetching messages:", error);
+    // });
 
     return () => {
       // Leave the room for the specific video when the component unmounts
-      socket.emit("leave video", videoId);
+       //socket.emit("leave video chat", videoId);
+      //socket.off("chat message");
     };
-  }, []);
+  }, [videoId, socket]);
 
   useEffect(() => {
     // Scroll to the bottom of the chat list whenever the messages state changes
@@ -52,11 +54,12 @@ function LiveChat({ videoId }) {
     event.preventDefault();
     console.log(newMessage, videoId);
     // Send the new message to the server for the specific video
-    socket.emit("new message", newMessage, videoId);
+    socket.emit("chat message", { videoId: videoId, author: "test", message: newMessage,timestamp : new Date().toJSON() });
     setNewMessage("");
   };
 
   const formatTimestamp = (timestamp) => {
+    console.log("timestamp",timestamp);
     const date = new Date(timestamp);
     const hours = date.getHours();
     let minutes = date.getMinutes();
@@ -69,7 +72,7 @@ function LiveChat({ videoId }) {
       <h2 className="text-xl font-bold mb-4">Chat</h2>
       <ul className="overflow-auto flex-1" ref={chatListRef}>
         {messages.map((message, index) => (
-          <li key={message.id}>
+          <li key={index}>
             <p>
               {formatTimestamp(message.timestamp)} {message.author} :{" "}
               {message.content}{" "}
