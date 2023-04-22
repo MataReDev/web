@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Helmet } from "react-helmet";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -113,6 +114,10 @@ function Dashboard() {
 
   return (
     <div className="bg-gray-100 p-5">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>iSee - Dashboard</title>
+      </Helmet>
       <div className="flex flex-col md:flex-row md:justify-between gap-4 p-5">
         <div className="bg-white rounded-md shadow-md p-5 w-full md:w-1/3">
           <h2 className="text-lg font-bold mb-3">Comptes utilisateurs</h2>

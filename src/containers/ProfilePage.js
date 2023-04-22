@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Helmet } from "react-helmet";
 
 function ProfilePage() {
   const [username, setUsername] = useState("");
@@ -29,6 +30,10 @@ function ProfilePage() {
 
   return (
     <div className="max-w-xl mx-auto my-4 p-4 bg-white rounded-md">
+      <Helmet>
+          <meta charSet="utf-8" />
+          <title>iSee - Profile</title>
+        </Helmet>
       <h1 className="text-3xl font-bold mb-4">Profile Page</h1>
       <div className="mb-4">
         <label className="block font-medium mb-2">Username:</label>
