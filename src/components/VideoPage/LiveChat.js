@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 
+import { fakeMessage } from "./fakeMessage";
+
 function LiveChat({ videoId }) {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(fakeMessage);
   const [newMessage, setNewMessage] = useState("");
   const socket = io("http://localhost:3000");
+  const chatListRef = useRef(null);
 
   useEffect(() => {
     // Join the room for the specific video
@@ -28,6 +31,11 @@ function LiveChat({ videoId }) {
     };
   }, []);
 
+  useEffect(() => {
+    // Scroll to the bottom of the chat list whenever the messages state changes
+    chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+  }, [messages]);
+
   const handleNewMessageChange = (event) => {
     setNewMessage(event.target.value);
   };
@@ -40,12 +48,24 @@ function LiveChat({ videoId }) {
     setNewMessage("");
   };
 
+  const formatTimestamp = (timestamp) => {
+    const date = new Date(timestamp);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return `${hours}:${minutes}`;
+  };
+
   return (
-    <div className="border border-black p-3 rounded-xl h-96 relative flex flex-col">
-      <h2 className="mb-5">Chat</h2>
-      <ul className="overflow-auto flex-1">
+    <div className="bg-gray-100 p-3 rounded-xl h-96 relative flex flex-col">
+      <h2 className="text-xl font-bold mb-4">Chat</h2>
+      <ul className="overflow-auto flex-1" ref={chatListRef}>
         {messages.map((message, index) => (
-          <li key={index}>{message}</li>
+          <li key={message.id}>
+            <p>
+              {formatTimestamp(message.timestamp)} {message.author} :{" "}
+              {message.content}{" "}
+            </p>
+          </li>
         ))}
       </ul>
       <form
@@ -55,9 +75,8 @@ function LiveChat({ videoId }) {
         <input
           type="text"
           value={newMessage}
-          onChange={handleNewMessageChange} 
-          className="flex border border-black rounded-lg w-5/5
-          "
+          onChange={handleNewMessageChange}
+          className="flex border border-black rounded-lg w-5/5"
         />
         <button
           type="submit"

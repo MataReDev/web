@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { createRoot } from "react-dom/client";
 
 import "./index.css";
@@ -21,10 +26,10 @@ function App() {
   const [user, setUser] = useState(null);
 
   function isAuth() {
-    if(localStorage.getItem("authToken")){
-      return true
+    if (localStorage.getItem("authToken")) {
+      return true;
     }
-    return false
+    return false;
   }
 
   const handleLogin = () => {};
@@ -35,33 +40,32 @@ function App() {
 
   return (
     <Router>
-       
-      <HeaderBar user={user} onLogout={handleLogout} /> 
+      <HeaderBar user={user} onLogout={handleLogout} />
       <div className="relative">
-         
         {isAuth() ? (
           <Routes>
-             
-            <Route exact path="/profile" element={<ProfilePage />} /> 
-            <Route exact path="/upload-video" element={<UploadVideoPage />} /> 
-            <Route exact path="/admin/dashboard" element={<Dashboard />} /> 
+            <Route exact path="/profile" element={<ProfilePage />} />
+            <Route exact path="/upload-video" element={<UploadVideoPage />} />
+            <Route exact path="/admin/dashboard" element={<Dashboard />} />
           </Routes>
         ) : (
           <Routes>
-            <Route exact path="/" element={<HomePage />} />
-            <Route exact path="/search" element={<SearchPage />} />
-            <Route exact path="/video/:id" element={<VideoPage />} /> 
-            <Route exact path="/channel/:id" element={<ChannelPage />} /> 
-            <Route exact path="/params/:id" element={<ParamsPage />} /> 
-            <Route
-              exact
-              path="/login"
-              element={<LoginPage onLogin={handleLogin} />}
-            /> 
-            <Route path="*" element={<Navigate to="/login" replace />} /> 
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
-        )} 
-      </div> 
+        )}
+        <Routes>
+          <Route exact path="/" element={<HomePage />} />
+          <Route exact path="/search" element={<SearchPage />} />
+          <Route exact path="/video/:id" element={<VideoPage />} />
+          <Route exact path="/channel/:id" element={<ChannelPage />} />
+          <Route exact path="/params/:id" element={<ParamsPage />} />
+          <Route
+            exact
+            path="/login"
+            element={<LoginPage onLogin={handleLogin} />}
+          />{" "}
+        </Routes>
+      </div>
     </Router>
   );
 }
