@@ -21,8 +21,8 @@ function VideoPage() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-full px-5 md:px-14 py-5 gap-5">
-      <div className="flex flex-col  w-full md:max-w-full gap-5">
+    <div className="flex md:flex-row w-full px-5 md:px-14 py-5 gap-5">
+      <div className="flex flex-col w-full md:max-w-full gap-5">
         <div className="aspect-video align-top block m-auto w-full">
           <VideoPlayer options={videoJsOptions} video={video} />
         </div>
