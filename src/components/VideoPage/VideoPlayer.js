@@ -29,7 +29,7 @@ const VideoPlayer = ({ options, video }) => {
     <div data-vjs-player>
       <video
         ref={videoRef}
-        poster={video.miniature}
+        poster={video?.miniature}
         preload="auto"
         className={`w-full h-full video-js vjs-big-play-centered`}
       />

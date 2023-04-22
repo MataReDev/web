@@ -7,6 +7,8 @@ import VideoSimilaires from "../components/VideoPage/VideoSimilaires";
 
 function VideoPage() {
   const videoId = window.location.pathname.split("/")[2];
+
+  console.log(videoId);
   const video = listOfVideo[videoId-1]
 
   const videoJsOptions = {
@@ -19,13 +21,13 @@ function VideoPage() {
   };
 
   return (
-    <div className="flex md:flex-row w-full px-5 md:px-14 py-5 gap-5">
+    <div className="flex flex-col lg:flex-row  w-full px-5 md:px-14 py-5 gap-5">
       <div className="flex flex-col w-full md:max-w-full gap-5 flex-grow">
         <div className="aspect-video align-top block m-auto w-full">
           <VideoPlayer options={videoJsOptions} video={video} />
         </div>
         <div className="bg-gray-300 w-full rounded-xl p-5">
-          <p className="text-2xl font-bold">{video.titre}</p>
+          <p className="text-2xl font-bold">{videoId} - {video.titre}</p>
           <p>{video.nb_vues} vues</p>
           <div className="flex flex-row space-x-5 align-middle">
             <div className="flex profile-icon">

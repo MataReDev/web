@@ -4,13 +4,14 @@ import io from "socket.io-client";
 import { fakeMessage } from "./fakeMessage";
 
 function LiveChat({ videoId }) {
-  const [messages, setMessages] = useState(fakeMessage);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [draftMessage, setDraftMessage] = useState("");
   const socket = io("http://localhost:3000");
   const chatListRef = useRef(null);
 
   useEffect(() => {
-    console.log("New message",messages.length)
+    console.log("New message", messages.length);
     // Join the room for the specific video
     socket.emit("join video chat", videoId);
 
@@ -36,7 +37,7 @@ function LiveChat({ videoId }) {
 
     return () => {
       // Leave the room for the specific video when the component unmounts
-       //socket.emit("leave video chat", videoId);
+      //socket.emit("leave video chat", videoId);
       //socket.off("chat message");
     };
   }, [videoId, socket]);
@@ -46,24 +47,26 @@ function LiveChat({ videoId }) {
     chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
   }, [messages]);
 
-  const handleNewMessageChange = (event) => {
-    setNewMessage(event.target.value);
-  };
-
   const handleNewMessageSubmit = (event) => {
     event.preventDefault();
-    console.log(newMessage, videoId);
+    console.log(draftMessage, videoId);
     // Send the new message to the server for the specific video
-    socket.emit("chat message", { videoId: videoId, author: "test", message: newMessage,timestamp : new Date().toJSON() });
-    setNewMessage("");
+    socket.emit("chat message", {
+      videoId: videoId,
+      author: "test",
+      message: draftMessage,
+      timestamp: new Date().toJSON(),
+    });
+    setNewMessage(draftMessage);
+    setDraftMessage("");
   };
 
   const formatTimestamp = (timestamp) => {
-    console.log("timestamp",timestamp);
+    console.log("timestamp", timestamp);
     const date = new Date(timestamp);
     const hours = date.getHours();
     let minutes = date.getMinutes();
-    if (minutes <10) minutes = "0"+minutes
+    if (minutes < 10) minutes = "0" + minutes;
     return `${hours}:${minutes}`;
   };
 
@@ -86,9 +89,9 @@ function LiveChat({ videoId }) {
       >
         <input
           type="text"
-          value={newMessage}
-          onChange={handleNewMessageChange}
-          className="flex border border-black rounded-lg w-5/5"
+          value={draftMessage}
+          onChange={(event) => setDraftMessage(event.target.value)}
+          className="flex border border-black rounded-lg w-full"
         />
         <button
           type="submit"
