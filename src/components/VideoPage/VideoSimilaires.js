@@ -19,7 +19,7 @@ function VideoSimilaires() {
   }, []);
 
   return (
-    <div className='border border-black p-5 rounded-xl h-fit'>
+    <div className='p-5 rounded-xl h-fit bg-gray-100'>
       <h2 className='text-xl font-bold mb-4'>Vidéos similaires</h2>
       <div className='grid grid-cols-1 gap-4'>
         {videos.map(video => (
