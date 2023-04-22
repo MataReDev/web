@@ -1,20 +1,40 @@
-import React, { useContext } from "react";
+import React, {useState} from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../Auth/authContext";
 import "../../index.css";
 import ProfileMenu from "./ProfileMenu";
 
 import logo from "../../img/Logo.svg";
 
+function isAdmin(token) {
+  if (!token) {
+    return false;
+  }
+
+  const tokenParts = token.split('.');
+  if (tokenParts.length !== 3) {
+    return false;
+  }
+
+  let decodedToken;
+  try {
+    decodedToken = JSON.parse(atob(tokenParts[1]));
+  } catch (e) {
+    return false;
+  }
+
+  return decodedToken.isAdmin === true;
+}
+
+function getAuthToken() {
+  return localStorage.getItem('authToken');
+}
+
+function deleteAuthToken() {
+  localStorage.removeItem('authToken');
+}
+
 function HeaderBar({ toggleSidebar }) {
-  let { isLoggedIn, logout } = useContext(AuthContext);
-  let isAdmin = true;
-  isLoggedIn = true;
-
-
-  const handleLogout = () => {
-    logout();
-  };
+  const [authToken, setAuthToken] = useState(getAuthToken());
 
   return (
     <header className="flex flex-row justify-items-center align-middle bg-white space-x-8 py-2 px-5">
@@ -37,9 +57,9 @@ function HeaderBar({ toggleSidebar }) {
           <i className="fas fa-search text-gray-400"></i>
         </button>
       </div>
-      {isLoggedIn ? (
+      {authToken ? (
         <div className="flex-grow justify-end flex gap-4 lg:max-w-fit">
-          {isAdmin && (
+          {isAdmin(authToken) && (
             <div className="flex flex-row justify-center items-center">
               <Link
                 to={"admin/dashboard"}
@@ -49,7 +69,7 @@ function HeaderBar({ toggleSidebar }) {
               </Link>
             </div>
           )}
-          <ProfileMenu handleLogout={handleLogout} />
+          <ProfileMenu handleLogout={deleteAuthToken} />
         </div>
       ) : (
         <div className="login-button flex-grow justify-end flex items-center">

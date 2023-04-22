@@ -8,7 +8,7 @@ export const listOfVideo = [
     video_id: 1,
     titre: "Top 5 capybara",
     user_id: "squewe",
-    nb_vue: "713497",
+    nb_vues: "713497",
     miniature: "https://i.ytimg.com/vi/ecTWwpRVc7k/maxresdefault.jpg",
   },
   {
@@ -16,7 +16,7 @@ export const listOfVideo = [
     video_id: 2,
     titre: "Top 5 monke",
     user_id: "squewe",
-    nb_vue: "432008",
+    nb_vues: "432008",
     miniature: "https://i.ytimg.com/vi/1m5l3_7wu3M/maxresdefault.jpg",
   },
   {
@@ -24,7 +24,7 @@ export const listOfVideo = [
     video_id: 3,
     titre: "Top 5 capybaras",
     user_id: "squewe",
-    nb_vue: "1098734",
+    nb_vues: "1098734",
     miniature: "https://i.ytimg.com/vi/lJDL1O8xrLc/mqdefault.jpg",
   },
   {
@@ -32,7 +32,7 @@ export const listOfVideo = [
     video_id: 4,
     titre: "Top 5 monke",
     user_id: "squewe",
-    nb_vue: "432008",
+    nb_vues: "432008",
     miniature: "https://i.ytimg.com/vi/1m5l3_7wu3M/maxresdefault.jpg",
   },
   {
@@ -40,7 +40,7 @@ export const listOfVideo = [
     video_id: 5,
     titre: "Top 5 capybara",
     user_id: "squewe",
-    nb_vue: "713497",
+    nb_vues: "713497",
     miniature: "https://i.ytimg.com/vi/ecTWwpRVc7k/maxresdefault.jpg",
   },
   {
@@ -48,7 +48,7 @@ export const listOfVideo = [
     video_id: 6,
     titre: "Top 5 monke",
     user_id: "squewe",
-    nb_vue: "432008",
+    nb_vues: "432008",
     miniature: "https://i.ytimg.com/vi/1m5l3_7wu3M/maxresdefault.jpg",
   },
   {
@@ -56,7 +56,7 @@ export const listOfVideo = [
     video_id: 7,
     titre: "Top 5 capybaras",
     user_id: "squewe",
-    nb_vue: "1098734",
+    nb_vues: "1098734",
     miniature: "https://i.ytimg.com/vi/lJDL1O8xrLc/mqdefault.jpg",
   },
   {
@@ -64,7 +64,7 @@ export const listOfVideo = [
     video_id: 8,
     titre: "Top 5 monke",
     user_id: "squewe",
-    nb_vue: "432008",
+    nb_vues: "432008",
     miniature: "https://i.ytimg.com/vi/1m5l3_7wu3M/maxresdefault.jpg",
   },
   {
@@ -72,7 +72,7 @@ export const listOfVideo = [
     video_id: 9,
     titre: "Top 5 capybara",
     user_id: "squewe",
-    nb_vue: "713497",
+    nb_vues: "713497",
     miniature: "https://i.ytimg.com/vi/ecTWwpRVc7k/maxresdefault.jpg",
   },
   {
@@ -80,7 +80,7 @@ export const listOfVideo = [
     video_id: 10,
     titre: "Top 5 monke",
     user_id: "squewe",
-    nb_vue: "432008",
+    nb_vues: "432008",
     miniature: "https://i.ytimg.com/vi/1m5l3_7wu3M/maxresdefault.jpg",
   },
 ];

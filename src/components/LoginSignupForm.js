@@ -1,24 +1,47 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+function saveAuthToken(token) {
+  localStorage.setItem("authToken", token);
+}
+
 function LoginForm() {
+  const [authToken, setAuthToken] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = () => {
-    axios.post('/api/login', {
-      email: email.toString(),
-      password: password.toString()
-    })
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+  function checkEmail(email) {
+    var re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
   }
-  
-  
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (checkEmail(email)) {
+      axios
+        .post("/api/login", {
+          email: email.toString(),
+          password: password.toString(),
+        })
+        .then((response) => {
+          console.log(response);
+          saveAuthToken(response);
+          setAuthToken(response);
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorMessage("Email ou mot de passe incorrect");
+          setPassword("");
+        });
+    }
+  };
+
+  const handleInputFocus = () => {
+    setErrorMessage("");
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -33,6 +56,7 @@ function LoginForm() {
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          onFocus={handleInputFocus}
           required
           className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
         />
@@ -46,39 +70,52 @@ function LoginForm() {
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onFocus={handleInputFocus}
           required
           className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
-      <button
-        type="submit"
-        className="bg-white hover:bg-gray-300 border border-black focus:border-black active:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex justify-center items-center"
-      >
-        Login
-      </button>
+      {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
+      <div>
+        {authToken ? (
+          <p>Vous êtes connecté !</p>
+        ) : (
+          <button
+            type="submit"
+            className="bg-white hover:bg-gray-300 border border-black focus:border-black active:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex justify-center items-center"
+          >
+            Login
+          </button>
+        )}
+      </div>
     </form>
   );
 }
 
 function SignupForm() {
+  const [authToken, setAuthToken] = useState("");
+
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = () => {
-    axios.post('/api/login', {
-      email: email.toString(),
-      username: username.toString(),
-      password: password.toString()
-    })
-    .then((response) => {
-      console.log(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-  }
-  
+    axios
+      .post("/api/login", {
+        email: email.toString(),
+        username: username.toString(),
+        password: password.toString(),
+      })
+      .then((response) => {
+        console.log(response);
+
+        saveAuthToken(response);
+        setAuthToken(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <form
@@ -127,12 +164,16 @@ function SignupForm() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
-      <button
-        type="submit"
-        className="bg-white hover:bg-gray-300 border border-black focus:border-black active:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex justify-center items-center"
-      >
-        Signup
-      </button>
+      {authToken ? (
+        <p>Vous êtes connecté !</p>
+      ) : (
+        <button
+          type="submit"
+          className="bg-white hover:bg-gray-300 border border-black focus:border-black active:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex justify-center items-center"
+        >
+          Signup
+        </button>
+      )}
     </form>
   );
 }

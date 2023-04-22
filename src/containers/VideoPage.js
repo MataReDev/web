@@ -21,7 +21,7 @@ function VideoPage() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-full px-5 md:px-28 py-5 gap-5">
+    <div className="flex flex-col md:flex-row w-full px-5 md:px-14 py-5 gap-5">
       <div className="flex flex-col  w-full md:max-w-full gap-5">
         <div className="aspect-video align-top block m-auto w-full">
           <VideoPlayer options={videoJsOptions} video={video} />
@@ -46,7 +46,7 @@ function VideoPage() {
         <div className=""><Commentaires/></div>
       </div>
       <div className="flex flex-col md:w-1/4 gap-5">
-        <div className="w-full"><LiveChat /></div>
+        <div className="w-full"><LiveChat videoId={videoId} /></div>
         <div className="w-full"><VideoSimilaires /></div>
       </div>
     </div>

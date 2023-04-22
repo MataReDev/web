@@ -44,6 +44,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-router-dom": "^6.10.0",
     "sass": "^1.60.0",
+    "socket.io-client": "^4.6.1",
     "video.js": "^8.0.4",
     "videojs-hls-quality-selector": "^1.1.4"
   }
