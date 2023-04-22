@@ -29,7 +29,7 @@ function App() {
     if (localStorage.getItem("authToken")) {
       return true;
     }
-    return false;
+    return true;
   }
 
   const handleLogin = () => {};
