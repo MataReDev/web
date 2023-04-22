@@ -13,7 +13,7 @@ class HomePage extends Component {
             idVideo={video.video_id}
             title={video.titre}
             creator={video.user_id}
-            nbView={video.nb_vue}
+            nbView={video.nb_vues}
             poster={video.miniature}
           />
         ))}
