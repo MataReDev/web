@@ -20,10 +20,18 @@ function LiveChat({ videoId }) {
 
     // Send an API request to get all messages for the specific video since the user joined
     fetch(`/api/messages?videoId=${videoId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setMessages(data);
-      });
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  })
+  .then((data) => {
+    setMessages(data);
+  })
+  .catch((error) => {
+    console.error("Error fetching messages:", error);
+  });
 
     return () => {
       // Leave the room for the specific video when the component unmounts
@@ -51,7 +59,8 @@ function LiveChat({ videoId }) {
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
     const hours = date.getHours();
-    const minutes = date.getMinutes();
+    let minutes = date.getMinutes();
+    if (minutes <10) minutes = "0"+minutes
     return `${hours}:${minutes}`;
   };
 
