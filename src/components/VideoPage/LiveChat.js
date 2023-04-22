@@ -4,7 +4,7 @@ import io from "socket.io-client";
 import { fakeMessage } from "./fakeMessage";
 
 function LiveChat({ videoId }) {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState(fakeMessage);
   const [newMessage, setNewMessage] = useState("");
   const socket = io("http://localhost:3000");
   const chatListRef = useRef(null);
