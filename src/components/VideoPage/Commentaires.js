@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import { AppContext } from "./AppContext";
 
 function getAuthToken() {
   return localStorage.getItem('authToken');
@@ -11,12 +10,11 @@ function Commentaires() {
   const handleCommentaireSubmit = (event) => {
     event.preventDefault();
 
-    if (authToken) {
+    if (getAuthToken()) {
       fetch("/api/addcommentaire", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ commentaire }),
       })
