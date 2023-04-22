@@ -19,9 +19,9 @@ function VideoSimilaires() {
   }, []);
 
   return (
-    <div className='p-5 rounded-xl h-fit bg-gray-100'>
+    <div className='p-3 rounded-xl h-fit bg-gray-100'>
       <h2 className='text-xl font-bold mb-4'>Vidéos similaires</h2>
-      <div className='grid grid-cols-1 gap-4'>
+      <div className='grid grid-cols-1 gap-2'>
         {videos.map(video => (
           <VideoCard
           key={video.video_id}
