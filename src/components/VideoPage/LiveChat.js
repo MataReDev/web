@@ -6,11 +6,13 @@ import { fakeMessage } from "./fakeMessage";
 function LiveChat({ videoId }) {
   const [messages, setMessages] = useState(fakeMessage);
   const [newMessage, setNewMessage] = useState("");
-  const socket = io("http://localhost:3000");
+  const socket = io("https://iseevision.fr", {
+    path: "/socket.io"
+  });
   const chatListRef = useRef(null);
 
   useEffect(() => {
-    console.log("New message",messages.length)
+    console.log("New message", messages.length);
     // Join the room for the specific video
     socket.emit("join video chat", videoId);
 
@@ -36,7 +38,7 @@ function LiveChat({ videoId }) {
 
     return () => {
       // Leave the room for the specific video when the component unmounts
-       //socket.emit("leave video chat", videoId);
+      //socket.emit("leave video chat", videoId);
       //socket.off("chat message");
     };
   }, [videoId, socket]);
@@ -54,16 +56,21 @@ function LiveChat({ videoId }) {
     event.preventDefault();
     console.log(newMessage, videoId);
     // Send the new message to the server for the specific video
-    socket.emit("chat message", { videoId: videoId, author: "test", message: newMessage,timestamp : new Date().toJSON() });
+    socket.emit("chat message", {
+      videoId: videoId,
+      author: "test",
+      message: newMessage,
+      timestamp: new Date().toJSON(),
+    });
     setNewMessage("");
   };
 
   const formatTimestamp = (timestamp) => {
-    console.log("timestamp",timestamp);
+    console.log("timestamp", timestamp);
     const date = new Date(timestamp);
     const hours = date.getHours();
     let minutes = date.getMinutes();
-    if (minutes <10) minutes = "0"+minutes
+    if (minutes < 10) minutes = "0" + minutes;
     return `${hours}:${minutes}`;
   };
 
