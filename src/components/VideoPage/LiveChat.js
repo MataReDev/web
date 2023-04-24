@@ -4,8 +4,9 @@ import io from "socket.io-client";
 import { fakeMessage } from "./fakeMessage";
 
 function LiveChat({ videoId }) {
-  const [messages, setMessages] = useState(fakeMessage);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [draftMessage, setDraftMessage] = useState("");
   const socket = io("https://iseevision.fr", {
     path: "/socket.io"
   });
@@ -48,21 +49,18 @@ function LiveChat({ videoId }) {
     chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
   }, [messages]);
 
-  const handleNewMessageChange = (event) => {
-    setNewMessage(event.target.value);
-  };
-
   const handleNewMessageSubmit = (event) => {
     event.preventDefault();
-    console.log(newMessage, videoId);
+    console.log(draftMessage, videoId);
     // Send the new message to the server for the specific video
     socket.emit("chat message", {
       videoId: videoId,
       author: "test",
-      message: newMessage,
+      message: draftMessage,
       timestamp: new Date().toJSON(),
     });
-    setNewMessage("");
+    setNewMessage(draftMessage);
+    setDraftMessage("");
   };
 
   const formatTimestamp = (timestamp) => {
@@ -93,9 +91,9 @@ function LiveChat({ videoId }) {
       >
         <input
           type="text"
-          value={newMessage}
-          onChange={handleNewMessageChange}
-          className="flex border border-black rounded-lg w-5/5"
+          value={draftMessage}
+          onChange={(event) => setDraftMessage(event.target.value)}
+          className="flex border border-black rounded-lg w-full"
         />
         <button
           type="submit"

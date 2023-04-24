@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import VideoCard from "../components/Home/VideoCard";
+import { Helmet } from "react-helmet";
 
 import { listOfVideo } from "./videoData";
 
@@ -25,6 +26,10 @@ class HomePage extends Component {
   render() {
     return (
       <div className="flex flex-wrap justify-center">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>iSee - Accueil</title>
+      </Helmet>
         {this.state.videos.map((video) => (
           <VideoCard
             key={video.video_id}

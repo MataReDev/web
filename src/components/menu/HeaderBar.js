@@ -1,16 +1,22 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../index.css";
 import ProfileMenu from "./ProfileMenu";
-
 import logo from "../../img/Logo.svg";
+
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+library.add(faSearch);
+
 
 function isAdmin(token) {
   if (!token) {
     return false;
   }
 
-  const tokenParts = token.split('.');
+  const tokenParts = token.split(".");
   if (tokenParts.length !== 3) {
     return false;
   }
@@ -26,14 +32,14 @@ function isAdmin(token) {
 }
 
 function getAuthToken() {
-  return localStorage.getItem('authToken');
+  return localStorage.getItem("authToken");
 }
 
 function deleteAuthToken() {
-  localStorage.removeItem('authToken');
+  localStorage.removeItem("authToken");
 }
 
-function HeaderBar({ toggleSidebar }) {
+function HeaderBar() {
   const [authToken, setAuthToken] = useState(getAuthToken());
 
   return (
@@ -48,13 +54,13 @@ function HeaderBar({ toggleSidebar }) {
         <input
           type="text"
           placeholder="Rechercher..."
-          className="w-1/2 px-4 py-2 rounded-full shadow-sm focus:outline-none border-2 transition border-black focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+          className="w-full px-4 py-2 rounded-full shadow-sm focus:outline-none border-2 transition border-black focus:ring-2 focus:ring-gray-500 focus:border-transparent"
         />
         <button
           type="submit"
           className="absolute top-1/2 right-4 transform -translate-y-1/2"
         >
-          <i className="fas fa-search text-gray-400"></i>
+          <FontAwesomeIcon icon="search" className="text-gray-400" />
         </button>
       </div>
       {authToken ? (

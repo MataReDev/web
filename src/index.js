@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import {Helmet} from "react-helmet";
 
 import {
   BrowserRouter as Router,
@@ -40,12 +41,35 @@ function App() {
 
   return (
     <Router>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>iSee</title>
+      </Helmet>
       <HeaderBar user={user} onLogout={handleLogout} />
+
       <div className="relative">
         <Routes>
-          <Route exact path="/profile" element={isAuth() ? (<ProfilePage />):(<Navigate to="/login" replace />)} />
-          <Route exact path="/upload-video" element={isAuth() ? (<UploadVideoPage />):(<Navigate to="/login" replace />)} />
-          <Route exact path="/admin/dashboard" element={isAuth() ? (<Dashboard />):(<Navigate to="/login" replace />)} />
+          <Route
+            exact
+            path="/profile"
+            element={
+              isAuth() ? <ProfilePage /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route
+            exact
+            path="/upload-video"
+            element={
+              isAuth() ? <UploadVideoPage /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route
+            exact
+            path="/admin/dashboard"
+            element={
+              isAuth() ? <Dashboard /> : <Navigate to="/login" replace />
+            }
+          />
           <Route exact path="/" element={<HomePage />} />
           <Route exact path="/search" element={<SearchPage />} />
           <Route exact path="/video/:id" element={<VideoPage />} />
