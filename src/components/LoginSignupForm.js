@@ -21,14 +21,14 @@ function LoginForm() {
     e.preventDefault();
     if (checkEmail(email)) {
       axios
-        .post("/api/login", {
+        .post("https://iseevision.fr/api/users/login", {
           email: email.toString(),
           password: password.toString(),
         })
         .then((response) => {
-          console.log(response);
-          saveAuthToken(response);
-          setAuthToken(response);
+          console.log(response.data.token);
+          saveAuthToken(response.data.token);
+          setAuthToken(response.data.token);
         })
         .catch((error) => {
           console.log(error);
@@ -101,13 +101,13 @@ function SignupForm() {
 
   const handleSubmit = () => {
     axios
-      .post("/api/login", {
+      .post("https://iseevision.fr/api/users/register", {
         email: email.toString(),
         username: username.toString(),
         password: password.toString(),
       })
       .then((response) => {
-        console.log(response);
+        console.log(response.data.token);
 
         saveAuthToken(response);
         setAuthToken(response);
