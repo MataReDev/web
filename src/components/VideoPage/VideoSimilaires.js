@@ -7,14 +7,14 @@ function VideoSimilaires() {
 
   useEffect(() => {
     setVideos(listOfVideo);
-    fetch("/api/videoSimilaire")
-      .then((response) => response.json())
-      .then((data) => {
-        setVideos(data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    // fetch("/api/videoSimilaire")
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     setVideos(data);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   }, []);
 
   return (

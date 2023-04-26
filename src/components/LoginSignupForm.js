@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function saveAuthToken(token) {
-  localStorage.setItem("authToken", token);
-}
+import { getAuthToken, saveAuthToken } from "../Auth/authContext";
 
 function LoginForm() {
   const [authToken, setAuthToken] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(()=>{
+    setAuthToken(getAuthToken())
+  })
 
   function checkEmail(email) {
     var re =
@@ -26,9 +28,7 @@ function LoginForm() {
           password: password.toString(),
         })
         .then((response) => {
-          console.log(response.data.token);
           saveAuthToken(response.data.token);
-          setAuthToken(response.data.token);
         })
         .catch((error) => {
           console.log(error);
@@ -105,6 +105,7 @@ function SignupForm() {
         email: email.toString(),
         username: username.toString(),
         password: password.toString(),
+        isAdmin: false,
       })
       .then((response) => {
         console.log(response.data.token);
