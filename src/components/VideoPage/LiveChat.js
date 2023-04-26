@@ -39,14 +39,12 @@ function LiveChat({ videoId }) {
 
   const handleNewMessageSubmit = (event) => {
     if (draftMessage !== "") {
-      console.log("Message submit :", draftMessage);
       event.preventDefault();
       // Send the new message to the server for the specific video
-      setNewMessage(draftMessage);
       socket.emit("chat message", {
         videoId: videoId,
         author: getUsernameFromToken(),
-        message: newMessage,
+        message: draftMessage,
         timestamp: new Date().toJSON(),
       });
       setDraftMessage("");
