@@ -9,26 +9,29 @@ function LiveChat({ videoId }) {
   const [newMessage, setNewMessage] = useState("");
   const [draftMessage, setDraftMessage] = useState("");
   const socket = io("https://iseevision.fr", {
-    path: "/socket.io",
-  });
+    path: "/socket.io"
+    });
+  
+  const videoID = useRef(videoId);
   const chatListRef = useRef(null);
-
-  socket.emit("join video chat", videoId);
 
   useEffect(() => {
     console.log("Nb messages chat :", messages.length);
 
     // Listen for new messages from the server for the specific video
     socket.on("chat message", (message) => {
-      setMessages([...messages, message]);
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+    socket.on("disconnect", () => {
+      console.log("Disconnected from server");
     });
 
     return () => {
       // Leave the room for the specific video when the component unmounts
-      //socket.emit("leave video chat", videoId);
-      //socket.off("chat message");
-    };
-  }, [videoId, socket]);
+      socket.emit("leave video chat", videoId);
+      socket.off("chat message");
+    }
+  }, []);
 
   useEffect(() => {
     // Scroll to the bottom of the chat list whenever the messages state changes

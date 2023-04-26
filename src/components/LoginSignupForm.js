@@ -23,7 +23,7 @@ function LoginForm() {
     e.preventDefault();
     if (checkEmail(email)) {
       axios
-        .post(`http://localhost:3000/api/users/login`, {
+        .post("https://iseevision.fr/api/users/login", {
           email: email.toString(),
           password: password.toString(),
         })
@@ -101,15 +101,17 @@ function SignupForm() {
 
   const handleSubmit = () => {
     axios
-      .post(`http://localhost:3000/api/users/register`, {
+      .post("https://iseevision.fr/api/users/register", {
         email: email.toString(),
         username: username.toString(),
         password: password.toString(),
         isAdmin: false,
       })
       .then((response) => {
-        saveAuthToken(response.data.token);
-        setAuthToken(response.data.token);
+        console.log(response.data.token);
+
+        saveAuthToken(response);
+        setAuthToken(response);
       })
       .catch((error) => {
         console.log(error);
