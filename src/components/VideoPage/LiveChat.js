@@ -13,8 +13,6 @@ function LiveChat({ videoId }) {
 
   const chatListRef = useRef(null);
 
-  socket.emit("join video chat", videoId);
-
   useEffect(() => {
     console.log("Nb messages chat :", messages.length);
     socket.emit("join video chat", videoId);
@@ -22,6 +20,7 @@ function LiveChat({ videoId }) {
     socket.on("chat message", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
+   
     socket.on("disconnect", () => {
       console.log("Disconnected from server");
     });
@@ -31,7 +30,7 @@ function LiveChat({ videoId }) {
       socket.emit("leave video chat", videoId);
       socket.off("chat message");
     };
-  }, [messages.length, socket, videoId]);
+  }, []);
 
   useEffect(() => {
     // Scroll to the bottom of the chat list whenever the messages state changes
