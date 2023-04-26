@@ -9,6 +9,7 @@ function LiveChat({ videoId }) {
   const [messages, setMessages] = useState([]);
   const [draftMessage, setDraftMessage] = useState("");
 
+  
   const chatListRef = useRef(null);
 
   useEffect(() => {
