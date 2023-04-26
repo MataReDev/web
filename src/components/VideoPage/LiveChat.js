@@ -11,6 +11,7 @@ function LiveChat({ videoId }) {
 
   
 
+
   const chatListRef = useRef(null);
 
   useEffect(() => {
