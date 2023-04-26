@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 
 import { getAuthToken, getUsernameFromToken } from "../../Auth/authContext";
-
+  const socket = io("https://iseevision.fr", {
+    path: "/socket.io",
+  });
 function LiveChat({ videoId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [draftMessage, setDraftMessage] = useState("");
-  const socket = io("https://iseevision.fr", {
-    path: "/socket.io",
-  });
+
 
   const videoID = useRef(videoId);
   const chatListRef = useRef(null);
