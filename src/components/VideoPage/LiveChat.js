@@ -3,15 +3,14 @@ import io from "socket.io-client";
 
 import { getAuthToken, getUsernameFromToken } from "../../Auth/authContext";
 
-
 function LiveChat({ videoId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [draftMessage, setDraftMessage] = useState("");
   const socket = io("https://iseevision.fr", {
-    path: "/socket.io"
-    });
-  
+    path: "/socket.io",
+  });
+
   const videoID = useRef(videoId);
   const chatListRef = useRef(null);
 
@@ -30,7 +29,7 @@ function LiveChat({ videoId }) {
       // Leave the room for the specific video when the component unmounts
       socket.emit("leave video chat", videoId);
       socket.off("chat message");
-    }
+    };
   }, []);
 
   useEffect(() => {
@@ -39,16 +38,18 @@ function LiveChat({ videoId }) {
   }, [messages]);
 
   const handleNewMessageSubmit = (event) => {
-    event.preventDefault();
-    // Send the new message to the server for the specific video
-    socket.emit("chat message", {
-      videoId: videoId,
-      author: getUsernameFromToken(),
-      message: draftMessage,
-      timestamp: new Date().toJSON(),
-    });
-    setNewMessage(draftMessage);
-    setDraftMessage("");
+    if (draftMessage !== "") {
+      event.preventDefault();
+      // Send the new message to the server for the specific video
+      socket.emit("chat message", {
+        videoId: videoId,
+        author: getUsernameFromToken(),
+        message: draftMessage,
+        timestamp: new Date().toJSON(),
+      });
+      setNewMessage(draftMessage);
+      setDraftMessage("");
+    }
   };
 
   const formatTimestamp = (timestamp) => {
@@ -80,7 +81,7 @@ function LiveChat({ videoId }) {
           type="text"
           value={draftMessage}
           onChange={(event) => setDraftMessage(event.target.value)}
-          className="flex border border-black rounded-lg w-full"
+          className="flex p-1 border border-black rounded-lg w-full"
         />
         <button
           type="submit"
@@ -95,7 +96,7 @@ function LiveChat({ videoId }) {
 
 function ConditionalLiveChat({ videoId }) {
   if (getAuthToken() != null) {
-    return <LiveChat videoId={videoId}   />;
+    return <LiveChat videoId={videoId} />;
   } else {
     return (
       <div className="bg-gray-100 p-3 rounded-xl h-96 relative flex flex-col">
