@@ -20,7 +20,7 @@ function VideoSimilaires() {
   return (
     <div className="p-3 rounded-xl h-fit bg-gray-100">
       <h2 className="text-xl font-bold mb-4">Vidéos similaires</h2>
-      <div className="grid grid-cols-1 gap-2 justify-items-center">
+      <div className="flex flex-wrap gap-2 justify-center">
         {videos.map((video) => (
           <VideoCard
             key={video.video_id}

@@ -19,7 +19,7 @@ function VideoPage() {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row w-full px-5 md:px-14 py-5 gap-5">
+    <div className="flex flex-col xl:flex-row w-full px-5 md:px-14 py-5 gap-5">
       <Helmet>
         <meta charSet="utf-8" />
         <title>iSee - {video.titre}</title>
@@ -49,7 +49,7 @@ function VideoPage() {
           <Commentaires />
         </div>
       </div>
-      <div className="flex flex-col lg:w-1/4 gap-5">
+      <div className="flex flex-col w-full xl:w-1/4 gap-5">
         <div className="w-full">
           <LiveChat videoId={videoId} />
         </div>
