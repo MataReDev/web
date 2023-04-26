@@ -7,9 +7,10 @@ import { getAuthToken, getUsernameFromToken } from "../../Auth/authContext";
   });
 function LiveChat({ videoId }) {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
   const [draftMessage, setDraftMessage] = useState("");
 
+
+  
 
   const chatListRef = useRef(null);
 
