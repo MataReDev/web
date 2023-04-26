@@ -8,10 +8,7 @@ import VideoSimilaires from "../components/VideoPage/VideoSimilaires";
 
 function VideoPage() {
   const videoId = window.location.pathname.split("/")[2];
-
-  console.log("Id video :",videoId);
   const video = listOfVideo[videoId - 1];
-
   const videoJsOptions = {
     controls: true,
     sources: [
@@ -54,7 +51,7 @@ function VideoPage() {
       </div>
       <div className="flex flex-col lg:w-1/4 gap-5">
         <div className="w-full">
-          <LiveChat videoId={videoId}/>
+          <LiveChat videoId={videoId} />
         </div>
         <div className="w-full">
           <VideoSimilaires />

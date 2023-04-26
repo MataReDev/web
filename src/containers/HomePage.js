@@ -12,16 +12,16 @@ class HomePage extends Component {
     };
   }
 
-  componentDidMount() {
-    fetch("/api/videos/getAll")
-      .then((response) => response.json())
-      .then((data) => {
-        this.setState({ videos: data });
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des données :", error);
-      });
-  }
+  // componentDidMount() {
+  //   fetch("/api/videos/getAll")
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       this.setState({ videos: data });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Erreur lors de la récupération des données :", error);
+  //     });
+  // }
 
   render() {
     return (

@@ -1,8 +1,6 @@
-import jwt_decode from "jwt-decode";
-
 function decodeToken(token) {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace('-', '+').replace('_', '/');
+  const base64Url = token.split(".")[1];
+  const base64 = base64Url.replace("-", "+").replace("_", "/");
   const decoded = JSON.parse(atob(base64));
   return decoded;
 }
@@ -36,7 +34,6 @@ export function getUsernameFromToken() {
     return null;
   }
   const decodedToken = decodeToken(token);
-  console.log('mathys',decodedToken);
   return decodedToken.username;
 }
 
@@ -46,5 +43,9 @@ export function getIsAdmin() {
     return false;
   }
   const decodedToken = decodeToken(token);
-  return decodedToken.isAdmin;
+  if (decodedToken.isAdmin) {
+    return true;
+  } else {
+    return false;
+  }
 }

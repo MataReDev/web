@@ -22,12 +22,13 @@ import UploadVideoPage from "./containers/UploadVideoPage";
 import Dashboard from "./containers/Dashboard";
 
 import HeaderBar from "./components/menu/HeaderBar";
+import { getAuthToken } from "./Auth/authContext";
 
 function App() {
   const [user, setUser] = useState(null);
 
   function isAuth() {
-    if (localStorage.getItem("authToken")) {
+    if (getAuthToken() !== null) {
       return true;
     }
     return false;

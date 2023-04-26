@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { deleteAuthToken } from "../../Auth/authContext";
 
-function ProfileMenu({logout}) {
+function ProfileMenu() {
   const [showMenu, setShowMenu] = useState(false);
 
   const handleMenuToggle = () => {
