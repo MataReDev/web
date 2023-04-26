@@ -16,7 +16,7 @@ function LiveChat({ videoId }) {
 
   useEffect(() => {
     console.log("Nb messages chat :", messages.length);
-
+    socket.emit("join video chat", videoId);
     // Listen for new messages from the server for the specific video
     socket.on("chat message", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
