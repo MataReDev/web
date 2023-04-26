@@ -53,21 +53,21 @@ function App() {
             exact
             path="/profile"
             element={
-              isAuth() ? <ProfilePage /> : <Navigate to="/login" replace />
+              isAuth() ? <ProfilePage /> : <Navigate to="/login" />
             }
           />
           <Route
             exact
             path="/upload-video"
             element={
-              isAuth() ? <UploadVideoPage /> : <Navigate to="/login" replace />
+              isAuth() ? <UploadVideoPage /> : <Navigate to="/login" />
             }
           />
           <Route
             exact
             path="/admin/dashboard"
             element={
-              isAuth() ? <Dashboard /> : <Navigate to="/login" replace />
+              isAuth() ? <Dashboard /> : <Navigate to="/login" />
             }
           />
           <Route exact path="/" element={<HomePage />} />

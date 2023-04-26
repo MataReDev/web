@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function saveAuthToken(token) {
-  localStorage.setItem("authToken", token);
-}
+import { getAuthToken, saveAuthToken } from "../Auth/authContext";
 
 function LoginForm() {
   const [authToken, setAuthToken] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(()=>{
+    setAuthToken(getAuthToken())
+  })
 
   function checkEmail(email) {
     var re =
@@ -21,14 +23,12 @@ function LoginForm() {
     e.preventDefault();
     if (checkEmail(email)) {
       axios
-        .post("/api/login", {
+        .post(`http://localhost:3000/api/users/login`, {
           email: email.toString(),
           password: password.toString(),
         })
         .then((response) => {
-          console.log(response);
-          saveAuthToken(response);
-          setAuthToken(response);
+          saveAuthToken(response.data.token);
         })
         .catch((error) => {
           console.log(error);
@@ -101,16 +101,15 @@ function SignupForm() {
 
   const handleSubmit = () => {
     axios
-      .post("/api/login", {
+      .post(`http://localhost:3000/api/users/register`, {
         email: email.toString(),
         username: username.toString(),
         password: password.toString(),
+        isAdmin: false,
       })
       .then((response) => {
-        console.log(response);
-
-        saveAuthToken(response);
-        setAuthToken(response);
+        saveAuthToken(response.data.token);
+        setAuthToken(response.data.token);
       })
       .catch((error) => {
         console.log(error);

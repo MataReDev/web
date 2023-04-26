@@ -1,41 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 
-import { fakeMessage } from "./fakeMessage";
+import { getAuthToken, getUsernameFromToken } from "../../Auth/authContext";
+
 
 function LiveChat({ videoId }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [draftMessage, setDraftMessage] = useState("");
   const socket = io("https://iseevision.fr", {
-    path: "/socket.io"
+    path: "/socket.io",
   });
   const chatListRef = useRef(null);
 
+  socket.emit("join video chat", videoId);
+
   useEffect(() => {
-    console.log("New message", messages.length);
-    // Join the room for the specific video
-    socket.emit("join video chat", videoId);
+    console.log("Nb messages chat :", messages.length);
 
     // Listen for new messages from the server for the specific video
     socket.on("chat message", (message) => {
       setMessages([...messages, message]);
     });
-
-    // Send an API request to get all messages for the specific video since the user joined
-    //   fetch(`/api/messages?videoId=${videoId}`)
-    // .then((response) => {
-    //   if (!response.ok) {
-    //     throw new Error("Network response was not ok");
-    //   }
-    //   return response.json();
-    // })
-    // .then((data) => {
-    //   setMessages(data);
-    // })
-    // .catch((error) => {
-    //   console.error("Error fetching messages:", error);
-    // });
 
     return () => {
       // Leave the room for the specific video when the component unmounts
@@ -51,11 +37,10 @@ function LiveChat({ videoId }) {
 
   const handleNewMessageSubmit = (event) => {
     event.preventDefault();
-    console.log(draftMessage, videoId);
     // Send the new message to the server for the specific video
     socket.emit("chat message", {
       videoId: videoId,
-      author: "test",
+      author: getUsernameFromToken(),
       message: draftMessage,
       timestamp: new Date().toJSON(),
     });
@@ -64,7 +49,6 @@ function LiveChat({ videoId }) {
   };
 
   const formatTimestamp = (timestamp) => {
-    console.log("timestamp", timestamp);
     const date = new Date(timestamp);
     const hours = date.getHours();
     let minutes = date.getMinutes();
@@ -106,4 +90,17 @@ function LiveChat({ videoId }) {
   );
 }
 
-export default LiveChat;
+function ConditionalLiveChat({ videoId }) {
+  if (getAuthToken() != null) {
+    return <LiveChat videoId={videoId}   />;
+  } else {
+    return (
+      <div className="bg-gray-100 p-3 rounded-xl h-96 relative flex flex-col">
+        <h2 className="text-xl font-bold mb-4">Chat</h2>
+        <p>Veuillez vous connecter pour accéder au chat en direct.</p>
+      </div>
+    );
+  }
+}
+
+export default ConditionalLiveChat;

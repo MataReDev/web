@@ -4,43 +4,17 @@ import "../../index.css";
 import ProfileMenu from "./ProfileMenu";
 import logo from "../../img/Logo.svg";
 
+import { getAuthToken, deleteAuthToken, getIsAdmin } from "../../Auth/authContext";
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 library.add(faSearch);
 
-
-function isAdmin(token) {
-  if (!token) {
-    return false;
-  }
-
-  const tokenParts = token.split(".");
-  if (tokenParts.length !== 3) {
-    return false;
-  }
-
-  let decodedToken;
-  try {
-    decodedToken = JSON.parse(atob(tokenParts[1]));
-  } catch (e) {
-    return false;
-  }
-
-  return decodedToken.isAdmin === true;
-}
-
-function getAuthToken() {
-  return localStorage.getItem("authToken");
-}
-
-function deleteAuthToken() {
-  localStorage.removeItem("authToken");
-}
-
 function HeaderBar() {
   const [authToken, setAuthToken] = useState(getAuthToken());
+  const [isAdmin, setIsAdmin] = useState(getIsAdmin())
 
   return (
     <header className="flex flex-row justify-items-center align-middle bg-white space-x-8 py-2 px-5">
@@ -50,7 +24,7 @@ function HeaderBar() {
       >
         <img className="w-20 max-h-10" src={logo} alt="Logo" />
       </Link>
-      <div className="search-bar flex-1 justify-center flex relative">
+      <div className="search-bar flex-grow justify-center flex relative">
         <input
           type="text"
           placeholder="Rechercher..."
@@ -65,7 +39,7 @@ function HeaderBar() {
       </div>
       {authToken ? (
         <div className="flex-grow justify-end flex gap-4 lg:max-w-fit">
-          {isAdmin(authToken) && (
+          {isAdmin && (
             <div className="flex flex-row justify-center items-center">
               <Link
                 to={"admin/dashboard"}
