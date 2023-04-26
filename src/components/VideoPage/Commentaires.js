@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-import { fakeCommentaire } from "./fakeCommentaires";
+import React, { useState } from "react";
 
 function getAuthToken() {
   return localStorage.getItem("authToken");

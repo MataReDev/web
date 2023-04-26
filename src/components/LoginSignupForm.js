@@ -11,7 +11,7 @@ function LoginForm() {
 
   useEffect(()=>{
     setAuthToken(getAuthToken())
-  })
+  }, [])
 
   function checkEmail(email) {
     var re =
@@ -43,8 +43,7 @@ function LoginForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
+    <div
       className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4"
     >
       <div className="mb-4">
@@ -81,14 +80,14 @@ function LoginForm() {
           <p>Vous êtes connecté !</p>
         ) : (
           <button
-            type="submit"
+            onClick={handleSubmit}
             className="bg-white hover:bg-gray-300 border border-black focus:border-black active:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex justify-center items-center"
           >
             Login
           </button>
         )}
       </div>
-    </form>
+    </div>
   );
 }
 
@@ -97,7 +96,11 @@ function SignupForm() {
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState(""); 
+  
+  useEffect(()=>{
+    setAuthToken(getAuthToken())
+  }, [])
 
   const handleSubmit = () => {
     axios
@@ -108,10 +111,7 @@ function SignupForm() {
         isAdmin: false,
       })
       .then((response) => {
-        console.log(response.data.token);
-
         saveAuthToken(response);
-        setAuthToken(response);
       })
       .catch((error) => {
         console.log(error);
@@ -119,8 +119,7 @@ function SignupForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
+    <div
       className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4"
     >
       <div className="mb-4">
@@ -169,13 +168,13 @@ function SignupForm() {
         <p>Vous êtes connecté !</p>
       ) : (
         <button
-          type="submit"
+          onClick={handleSubmit}
           className="bg-white hover:bg-gray-300 border border-black focus:border-black active:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex justify-center items-center"
         >
           Signup
         </button>
       )}
-    </form>
+    </div>
   );
 }
 

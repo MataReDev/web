@@ -11,8 +11,9 @@ function LiveChat({ videoId }) {
     path: "/socket.io",
   });
 
-  const videoID = useRef(videoId);
   const chatListRef = useRef(null);
+
+  socket.emit("join video chat", videoId);
 
   useEffect(() => {
     console.log("Nb messages chat :", messages.length);
@@ -30,7 +31,7 @@ function LiveChat({ videoId }) {
       socket.emit("leave video chat", videoId);
       socket.off("chat message");
     };
-  }, []);
+  }, [messages.length, socket, videoId]);
 
   useEffect(() => {
     // Scroll to the bottom of the chat list whenever the messages state changes
@@ -39,15 +40,16 @@ function LiveChat({ videoId }) {
 
   const handleNewMessageSubmit = (event) => {
     if (draftMessage !== "") {
+      console.log("Message submit :", draftMessage);
       event.preventDefault();
       // Send the new message to the server for the specific video
+      setNewMessage(draftMessage);
       socket.emit("chat message", {
         videoId: videoId,
         author: getUsernameFromToken(),
-        message: draftMessage,
+        message: newMessage,
         timestamp: new Date().toJSON(),
       });
-      setNewMessage(draftMessage);
       setDraftMessage("");
     }
   };
@@ -73,10 +75,7 @@ function LiveChat({ videoId }) {
           </li>
         ))}
       </ul>
-      <form
-        onSubmit={handleNewMessageSubmit}
-        className="flex w-auto gap-3 bottom-0"
-      >
+      <div className="flex w-auto gap-3 bottom-0">
         <input
           type="text"
           value={draftMessage}
@@ -85,11 +84,12 @@ function LiveChat({ videoId }) {
         />
         <button
           type="submit"
+          onClick={handleNewMessageSubmit}
           className="flex border border-black p-2 bg-gray-200 rounded-lg w-auto"
         >
           Envoyer
         </button>
-      </form>
+      </div>
     </div>
   );
 }
