@@ -9,9 +9,9 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(()=>{
-    setAuthToken(getAuthToken())
-  }, [])
+  useEffect(() => {
+    setAuthToken(getAuthToken());
+  }, [getAuthToken()]);
 
   function checkEmail(email) {
     var re =
@@ -29,12 +29,25 @@ function LoginForm() {
         })
         .then((response) => {
           saveAuthToken(response.data.token);
+          setAuthToken(getAuthToken());
+           const returnUrl = new URLSearchParams(window.location.search).get("returnUrl");
+           if (returnUrl) {
+             window.location.href = returnUrl;
+           } else {
+             // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
+             window.location.href = "/";
+           }
         })
         .catch((error) => {
           console.log(error);
           setErrorMessage("Email ou mot de passe incorrect");
           setPassword("");
+          
         });
+    }
+    else 
+    {
+      setErrorMessage("Email non reconnu, merci d'utiliser une autre adresse e-mail");
     }
   };
 
@@ -98,9 +111,9 @@ function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(""); 
   
-  useEffect(()=>{
-    setAuthToken(getAuthToken())
-  }, [])
+  useEffect(() => {
+    setAuthToken(getAuthToken());
+  }, [getAuthToken()]);
 
   const handleSubmit = () => {
     axios

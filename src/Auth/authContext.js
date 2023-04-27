@@ -8,12 +8,14 @@ function decodeToken(token) {
 // Fonction pour enregistrer un token d'authentification
 export function saveAuthToken(token) {
   document.cookie = "authToken=" + token + "; path=/";
+  
 }
 
 // Fonction pour supprimer un token d'authentification
 export function deleteAuthToken() {
   document.cookie =
     "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.reload();
 }
 
 export function getAuthToken() {
