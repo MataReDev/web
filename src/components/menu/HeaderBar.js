@@ -16,8 +16,6 @@ function HeaderBar() {
   const [authToken, setAuthToken] = useState(getAuthToken());
   const isAdmin = getIsAdmin()
 
-  console.log(isAdmin)
-
   useEffect(() => {
     setAuthToken(getAuthToken());
   }, []);  

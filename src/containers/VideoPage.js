@@ -46,7 +46,7 @@ function VideoPage() {
           </div>
         </div>
         <div className="flex-grow">
-          <Commentaires />
+          <Commentaires videoId={videoId} />
         </div>
       </div>
       <div className="flex flex-col w-full xl:w-1/4 gap-5">

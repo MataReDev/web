@@ -30,11 +30,19 @@ export function getAuthToken() {
 export function getUsernameFromToken() {
   const token = getAuthToken();
   if (!token) {
-    console.error("Le JWT est absent dans les cookies.");
     return null;
   }
   const decodedToken = decodeToken(token);
   return decodedToken.username;
+}
+
+export function getIdFromToken() {
+  const token = getAuthToken();
+  if (!token) {
+    return null;
+  }
+  const decodedToken = decodeToken(token);
+  return decodedToken.id;
 }
 
 export function getIsAdmin() {
