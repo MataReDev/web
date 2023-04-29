@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
 
-import { deleteAuthToken } from "../../Auth/authContext";
+import { deleteAuthToken, AuthContext } from "../../Auth/authContext";
 
 function ProfileMenu() {
   const [showMenu, setShowMenu] = useState(false);
+  const { logout } = useContext(AuthContext);
 
   const handleMenuToggle = () => {
     setShowMenu(!showMenu);
@@ -12,6 +13,7 @@ function ProfileMenu() {
 
   const handleLogout = () => {
     deleteAuthToken();
+    logout();
   };
 
   return (

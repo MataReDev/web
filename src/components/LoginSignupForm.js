@@ -1,13 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { useLocation,  } from "react-router-dom";
+import { getAuthToken, saveAuthToken, AuthContext  } from "../Auth/authContext";
 
-import { getAuthToken, saveAuthToken } from "../Auth/authContext";
 
-function LoginForm() {
+function LoginForm(){
+ 
+  const { login } = useContext(AuthContext);
   const [authToken, setAuthToken] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const location = useLocation();
+
 
   useEffect(() => {
     setAuthToken(getAuthToken());
@@ -28,11 +33,12 @@ function LoginForm() {
           password: password.toString(),
         })
         .then((response) => {
+          login();
           saveAuthToken(response.data.token);
           setAuthToken(getAuthToken());
-           const returnUrl = new URLSearchParams(window.location.search).get("returnUrl");
-           if (returnUrl) {
-             window.location.href = returnUrl;
+
+           if (location.state?.data) {
+             window.location.href = location.state?.data;
            } else {
              // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
              window.location.href = "/";

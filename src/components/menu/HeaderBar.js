@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, NavLink } from "react-router-dom";
 import "../../index.css";
 import ProfileMenu from "./ProfileMenu";
 import logo from "../../img/Logo.svg";
@@ -15,7 +15,7 @@ library.add(faSearch);
 function HeaderBar() {
   const [authToken, setAuthToken] = useState(getAuthToken());
   const isAdmin = getIsAdmin()
-
+  const location = useLocation()
   console.log(isAdmin)
 
   useEffect(() => {
@@ -61,6 +61,7 @@ function HeaderBar() {
         <div className="login-button flex-grow justify-end flex items-center">
           <Link
             to={"login"}
+            state={{ data: location.pathname }}
             className="px-4 py-2 border border-black hover:bg-gray-300 focus:border focus:border-black active:bg-gray-500 text-black rounded-lg"
           >
             Se connecter
