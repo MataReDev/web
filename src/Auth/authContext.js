@@ -14,9 +14,33 @@ const AuthProvider = (props) => {
   const checkAuth = () => {
     return isLoggedIn;
   };
-  const login = () => {
-    console.log("LOGIN");
-    setIsLoggedIn(true);
+
+  const login = async (email, password) => {
+    const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    const options = {
+      method : 'POST',
+      mode : 'cors',
+      body : JSON.stringify({email,password}),
+      headers,
+      credentials : 'include'
+    }
+
+    await fetch("https://iseevision.fr/api/users/login",options).then((response) => {
+      if(response.ok)
+      {       
+        console.log("Repsonse : " + response.JSON.stringify());
+        setIsLoggedIn(true);
+        return response.json();
+      }  
+      else {
+      throw new Error('Mauvais identifiants'); // Authentification échouée
+    }
+  
+    }).catch((error) => {
+       throw new Error('Un problème est survenu veuillez ressayer dans quelques minutes')
+    });
   };
 
   const logout = () => {
