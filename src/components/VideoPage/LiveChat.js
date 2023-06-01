@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef,useContext } from "react";
 import io from "socket.io-client";
 
-import { getAuthToken, getUsernameFromToken } from "../../Auth/authContext";
+import { AuthContext } from "../../Auth/authContext";
+
   const socket = io("https://iseevision.fr", {
     path: "/socket.io",
   });
 function LiveChat({ videoId }) {
+  const { user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [draftMessage, setDraftMessage] = useState("");
 
@@ -41,7 +43,7 @@ function LiveChat({ videoId }) {
       // Send the new message to the server for the specific video
       socket.emit("chat message", {
         videoId: videoId,
-        author: getUsernameFromToken(),
+        author: user.username,
         message: draftMessage,
         timestamp: new Date().toJSON(),
       });
@@ -90,7 +92,8 @@ function LiveChat({ videoId }) {
 }
 
 function ConditionalLiveChat({ videoId }) {
-  if (getAuthToken() != null) {
+    const { isAuthenticated } = useContext(AuthContext);
+  if (isAuthenticated()) {
     return <LiveChat videoId={videoId} />;
   } else {
     return (

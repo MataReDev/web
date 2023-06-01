@@ -1,22 +1,21 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useLocation,  } from "react-router-dom";
-import { getAuthToken, saveAuthToken, AuthContext  } from "../Auth/authContext";
+import { AuthContext  } from "../Auth/authContext";
 
 
 function LoginForm(){
  
-  const { login } = useContext(AuthContext);
-  const [authToken, setAuthToken] = useState("");
+  const { login, isLoggedIn } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const location = useLocation();
 
 
-  useEffect(() => {
-    setAuthToken(getAuthToken());
-  }, [getAuthToken()]);
+  // useEffect(() => {
+  //   setAuthToken(getAuthToken());
+  // }, [getAuthToken()]);
 
   function checkEmail(email) {
     var re =
@@ -27,29 +26,30 @@ function LoginForm(){
   const handleSubmit = (e) => {
     e.preventDefault();
     if (checkEmail(email)) {
-      axios
-        .post("https://iseevision.fr/api/users/login", {
-          email: email.toString(),
-          password: password.toString(),
-        })
-        .then((response) => {
-          login();
-          saveAuthToken(response.data.token);
-          setAuthToken(getAuthToken());
+      login(email,password);
+      // axios
+      //   .post("https://iseevision.fr/api/users/login", {
+      //     email: email.toString(),
+      //     password: password.toString(),
+      //   })
+      //   .then((response) => {
+      //     login();
+      //     saveAuthToken(response.data.token);
+      //     setAuthToken(getAuthToken());
 
-           if (location.state?.data) {
-             window.location.href = location.state?.data;
-           } else {
-             // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
-             window.location.href = "/";
-           }
-        })
-        .catch((error) => {
-          console.log(error);
-          setErrorMessage("Email ou mot de passe incorrect");
-          setPassword("");
+      //      if (location.state?.data) {
+      //        window.location.href = location.state?.data;
+      //      } else {
+      //        // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
+      //        window.location.href = "/";
+      //      }
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //     setErrorMessage("Email ou mot de passe incorrect");
+      //     setPassword("");
           
-        });
+      //   });
     }
     else 
     {
@@ -95,7 +95,7 @@ function LoginForm(){
       </div>
       {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
       <div>
-        {authToken ? (
+        {isLoggedIn ? (
           <p>Vous êtes connecté !</p>
         ) : (
           <button
@@ -111,15 +111,15 @@ function LoginForm(){
 }
 
 function SignupForm() {
-  const [authToken, setAuthToken] = useState("");
+const { login, isLoggedIn } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(""); 
   
-  useEffect(() => {
-    setAuthToken(getAuthToken());
-  }, [getAuthToken()]);
+  // useEffect(() => {
+  //   setAuthToken(getAuthToken());
+  // }, [getAuthToken()]);
 
   const handleSubmit = () => {
     axios
@@ -130,7 +130,7 @@ function SignupForm() {
         isAdmin: false,
       })
       .then((response) => {
-        saveAuthToken(response);
+       // saveAuthToken(response);
       })
       .catch((error) => {
         console.log(error);
@@ -138,9 +138,7 @@ function SignupForm() {
   };
 
   return (
-    <div
-      className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4"
-    >
+    <div className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
       <div className="mb-4">
         <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
           Name:
@@ -183,7 +181,7 @@ function SignupForm() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
-      {authToken ? (
+      {isLoggedIn ? (
         <p>Vous êtes connecté !</p>
       ) : (
         <button
