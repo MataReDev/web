@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faThumbsUp as faThumbsUpFull,
@@ -11,56 +11,83 @@ import {
   faTrashAlt as faTrashAltEmpty,
 } from "@fortawesome/free-regular-svg-icons";
 
-import { getAuthToken, getIdFromToken } from "../../Auth/authContext";
+import { AuthContext } from "../../Auth/authContext";
+import  makeRequest  from "../../Utils/RequestUtils";
 
 function Commentaires({ videoId }) {
   const [commentaire, setCommentaire] = useState("");
   const [commentaires, setCommentaires] = useState("");
-
+  const { user } = useContext(AuthContext);
   useEffect(() => {
     fetchCommentaires(videoId);
   }, [videoId]);
 
   const fetchCommentaires = () => {
     const videoIdTest = "6447a03e112e24de7ed24c41";
-    fetch(`https://iseevision.fr/api/comments/video/${videoIdTest}`, {
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok.");
-        }
-        return response.json();
+
+    makeRequest(
+      `/api/comments/video/${videoIdTest}`,
+      "GET",
+      null,
+      null,
+      null,
+      true
+    )
+      .then((data) => {
+        setCommentaires(data);
       })
-      .then((data) => setCommentaires(data))
       .catch((error) => console.error(error));
+
+    // fetch(`https://iseevision.fr/api/comments/video/${videoIdTest}`, {
+    //   headers: {
+    //     Authorization: `Bearer ${getAuthToken()}`,
+    //   },
+    // })
+    //   .then((response) => {
+    //     if (!response.ok) {
+    //       throw new Error("Network response was not ok.");
+    //     }
+    //     return response.json();
+    //   })
+    //   .then((data) => setCommentaires(data))
+    //   .catch((error) => console.error(error));
   };
 
   const handleCommentaireSubmit = (event) => {
     event.preventDefault();
     const videoIdTest = "6447a03e112e24de7ed24c41";
-    if (commentaire && getAuthToken()) {
-      fetch(`https://iseevision.fr/api/comments`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-        body: JSON.stringify({ videoId: videoIdTest, content: commentaire }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok.");
-          }
-          return response.json();
-        })
+    if (commentaire && user.isAuthenticated) {
+      const body = JSON.stringify({
+        videoId: videoIdTest,
+        content: commentaire,
+      });
+
+      makeRequest("/api/comments", "POST", null, body, null, true)
         .then((data) => {
           setCommentaire("");
           setCommentaires([...commentaires, data]);
         })
         .catch((error) => console.error(error));
+
+      // fetch(`https://iseevision.fr/api/comments`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/x-www-form-urlencoded",
+      //     Authorization: `Bearer ${getAuthToken()}`,
+      //   },
+      //   body: JSON.stringify({ videoId: videoIdTest, content: commentaire }),
+      // })
+      //   .then((response) => {
+      //     if (!response.ok) {
+      //       throw new Error("Network response was not ok.");
+      //     }
+      //     return response.json();
+      //   })
+      //   .then((data) => {
+      //     setCommentaire("");
+      //     setCommentaires([...commentaires, data]);
+      //   })
+      //   .catch((error) => console.error(error));
     } else {
       alert("Veuillez vous connecter !");
     }
@@ -68,26 +95,43 @@ function Commentaires({ videoId }) {
 
   const handleLikeCommentaire = (commentId) => {
     console.log("like");
-    if (getAuthToken()) {
-      fetch(`https://iseevision.fr/api/comments/like/${commentId}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok.");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          const updatedCommentaires = commentaires.map((commentaire) =>
-            commentaire.id === data.id ? data : commentaire
-          );
-          setCommentaires(updatedCommentaires);
-        })
-        .catch((error) => console.error(error));
+    if (user.isAuthenticated) {
+
+
+  makeRequest(
+    `/api/comments/like/${commentId}`,
+    "POST",
+    null,
+    null,
+    null,
+    true
+  )
+    .then((data) => {
+       const updatedCommentaires = commentaires.map((commentaire) =>
+         commentaire.id === data.id ? data : commentaire
+       );
+       setCommentaires(updatedCommentaires);
+    })
+    .catch((error) => console.error(error));
+      // fetch(`https://iseevision.fr/api/comments/like/${commentId}`, {
+      //   method: "POST",
+      //   headers: {
+      //     Authorization: `Bearer ${getAuthToken()}`,
+      //   },
+      // })
+      //   .then((response) => {
+      //     if (!response.ok) {
+      //       throw new Error("Network response was not ok.");
+      //     }
+      //     return response.json();
+      //   })
+      //   .then((data) => {
+      //     const updatedCommentaires = commentaires.map((commentaire) =>
+      //       commentaire.id === data.id ? data : commentaire
+      //     );
+      //     setCommentaires(updatedCommentaires);
+      //   })
+      //   .catch((error) => console.error(error));
     } else {
       alert("Veuillez vous connectez !");
     }
@@ -95,49 +139,80 @@ function Commentaires({ videoId }) {
 
   const handleDislikeCommentaire = (commentId) => {
     console.log("dislike");
-    if (getAuthToken()) {
-      fetch(`https://iseevision.fr/api/comments/dislike/${commentId}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok.");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          const updatedCommentaires = commentaires.map((commentaire) =>
-            commentaire.id === data.id ? data : commentaire
-          );
-          setCommentaires(updatedCommentaires);
-        })
-        .catch((error) => console.error(error));
+    if (user.isAuthenticated) {
+
+
+  makeRequest(
+    `/api/comments/dislike/${commentId}`,
+    "POST",
+    null,
+    null,
+    null,
+    true
+  )
+    .then((data) => {
+     const updatedCommentaires = commentaires.map((commentaire) =>
+       commentaire.id === data.id ? data : commentaire
+     );
+     setCommentaires(updatedCommentaires);
+    })
+    .catch((error) => console.error(error));
+
+      // fetch(`https://iseevision.fr/api/comments/dislike/${commentId}`, {
+      //   method: "POST",
+      //   headers: {
+      //     Authorization: `Bearer ${getAuthToken()}`,
+      //   },
+      // })
+      //   .then((response) => {
+      //     if (!response.ok) {
+      //       throw new Error("Network response was not ok.");
+      //     }
+      //     return response.json();
+      //   })
+      //   .then((data) => {
+      //     const updatedCommentaires = commentaires.map((commentaire) =>
+      //       commentaire.id === data.id ? data : commentaire
+      //     );
+      //     setCommentaires(updatedCommentaires);
+      //   })
+      //   .catch((error) => console.error(error));
     } else {
       alert("Veuillez vous connectez !");
     }
   };
 
   const handleDeleteCommentaire = (commentId) => {
-    if (getAuthToken()) {
-      fetch(`https://iseevision.fr/api/comments/${commentId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error deleting comment");
-          }
-          const updatedCommentaires = commentaires.filter(
-            (commentaire) => commentaire.id !== commentId
-          );
-          setCommentaires(updatedCommentaires);
-        })
-        .catch((error) => console.error(error));
+    if (user.isAuthenticated) {
+
+
+ makeRequest(`/api/comments/${commentId}`, "DELETE", null, null, null, true)
+   .then((data) => {
+     const updatedCommentaires = commentaires.filter(
+       (commentaire) => commentaire.id !== commentId
+     );
+     setCommentaires(updatedCommentaires);
+   })
+   .catch((error) => console.error(error));
+
+
+
+      // fetch(`https://iseevision.fr/api/comments/${commentId}`, {
+      //   method: "DELETE",
+      //   headers: {
+      //     Authorization: `Bearer ${getAuthToken()}`,
+      //   },
+      // })
+      //   .then((response) => {
+      //     if (!response.ok) {
+      //       throw new Error("Error deleting comment");
+      //     }
+      //     const updatedCommentaires = commentaires.filter(
+      //       (commentaire) => commentaire.id !== commentId
+      //     );
+      //     setCommentaires(updatedCommentaires);
+      //   })
+      //   .catch((error) => console.error(error));
     } else {
       alert("Veuillez vous connectez !");
     }
@@ -202,7 +277,7 @@ function Commentaires({ videoId }) {
                     <FontAwesomeIcon icon={faThumbsDownEmpty} className="h-5" />{" "}
                     {commentaire.dislikesCount}
                   </button>
-                  {getIdFromToken() === commentaire.userId._id && (
+                  {user.currentUser?.id === commentaire.userId._id && (
                     <button
                       onClick={() => handleDeleteCommentaire(commentaire._id)}
                       className="text-gray-500 rounded-xl"

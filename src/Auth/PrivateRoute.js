@@ -6,10 +6,10 @@ const PrivateRoute = () => {
     const { addToSecureLocalStorage } = useContext(AuthContext);
   useEffect(  () => {
     const checkAuthentication = async () => {
-      console.log("Checking 1 ");
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
       headers.append("x-xsrf-token", localStorage.getItem("xsrfToken"));
+      
       const options = {
         method: "GET",
         mode: "cors",

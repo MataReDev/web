@@ -120,7 +120,7 @@ const AuthProvider = (props) => {
       credentials: "include",
     };
 
-    await fetch("https://iseevision.fr/api/users/login", options)
+    await fetch("http://localhost:3001/api/users/login", options)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -206,11 +206,31 @@ const AuthProvider = (props) => {
       });
   };
 
-  const logout = () => {
-    //TODO  authLogout();
-    console.log("LOGOUT");
-    removeFromSecureLocalStorage("user");
-    toast("Reviens nous voir vite, tu nous manque déjà 👋 ");
+  const logout = async () => {
+
+     const headers = new Headers();
+    headers.append("Content-Type", "application/json");
+
+    const options = {
+      method: "POST",
+      mode: "cors",
+      headers: headers,
+      credentials: "include",
+    };
+
+    await fetch("http://localhost:3001/api/users/logout", options)
+      .then((response) => {
+        if (response.ok) {
+          //TODO  authLogout();
+          console.log("LOGOUT");
+          removeFromSecureLocalStorage("user");
+          toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
+        } else {
+          throw new Error("Erreur lors de l'authentification."); // Authentification échouée
+        }
+      })
+
+    
   };
 
   return (
