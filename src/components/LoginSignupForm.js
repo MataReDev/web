@@ -111,7 +111,7 @@ function LoginForm(){
 }
 
 function SignupForm() {
-const { login, isLoggedIn } = useContext(AuthContext);
+const { register, isLoggedIn } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -122,19 +122,22 @@ const { login, isLoggedIn } = useContext(AuthContext);
   // }, [getAuthToken()]);
 
   const handleSubmit = () => {
-    axios
-      .post("https://iseevision.fr/api/users/register", {
-        email: email.toString(),
-        username: username.toString(),
-        password: password.toString(),
-        isAdmin: false,
-      })
-      .then((response) => {
-       // saveAuthToken(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+
+    register(username,email,password);
+
+    // axios
+    //   .post("https://iseevision.fr/api/users/register", {
+    //     email: email.toString(),
+    //     username: username.toString(),
+    //     password: password.toString(),
+    //     isAdmin: false,
+    //   })
+    //   .then((response) => {
+    //    // saveAuthToken(response);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   return (
