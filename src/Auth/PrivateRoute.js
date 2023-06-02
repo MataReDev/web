@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { AuthContext } from "./authContext";
-import secureLocalStorage from "react-secure-storage";
 
 const PrivateRoute = () => {
     const { addToSecureLocalStorage } = useContext(AuthContext);

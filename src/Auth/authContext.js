@@ -1,6 +1,4 @@
 import React, { createContext, useState, useEffect } from "react";
-import Cookies from "js-cookie";
-import jwt_decode from "jwt-decode";
 import { useLocation } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
 import { toast } from "react-toastify";
@@ -18,18 +16,6 @@ const toastOptions = {
   theme: "colored",
 };
 
-var toBoolean = function (value) {
-  var strValue = String(value).toLowerCase();
-  strValue =
-    !isNaN(strValue) &&
-    strValue !== "0" &&
-    strValue !== "" &&
-    strValue !== "null" &&
-    strValue !== "undefined"
-      ? "1"
-      : strValue;
-  return strValue === "true" || strValue === "1" ? true : false;
-};
 
 function checkLocalStorage() {
   const storedValue = secureLocalStorage.getItem("user");
@@ -42,11 +28,7 @@ function checkLocalStorage() {
 }
 
 const AuthProvider = (props) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(
-    false
-    //toBoolean(localStorage.getItem("isLoggedIn") )
-  );
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState({
     currentUser: undefined,
     isAuthenticated: false,
@@ -95,12 +77,14 @@ const AuthProvider = (props) => {
     };
   }, []);
 
+  //Permet d'ajouter au stockage local sécurisé et modifier le state user
   const addToSecureLocalStorage = (key, value) => {
     secureLocalStorage.setItem(key, value);
     const keySecure = `@secure.j.${key}`;
     handleStorageChange({ key: keySecure, newValue: value });
   };
 
+  //Permet de supprimer le stockage local sécurisé et modifier state user
   const removeFromSecureLocalStorage = (key) => {
     secureLocalStorage.removeItem(key);
     const keySecure = `@secure.j.${key}`;
@@ -121,9 +105,6 @@ const AuthProvider = (props) => {
   }, []);
 
   const login = async (email, password) => {
-    const handleToastClose = () => {
-      // Redirection vers une autre page après la fermeture du toast
-    };
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
 
@@ -158,7 +139,6 @@ const AuthProvider = (props) => {
             "toastMessage",
             `Content de te revoir ${user.username} 👋`
           );
-          // localStorage.setItem("toastOptions", JSON.stringify(toastOptions));
 
           if (location.state?.data) {
             window.location.href = location.state?.data;
@@ -178,13 +158,10 @@ const AuthProvider = (props) => {
           "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes.",
           toastOptions
         );
-        // throw new Error(
-        //   "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes."
-        // );
       });
   };
 
-  const register = async (username, email, password, isAdmin=false) => {
+  const register = async (username, email, password, isAdmin = false) => {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
 
@@ -195,7 +172,7 @@ const AuthProvider = (props) => {
         email: email.toString(),
         username: username.toString(),
         password: password.toString(),
-        isAdmin: isAdmin
+        isAdmin: isAdmin,
       }),
       headers: headers,
       credentials: "include",
@@ -217,18 +194,8 @@ const AuthProvider = (props) => {
           `Bienvenue parmis nous ${user.username} 👋 N'oublie pas de valider ton inscription ! `
         );
 
-          // Redirigez l'utilisateur vers la page de login
-          window.location.href = "/login";
-        
-        // const { xsrfToken } = tokens;
-        // localStorage.setItem("xsrfToken", JSON.stringify(xsrfToken));
-        // setIsLoggedIn(true);
-        // if (location.state?.data) {
-        //   window.location.href = location.state?.data;
-        // } else {
-        //   // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
-        //   window.location.href = "/";
-        // }
+        // Redirigez l'utilisateur vers la page de login
+        window.location.href = "/login";
       })
       .catch(() => {
         toast.error(
@@ -239,7 +206,7 @@ const AuthProvider = (props) => {
   };
 
   const logout = () => {
-    //  authLogout();
+    //TODO  authLogout();
     console.log("LOGOUT");
     removeFromSecureLocalStorage("user");
     toast("Reviens nous voir vite, tu nous manque déjà 👋 ");
