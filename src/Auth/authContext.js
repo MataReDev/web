@@ -120,7 +120,7 @@ const AuthProvider = (props) => {
       credentials: "include",
     };
 
-    await fetch("http://localhost:3001/api/users/login", options)
+    await fetch("https://iseevision.fr/api/users/login", options)
       .then((response) => {
         if (response.ok) {
           return response.json();
@@ -218,7 +218,7 @@ const AuthProvider = (props) => {
       credentials: "include",
     };
 
-    await fetch("http://localhost:3001/api/users/logout", options)
+    await fetch("https://iseevision.fr/api/users/logout", options)
       .then((response) => {
         if (response.ok) {
           //TODO  authLogout();

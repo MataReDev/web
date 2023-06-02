@@ -15,7 +15,7 @@ async function makeRequest(
     ...headers,
   };
 
-  const defaultUrl = "https://iseevision.fr/";
+  const defaultUrl = "https://iseevision.fr";
 
   const url = defaultUrl + path;
 
