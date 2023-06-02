@@ -15,7 +15,7 @@ async function makeRequest(
     ...headers,
   };
 
-  const defaultUrl = "https://iseevision.fr";
+  const defaultUrl = "http://localhost:3001";
 
   const url = defaultUrl + path;
 
@@ -34,11 +34,13 @@ async function makeRequest(
     requestOptions.body = JSON.stringify(body);
   }
 
-  return fetch(url, requestOptions)
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error("Erreur lors de la requête :", error);
-    });
+   return fetch(url, requestOptions).then((response) => {
+     if (response.ok) {
+       return response.json();
+     } else {
+       throw new Error(`Request failed with status ${response.status}`);
+     }
+   });
 }
 
 // Exportez la fonction makeRequest 

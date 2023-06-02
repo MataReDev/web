@@ -179,7 +179,7 @@ const AuthProvider = (props) => {
       credentials: "include",
     };
 
-    await fetch("https://iseevision.fr/api/users/register", options)
+    await fetch("http://localhost:3001/api/users/register", options)
       .then((response) => {
         if (response.ok) {
           return response.json();

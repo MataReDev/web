@@ -19,7 +19,7 @@ import LoginPage from "./containers/LoginPage";
 import ProfilePage from "./containers/ProfilePage";
 import UploadVideoPage from "./containers/UploadVideoPage";
 import Dashboard from "./containers/Dashboard";
-
+import VerificationPage from "./containers/VerificationPage";
 import HeaderBar from "./components/menu/HeaderBar";
 //import { getAuthToken } from "./Auth/authContext";
 
@@ -58,6 +58,7 @@ function App() {
               <Route exact path="/profile" element={<ProfilePage />} />
             </Route>
             <Route exact path="/" element={<HomePage />} />
+            <Route exact path="/verification" element={<VerificationPage/>}/> 
             <Route exact path="/search" element={<SearchPage />} />
             <Route exact path="/video/:id" element={<VideoPage />} />
             <Route exact path="/channel/:id" element={<ChannelPage />} />
