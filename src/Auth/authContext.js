@@ -20,6 +20,7 @@ const toastOptions = {
 function checkLocalStorage() {
   const storedValue = secureLocalStorage.getItem("user");
 
+
   if (storedValue === null) {
     return false;
   }
