@@ -43,7 +43,7 @@ function LiveChat({ videoId }) {
       // Send the new message to the server for the specific video
       socket.emit("chat message", {
         videoId: videoId,
-        author: user.username,
+        author: user.currentUser.username,
         message: draftMessage,
         timestamp: new Date().toJSON(),
       });
