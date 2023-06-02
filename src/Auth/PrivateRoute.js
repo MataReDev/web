@@ -19,7 +19,7 @@ const PrivateRoute = () => {
 
       try {
         const response = await fetch(
-          "http://localhost:3001/api/users/checkIsAuth",
+          "https://iseevision.fr/api/users/checkIsAuth",
           options
         );
             
