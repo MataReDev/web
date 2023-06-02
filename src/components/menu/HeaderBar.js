@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect , useContext} from "react";
+import { Link, useLocation, NavLink } from "react-router-dom";
 import "../../index.css";
 import ProfileMenu from "./ProfileMenu";
 import logo from "../../img/Logo.svg";
 
-import { getAuthToken, deleteAuthToken, getIsAdmin } from "../../Auth/authContext";
+import {
+  AuthContext
+} from "../../Auth/authContext";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -13,12 +15,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 library.add(faSearch);
 
 function HeaderBar() {
-  const [authToken, setAuthToken] = useState(getAuthToken());
-  const isAdmin = getIsAdmin()
+  const {  logout, user } = useContext(AuthContext);
+  const isAdmin = user?.currentUser?.isAdmin;
+  const location = useLocation()
 
-  useEffect(() => {
-    setAuthToken(getAuthToken());
-  }, []);  
+
+  // useEffect(() => {
+  //   setAuthToken(getAuthToken());
+  // }, []);  
+
 
   return (
     <header className="flex flex-row justify-items-center align-middle bg-white space-x-8 py-2 px-5">
@@ -41,7 +46,7 @@ function HeaderBar() {
           <FontAwesomeIcon icon="search" className="text-gray-400" />
         </button>
       </div>
-      {authToken ? (
+      {user.isAuthenticated ? (
         <div className="flex-grow justify-end flex gap-4 lg:max-w-fit">
           {isAdmin && (
             <div className="flex flex-row justify-center items-center">
@@ -53,12 +58,13 @@ function HeaderBar() {
               </Link>
             </div>
           )}
-          <ProfileMenu handleLogout={deleteAuthToken} />
+          <ProfileMenu handleLogout={logout} />
         </div>
       ) : (
         <div className="login-button flex-grow justify-end flex items-center">
           <Link
             to={"login"}
+            state={{ data: location.pathname }}
             className="px-4 py-2 border border-black hover:bg-gray-300 focus:border focus:border-black active:bg-gray-500 text-black rounded-lg"
           >
             Se connecter
