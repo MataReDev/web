@@ -3,8 +3,20 @@ import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import { useLocation } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
-
+import {  toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export const AuthContext = createContext();
+
+  const toastOptions = {
+           position: "top-right",
+           autoClose: 3000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+           theme: "colored",
+         };
 
 var toBoolean = function (value) {
   var strValue = String(value).toLowerCase();
@@ -19,39 +31,108 @@ var toBoolean = function (value) {
   return strValue === "true" || strValue === "1" ? true : false;
 };
 
+function checkLocalStorage() {
+  const storedValue = secureLocalStorage.getItem("user");
+
+  if (storedValue === null) {
+    return false;
+  }
+
+  return true;
+}
+
 const AuthProvider = (props) => {
    
   const [isLoggedIn, setIsLoggedIn] = useState(false
     //toBoolean(localStorage.getItem("isLoggedIn") )
   );
-  const [user,setUser] = useState( {isAdmin  : false, currentUser:undefined} );
-
-  const [email, setEmail] = useState("")
+ // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState({
+    currentUser: undefined,
+    isAuthenticated: false,
+  });
 
   const location = useLocation();
-  
+
+
+const handleStorageChange = (event) => {
+  console.log("Event: ", event.key);
+  if (event.key === "@secure.j.user") {
+    if (event.newValue === null) {
+      setUser({
+        currentUser: undefined,
+        isAuthenticated: false,
+      });
+    } else {
+      console.log("User: " + event.newValue);
+      const userInformation = event.newValue;
+      setUser({
+        currentUser: userInformation,
+        isAuthenticated: true,
+      });
+    }
+  }
+};
+
 useEffect(() => {
-  const userInformation = getCurrentUser();
-  console.log("test user log " + userInformation?.username);
- 
-  if (userInformation) {
-   setUser({ isAdmin: userInformation.isAdmin, currentUser: userInformation });
+  window.addEventListener("storage", handleStorageChange);
+
+//Affichage d'un toast
+ const toastMessage = localStorage.getItem("toastMessage");
+ //const toastOptions = JSON.parse(localStorage.getItem("toastOptions"));
+
+ if (toastMessage && toastOptions) {
+   toast.success(toastMessage, {
+     ...toastOptions,
+     onClose: () => {
+       localStorage.removeItem("toastMessage");
+       //localStorage.removeItem("toastOptions");
+     },
+   });
  }
- 
 
-},[])
 
-const isAuthenticated =  () => {
-const userInformation = secureLocalStorage.getItem("user")
 
-if (!userInformation)
-{
-  return false;
+  return () => {
+    window.removeEventListener("storage", handleStorageChange);
+  };
+}, []);
+
+
+
+const addToSecureLocalStorage = (key, value) => {
+  secureLocalStorage.setItem(key, value);
+  const keySecure = `@secure.j.${key}`
+  handleStorageChange({ key: keySecure, newValue: value });
+};
+
+const removeFromSecureLocalStorage = (key) => {
+  secureLocalStorage.removeItem(key);
+   const keySecure = `@secure.j.${key}`;
+  handleStorageChange({ key: keySecure, newValue: null });
+};
+
+
+useEffect(() => {
+  if (user.currentUser == null) {
+  const userInformation = secureLocalStorage.getItem("user");
+  console.log("isAuthenticated", userInformation);
+  if (userInformation) {
+    setUser({
+      currentUser: userInformation,
+      isAuthenticated: checkLocalStorage(),
+    });
+  }
 }
-  return true;
-}
+}, []);
+
 
   const login = async (email, password) => {
+
+     const handleToastClose = () => {
+    // Redirection vers une autre page après la fermeture du toast
+    
+  };
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
 
@@ -71,28 +152,47 @@ if (!userInformation)
         if (response.ok) {
           return response.json();
         } else {
-          throw new Error("Erreur lors de l'authentification"); // Authentification échouée
+          throw new Error("Erreur lors de l'authentification."); // Authentification échouée
         }
       })
       .then((tokens) => {
+       
         const { xsrfToken, user } = tokens;
-        console.log(xsrfToken);
-        console.log("UserInfo "+user.username);
-        setEmail(user.email);
-        secureLocalStorage.setItem("user", user);
-        localStorage.setItem("xsrfToken", xsrfToken);
+
+
+        if(user.isValidated)
+        {
+
         setIsLoggedIn(true);
-        if (location.state?.data) {
-          window.location.href = location.state?.data;
-        } else {
-          // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
-          window.location.href = "/";
-        }
-      })
+        localStorage.setItem("xsrfToken", xsrfToken);
+        addToSecureLocalStorage("user", user);
+        
+       
+
+         localStorage.setItem("toastMessage", `Content de te revoir ${user.username} 👋`);
+        // localStorage.setItem("toastOptions", JSON.stringify(toastOptions));
+
+        
+          if (location.state?.data) {
+            window.location.href = location.state?.data;
+          } else {
+            // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
+            window.location.href = "/";
+          }
+            
+      }
+      else 
+      {
+          toast.warning("Veuillez vérifier votre compte, si vous n'avez pas reçu de mail veuillez nous contacter !", toastOptions)
+      }
+    
+    
+    })
       .catch(() => {
-        throw new Error(
-          "Une erreur est survenu durant l'authentification, veuillez retentez dans quelques minutes."
-        );
+        toast.error("Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes.",toastOptions)
+        // throw new Error(
+        //   "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes."
+        // );
       });
   };
 
@@ -142,17 +242,23 @@ if (!userInformation)
   const logout = () => {
     //  authLogout();
     console.log("LOGOUT");
-    secureLocalStorage.removeItem("user");
-    //setIsLoggedIn(false);
+    removeFromSecureLocalStorage("user")
+    toast("Reviens nous voir vite, tu nous manque déjà 👋 "); 
+
   };
 
-  const getCurrentUser = () => {
-    return (secureLocalStorage.getItem("user"));
-  }
+ 
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, login, register, logout, user, isAuthenticated }}
+      value={{
+        isLoggedIn,
+        login,
+        register,
+        logout,
+        user,
+        addToSecureLocalStorage,
+      }}
     >
       {props.children}
     </AuthContext.Provider>

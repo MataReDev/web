@@ -15,8 +15,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 library.add(faSearch);
 
 function HeaderBar() {
-  const { isAuthenticated, logout, user } = useContext(AuthContext);
-  const isAdmin = user?.isAdmin
+  const {  logout, user } = useContext(AuthContext);
+  const isAdmin = user?.currentUser?.isAdmin;
   const location = useLocation()
 
   // useEffect(() => {
@@ -44,7 +44,7 @@ function HeaderBar() {
           <FontAwesomeIcon icon="search" className="text-gray-400" />
         </button>
       </div>
-      {isAuthenticated() ? (
+      {user.isAuthenticated ? (
         <div className="flex-grow justify-end flex gap-4 lg:max-w-fit">
           {isAdmin && (
             <div className="flex flex-row justify-center items-center">

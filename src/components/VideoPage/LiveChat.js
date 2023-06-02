@@ -92,8 +92,8 @@ function LiveChat({ videoId }) {
 }
 
 function ConditionalLiveChat({ videoId }) {
-    const { isAuthenticated } = useContext(AuthContext);
-  if (isAuthenticated()) {
+    const { user } = useContext(AuthContext);
+  if (user.isAuthenticated) {
     return <LiveChat videoId={videoId} />;
   } else {
     return (

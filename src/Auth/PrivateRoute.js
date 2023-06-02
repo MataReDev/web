@@ -4,9 +4,10 @@ import { AuthContext } from "./authContext";
 import secureLocalStorage from "react-secure-storage";
 
 const PrivateRoute = () => {
-
-  useEffect(() => {
+    const { addToSecureLocalStorage } = useContext(AuthContext);
+  useEffect(  () => {
     const checkAuthentication = async () => {
+      console.log("Checking 1 ");
       const headers = new Headers();
       headers.append("Content-Type", "application/json");
       headers.append("x-xsrf-token", localStorage.getItem("xsrfToken"));
@@ -24,11 +25,11 @@ const PrivateRoute = () => {
         );
             
         if (response.ok) {
-          const user = await response.user
+          const {user} = await response.json();
           if (user) {
-            console.log("UserInfo " + user.username);
-            secureLocalStorage.setItem("user", user);
-          }
+            console.log("UserInfo1 " + user.username);
+            addToSecureLocalStorage("user", user);
+          }         
         } else {
             throw new Error("unauthorized request");       
         }
@@ -40,10 +41,11 @@ const PrivateRoute = () => {
       }
     };
 
-    checkAuthentication();
+     checkAuthentication();
+       
   }, []);
 
-  return <Outlet />;
+return <Outlet />;
 };
 
 export default PrivateRoute;

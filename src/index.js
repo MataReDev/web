@@ -25,7 +25,7 @@ import HeaderBar from "./components/menu/HeaderBar";
 
 import AuthProvider from "./Auth/authContext"
 import PrivateRoute from "./Auth/PrivateRoute"
-
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -46,7 +46,7 @@ function App() {
   return (
     <div className="relative">
       <Router>
-        <AuthProvider>
+        <AuthProvider>  
           <Helmet>
             <meta charSet="utf-8" />
             <title>iSee</title>
@@ -64,6 +64,7 @@ function App() {
             <Route exact path="/params/:id" element={<ParamsPage />} />
             <Route exact path="/login" element={<LoginPage />} />{" "}
           </Routes>
+            <ToastContainer/>
         </AuthProvider>
       </Router>
     </div>
@@ -72,7 +73,7 @@ function App() {
 
 const rootElement = document.getElementById("root");
 createRoot(rootElement).render(
-  <React.StrictMode>
+  //<React.StrictMode>
     <App />
-  </React.StrictMode>
+ // </React.StrictMode>
 );
