@@ -15,7 +15,7 @@ async function makeRequest(
     ...headers,
   };
 
-  const defaultUrl = "http://localhost:3001";
+  const defaultUrl = "https://iseevision.fr";
 
   const url = defaultUrl + path;
 
