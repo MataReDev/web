@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
 import makeRequest from "../Utils/RequestUtils";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const toastOptions = {
+  position: "top-right",
+  autoClose: 3000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "colored",
+};
 
 const VerificationPage =  () => {
   const [verificationStatus, setVerificationStatus] = useState("");
@@ -18,17 +31,25 @@ const VerificationPage =  () => {
          null,
          null,
          false
-       ).then(() => {           
-             setVerificationStatus("Votre adresse a bien été enregistrée.");          
+       ).then((data) => { 
+            localStorage.setItem(
+              "toastMessage",
+              `Ton addresse mail a bien été validée ! tu peux maintenant te connecter !`
+            );      
+                 window.location.href = "/login";
          })
          .catch((error) => {
-           setVerificationStatus(
-             "Une erreur s'est produite lors de la vérification. Veuillez réessayer."
-           );
-         });
+
+toast.error(
+  "Une erreur est survenu lors de la vérification, Veuillez réessayer..",
+  toastOptions
+)});
 
     } else {
-      setVerificationStatus("Token manquant dans l'URL.");
+        toast.error(
+          "Url Invalide",
+          toastOptions
+        );
     }
   }, []);
 
