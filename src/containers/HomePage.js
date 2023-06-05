@@ -15,7 +15,7 @@ class HomePage extends Component {
   }
 
   componentDidMount() {
-    makeRequest("/api/videos", "GET", null, null, null, true)
+    makeRequest("api/videos/getAll", "GET", null, null, null, true)
       .then(response => {
         this.setState({ videos: response });
       })
@@ -33,13 +33,13 @@ class HomePage extends Component {
         </Helmet>
         {this.state.videos.map((video) => (
           <VideoCard
-            key={video.video_id}
+            key={video._id}
             video={video.video_path}
-            idVideo={video.video_id}
-            title={video.titre}
-            creator={video.user_id}
-            nbView={video.nb_vues}
-            poster={video.miniature}
+            idVideo={video._id}
+            title={video.title}
+            creator={video.ownerId}
+            nbView={video.views}
+            poster={video.thumbnail_path}
           />
         ))}
       </div>

@@ -134,7 +134,7 @@ function Dashboard() {
           </h2>
         </div>
       </div>
-      <div className="p-10 bg-white rounded-md shadow-lg p-5 w-full">
+      <div className="p-10 bg-white rounded-md shadow-lg w-full">
         <Line options={options} data={data} />
       </div>
     </div>

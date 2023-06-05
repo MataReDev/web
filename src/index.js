@@ -64,6 +64,7 @@ function App() {
             <Route exact path="/channel/:id" element={<ChannelPage />} />
             <Route exact path="/params/:id" element={<ParamsPage />} />
             <Route exact path="/login" element={<LoginPage />} />{" "}
+            <Route exact path="/admin/dashboard" element={<Dashboard />} />
           </Routes>
             <ToastContainer/>
         </AuthProvider>
