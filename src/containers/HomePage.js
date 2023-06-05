@@ -2,37 +2,35 @@ import React, { Component } from "react";
 import VideoCard from "../components/Home/VideoCard";
 import { Helmet } from "react-helmet";
 
+import makeRequest from "../Utils/RequestUtils";
+
 import { listOfVideo } from "./videoData";
 
 class HomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      videos: listOfVideo,
+      videos: [],
     };
   }
 
- // componentDidMount() {
-
-
-
-  //   fetch("/api/videos/getAll")
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       this.setState({ videos: data });
-  //     })
-  //     .catch((error) => {
-  //       console.error("Erreur lors de la récupération des données :", error);
-  //     });
-  // }
+  componentDidMount() {
+    makeRequest("/api/videos", "GET", null, null, null, true)
+      .then(response => {
+        this.setState({ videos: response });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
 
   render() {
     return (
       <div className="flex flex-wrap justify-center">
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>iSee - Accueil</title>
-      </Helmet>
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>iSee - Accueil</title>
+        </Helmet>
         {this.state.videos.map((video) => (
           <VideoCard
             key={video.video_id}

@@ -23,10 +23,8 @@ function Commentaires({ videoId }) {
   }, [videoId]);
 
   const fetchCommentaires = () => {
-    const videoIdTest = "6447a03e112e24de7ed24c41";
-
     makeRequest(
-      `/api/comments/video/${videoIdTest}`,
+      `/api/comments/video/${videoId}`,
       "GET",
       null,
       null,
@@ -38,7 +36,7 @@ function Commentaires({ videoId }) {
       })
       .catch((error) => console.error(error));
 
-    // fetch(`https://iseevision.fr/api/comments/video/${videoIdTest}`, {
+    // fetch(`https://iseevision.fr/api/comments/video/${videoId}`, {
     //   headers: {
     //     Authorization: `Bearer ${getAuthToken()}`,
     //   },
@@ -55,10 +53,9 @@ function Commentaires({ videoId }) {
 
   const handleCommentaireSubmit = (event) => {
     event.preventDefault();
-    const videoIdTest = "6447a03e112e24de7ed24c41";
     if (commentaire && user.isAuthenticated) {
       const body = JSON.stringify({
-        videoId: videoIdTest,
+        videoId: videoId,
         content: commentaire,
       });
 
@@ -75,7 +72,7 @@ function Commentaires({ videoId }) {
       //     "Content-Type": "application/x-www-form-urlencoded",
       //     Authorization: `Bearer ${getAuthToken()}`,
       //   },
-      //   body: JSON.stringify({ videoId: videoIdTest, content: commentaire }),
+      //   body: JSON.stringify({ videoId: videoId, content: commentaire }),
       // })
       //   .then((response) => {
       //     if (!response.ok) {
