@@ -15,12 +15,18 @@ async function makeRequest(
     ...headers,
   };
 
-  const defaultUrl = "https://iseevision.fr";
+let defaultUrl = "https://iseevision.fr/";
 
+if (process.env.REACT_APP_ENVIRONMENT === "development") {
+  defaultUrl = "/";
+} else if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
+  defaultUrl = "http://localhost:3001/";
+}
+ 
   const url = defaultUrl + path;
 
   if (xsrfToken) {
-    mergedHeaders.append("x-xsrf-token", localStorage.getItem("xsrfToken"));
+    mergedHeaders["x-xsrf-token"] = localStorage.getItem("xsrfToken");
   }
 
   const requestOptions = {
@@ -34,13 +40,18 @@ async function makeRequest(
     requestOptions.body = JSON.stringify(body);
   }
 
-   return fetch(url, requestOptions).then((response) => {
-     if (response.ok) {
-       return response.json();
-     } else {
-       throw new Error(`Request failed with status ${response.status}`);
-     }
-   });
+  return fetch(url, requestOptions).then((response) => {
+    if (response.ok) {
+       const contentType = response.headers.get("content-type");
+       if (contentType && contentType.includes("application/json")) {
+         return response.json();
+       } else {
+         return response.text();
+       }
+    } else {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+  });
 }
 
 // Exportez la fonction makeRequest 

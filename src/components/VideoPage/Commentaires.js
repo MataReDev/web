@@ -24,7 +24,11 @@ function Commentaires({ videoId }) {
 
   const fetchCommentaires = () => {
     makeRequest(
+<<<<<<< HEAD
       `/api/comments/video/${videoId}`,
+=======
+      `api/comments/video/${videoIdTest}`,
+>>>>>>> 9dc3b7dec92178821982de25c6d921a385b7925b
       "GET",
       null,
       null,
@@ -53,13 +57,20 @@ function Commentaires({ videoId }) {
 
   const handleCommentaireSubmit = (event) => {
     event.preventDefault();
+<<<<<<< HEAD
     if (commentaire && user.isAuthenticated) {
       const body = JSON.stringify({
         videoId: videoId,
+=======
+    const videoIdTest = "647cb055147dcdbb63025138";
+    if (commentaire && user.isAuthenticated) {
+      const body = {
+        videoId: videoIdTest,
+>>>>>>> 9dc3b7dec92178821982de25c6d921a385b7925b
         content: commentaire,
-      });
+      };
 
-      makeRequest("/api/comments", "POST", null, body, null, true)
+      makeRequest("api/comments/add", "POST", null, body, null, true)
         .then((data) => {
           setCommentaire("");
           setCommentaires([...commentaires, data]);
@@ -96,7 +107,7 @@ function Commentaires({ videoId }) {
 
 
   makeRequest(
-    `/api/comments/like/${commentId}`,
+    `api/comments/like/${commentId}`,
     "POST",
     null,
     null,
@@ -140,7 +151,7 @@ function Commentaires({ videoId }) {
 
 
   makeRequest(
-    `/api/comments/dislike/${commentId}`,
+    `api/comments/dislike/${commentId}`,
     "POST",
     null,
     null,
@@ -183,7 +194,7 @@ function Commentaires({ videoId }) {
     if (user.isAuthenticated) {
 
 
- makeRequest(`/api/comments/${commentId}`, "DELETE", null, null, null, true)
+ makeRequest(`api/comments/${commentId}`, "DELETE", null, null, null, true)
    .then((data) => {
      const updatedCommentaires = commentaires.filter(
        (commentaire) => commentaire.id !== commentId
