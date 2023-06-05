@@ -54,45 +54,45 @@ export const data = {
 };
 
 async function fetchNbUser() {
-  try {
-    const response = await fetch("/api/nbUser");
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération du nombre d'utilisateurs :",
-      error
-    );
-    return null;
-  }
+  // try {
+  //   const response = await fetch("/api/nbUser");
+  //   const data = await response.json();
+  //   return data;
+  // } catch (error) {
+  //   console.error(
+  //     "Erreur lors de la récupération du nombre d'utilisateurs :",
+  //     error
+  //   );
+  //   return null;
+  // }
 }
 
 async function fetchNbVideo() {
-  try {
-    const response = await fetch("/api/nbVideo");
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération du nombre de vidéos :",
-      error
-    );
-    return null;
-  }
+  // try {
+  //   const response = await fetch("/api/nbVideo");
+  //   const data = await response.json();
+  //   return data;
+  // } catch (error) {
+  //   console.error(
+  //     "Erreur lors de la récupération du nombre de vidéos :",
+  //     error
+  //   );
+  //   return null;
+  // }
 }
 
 async function fetchNbVues7LastDay() {
-  try {
-    const response = await fetch("/api/nbVideo");
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération du nombre de vidéos :",
-      error
-    );
-    return null;
-  }
+  // try {
+  //   const response = await fetch("/api/nbVideo");
+  //   const data = await response.json();
+  //   return data;
+  // } catch (error) {
+  //   console.error(
+  //     "Erreur lors de la récupération du nombre de vidéos :",
+  //     error
+  //   );
+  //   return null;
+  // }
 }
 
 function Dashboard() {
@@ -101,15 +101,15 @@ function Dashboard() {
   const [view7lastdays, setView7lastdays] = useState(5343);
 
   useEffect(() => {
-    async function fetchData() {
-      const nbUser = await fetchNbUser();
-      const nbVideo = await fetchNbVideo();
-      const nbVue7DerniersJour = await fetchNbVues7LastDay();
-      if (nbUser != null) setUserCount(nbUser);
-      if (nbVideo != null) setVideoCount(nbVideo);
-      if (nbVue7DerniersJour != null) setView7lastdays(nbVue7DerniersJour);
-    }
-    fetchData();
+    // async function fetchData() {
+    //   const nbUser = await fetchNbUser();
+    //   const nbVideo = await fetchNbVideo();
+    //   const nbVue7DerniersJour = await fetchNbVues7LastDay();
+    //   if (nbUser != null) setUserCount(nbUser);
+    //   if (nbVideo != null) setVideoCount(nbVideo);
+    //   if (nbVue7DerniersJour != null) setView7lastdays(nbVue7DerniersJour);
+    // }
+    // fetchData();
   }, []);
 
   return (

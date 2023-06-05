@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import makeRequest from "../Utils/RequestUtils";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 
 const toastOptions = {
   position: "top-right",
@@ -25,7 +25,7 @@ const VerificationPage =  () => {
 
  const encodedToken = encodeURIComponent(token);
        makeRequest(
-         `/api/users/verification?token=${encodedToken}`,
+         `api/users/verification?token=${encodedToken}`,
          "POST",
          null,
          null,

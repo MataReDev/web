@@ -22,7 +22,7 @@ import Dashboard from "./containers/Dashboard";
 import VerificationPage from "./containers/VerificationPage";
 import HeaderBar from "./components/menu/HeaderBar";
 //import { getAuthToken } from "./Auth/authContext";
-
+import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./Auth/authContext"
 import PrivateRoute from "./Auth/PrivateRoute"
 import { ToastContainer } from "react-toastify";

@@ -1,5 +1,18 @@
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
+import { toast } from "react-toastify";
+import makeRequest from "../Utils/RequestUtils";
+
+const toastOptions = {
+  position: "top-right",
+  autoClose: 3000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "colored",
+};
 
 function ProfilePage() {
   const [username, setUsername] = useState("");
@@ -24,7 +37,34 @@ function ProfilePage() {
   };
 
   const handleSave = () => {
-    // Save changes to database or API
+
+
+    const body = JSON.stringify ({
+      username: "",
+      email: email,
+      password: password
+    })
+         makeRequest(
+           `api/users/update`,
+           "PUT",
+           null,
+           body,
+           null,
+           false
+         )
+           .then((data) => {
+             toast.error(
+               "Ton profil a bien été mit à jour :)",
+               toastOptions
+             );
+           })
+           .catch((error) => {
+             toast.error(
+               `Une erreur est survenu lors de la mise à jour de ton profil, Veuillez réessayer.. ${error.message}`,
+               toastOptions
+             );
+           });
+
     console.log(`Saving changes: ${username}, ${email}, ${password}, ${profileImage}`);
   };
 
