@@ -14,7 +14,7 @@ function VideoCard({ video, idVideo, title, creator, nbView, poster }) {
 
   return (
     <div
-      className="max-w-sm rounded-xl overflow-hidden shadow-lg m-4 rounded-xl"
+      className="max-w-sm rounded-xl overflow-hidden shadow-lg m-4"
       onClick={handleClick}
     >
       <video poster={poster} src={video} muted width="500" height="300" />

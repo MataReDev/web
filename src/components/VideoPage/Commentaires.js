@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faThumbsUp as faThumbsUpFull,
@@ -12,25 +12,20 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 
 import { AuthContext } from "../../Auth/authContext";
-import  makeRequest  from "../../Utils/RequestUtils";
+import makeRequest from "../../Utils/RequestUtils";
 
 function Commentaires({ videoId }) {
   const [commentaire, setCommentaire] = useState("");
   const [commentaires, setCommentaires] = useState("");
   const { user } = useContext(AuthContext);
+
+
   useEffect(() => {
     fetchCommentaires(videoId);
   }, [videoId]);
 
   const fetchCommentaires = () => {
-    makeRequest(
-      `/api/comments/video/${videoId}`,
-      "GET",
-      null,
-      null,
-      null,
-      true
-    )
+    makeRequest(`api/comments/video/${videoId}`, "GET", null, null, null, true)
       .then((data) => {
         setCommentaires(data);
       })
@@ -61,7 +56,6 @@ function Commentaires({ videoId }) {
 
       makeRequest("api/comments/add", "POST", null, body, null, true)
         .then((data) => {
-          setCommentaire("");
           setCommentaires([...commentaires, data]);
         })
         .catch((error) => console.error(error));
@@ -93,23 +87,22 @@ function Commentaires({ videoId }) {
   const handleLikeCommentaire = (commentId) => {
     console.log("like");
     if (user.isAuthenticated) {
-
-
-  makeRequest(
-    `api/comments/like/${commentId}`,
-    "POST",
-    null,
-    null,
-    null,
-    true
-  )
-    .then((data) => {
-       const updatedCommentaires = commentaires.map((commentaire) =>
-         commentaire.id === data.id ? data : commentaire
-       );
-       setCommentaires(updatedCommentaires);
-    })
-    .catch((error) => console.error(error));
+      makeRequest(
+        `api/comments/like/${commentId}`,
+        "PUT",
+        null,
+        null,
+        null,
+        true
+      )
+        .then((data) => {
+          const updatedCommentaires = commentaires.map((commentaire) =>
+            commentaire._id === data.id ? data : commentaire
+          );
+          setCommentaires("");
+          setCommentaires(updatedCommentaires);
+        })
+        .catch((error) => console.error(error));
       // fetch(`https://iseevision.fr/api/comments/like/${commentId}`, {
       //   method: "POST",
       //   headers: {
@@ -137,23 +130,21 @@ function Commentaires({ videoId }) {
   const handleDislikeCommentaire = (commentId) => {
     console.log("dislike");
     if (user.isAuthenticated) {
-
-
-  makeRequest(
-    `api/comments/dislike/${commentId}`,
-    "POST",
-    null,
-    null,
-    null,
-    true
-  )
-    .then((data) => {
-     const updatedCommentaires = commentaires.map((commentaire) =>
-       commentaire.id === data.id ? data : commentaire
-     );
-     setCommentaires(updatedCommentaires);
-    })
-    .catch((error) => console.error(error));
+      makeRequest(
+        `api/comments/dislike/${commentId}`,
+        "PUT",
+        null,
+        null,
+        null,
+        true
+      )
+        .then((data) => {
+          const updatedCommentaires = commentaires.map((commentaire) =>
+            commentaire._id === data.id ? data : commentaire
+          );
+          setCommentaires(updatedCommentaires);
+        })
+        .catch((error) => console.error(error));
 
       // fetch(`https://iseevision.fr/api/comments/dislike/${commentId}`, {
       //   method: "POST",
@@ -181,19 +172,14 @@ function Commentaires({ videoId }) {
 
   const handleDeleteCommentaire = (commentId) => {
     if (user.isAuthenticated) {
-
-
- makeRequest(`api/comments/${commentId}`, "DELETE", null, null, null, true)
-   .then((data) => {
-     const updatedCommentaires = commentaires.filter(
-       (commentaire) => commentaire.id !== commentId
-     );
-     setCommentaires(updatedCommentaires);
-   })
-   .catch((error) => console.error(error));
-
-
-
+      makeRequest(`api/comments/${commentId}`, "DELETE", null, null, null, true)
+        .then((data) => {
+          const updatedCommentaires = commentaires.filter(
+            (commentaire) => commentaire._id !== commentId
+          );
+          setCommentaires(updatedCommentaires);
+        })
+        .catch((error) => console.error(error));
       // fetch(`https://iseevision.fr/api/comments/${commentId}`, {
       //   method: "DELETE",
       //   headers: {
@@ -247,47 +233,69 @@ function Commentaires({ videoId }) {
       </div>
       <div className="flex flex-col gap-4 pt-2">
         {commentaires &&
-          commentaires.map((commentaire) => (
-            <div key={commentaire._id} className="p-2 rounded-xl bg-gray-200">
-              <div className="flex justify-between">
-                <div className="flex text-sm gap-2">
-                  <div className="font-bold">{commentaire.userId.username}</div>
-
-                  {formatTimestamp(commentaire.userId.createdAt)}
-                </div>
-
+          commentaires.map(
+            (commentaire, index) => (
+              console.log(commentaire),
+              (
                 <div
-                  name="action-button"
-                  className="flex gap-2 text-sm font-bold h-5"
+                  key={`${commentaire._id}-${index}`}
+                  className="p-2 rounded-xl bg-gray-200"
                 >
-                  <button
-                    onClick={() => handleLikeCommentaire(commentaire._id)}
-                    className="text-green-500 rounded-xl "
-                  >
-                    <FontAwesomeIcon icon={faThumbsUpEmpty} className="h-5" />{" "}
-                    {commentaire.likesCount}
-                  </button>
-                  <button
-                    onClick={() => handleDislikeCommentaire(commentaire._id)}
-                    className="text-red-500 rounded-xl"
-                  >
-                    <FontAwesomeIcon icon={faThumbsDownEmpty} className="h-5" />{" "}
-                    {commentaire.dislikesCount}
-                  </button>
-                  {user.currentUser?.id === commentaire.userId._id && (
-                    <button
-                      onClick={() => handleDeleteCommentaire(commentaire._id)}
-                      className="text-gray-500 rounded-xl"
+                  <div className="flex justify-between">
+                    <div className="flex text-sm gap-2">
+                      <div className="font-bold">
+                        {commentaire.userId.username}
+                      </div>
+                      {formatTimestamp(commentaire.userId.createdAt)}
+                    </div>
+
+                    <div
+                      name="action-button"
+                      className="flex gap-2 text-sm font-bold h-5"
                     >
-                      <FontAwesomeIcon icon={faTrashAltEmpty} className="h-5" />
-                    </button>
-                  )}
+                      <button
+                        onClick={() => handleLikeCommentaire(commentaire._id)}
+                        className="text-green-500 rounded-xl "
+                      >
+                        <FontAwesomeIcon
+                          icon={faThumbsUpEmpty}
+                          className="h-5"
+                        />{" "}
+                        {commentaire.likesCount}
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDislikeCommentaire(commentaire._id)
+                        }
+                        className="text-red-500 rounded-xl"
+                      >
+                        <FontAwesomeIcon
+                          icon={faThumbsDownEmpty}
+                          className="h-5"
+                        />{" "}
+                        {commentaire.dislikesCount}
+                      </button>
+                      {user.currentUser?.id === commentaire.userId._id && (
+                        <button
+                          onClick={() =>
+                            handleDeleteCommentaire(commentaire._id)
+                          }
+                          className="text-gray-500 rounded-xl"
+                        >
+                          <FontAwesomeIcon
+                            icon={faTrashAltEmpty}
+                            className="h-5"
+                          />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <hr className="border border-gray-400 m-2" />
+                  <div>{commentaire.content}</div>
                 </div>
-              </div>
-              <hr className="border border-gray-400 m-2" />
-              <div>{commentaire.content}</div>
-            </div>
-          ))}
+              )
+            )
+          )}
       </div>
     </div>
   );

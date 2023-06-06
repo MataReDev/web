@@ -1,17 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import VideoPlayer from "../components/VideoPage/VideoPlayer";
 import { listOfVideo } from "./videoData";
 import LiveChat from "../components/VideoPage/LiveChat";
 import Commentaires from "../components/VideoPage/Commentaires";
 import VideoSimilaires from "../components/VideoPage/VideoSimilaires";
+import makeRequest from "../Utils/RequestUtils";
 
-function VideoPage({ key, video, idVideo, title, creator, nbView, poster }) {
+function VideoPage() {
+  const [video, setVideo] = useState("")
+
+  const videoId = window.location.pathname.split("/")[2];
+  makeRequest(`api/videos/${videoId}`, "GET", null, null, null, true)
+    .then((data) => {
+      console.log(data);
+      setVideo(data);
+    })
+    .catch((error) => console.error(error));
+
   const videoJsOptions = {
     controls: true,
     sources: [
       {
-        src: video,
+        src: video.video_path,
       },
     ],
   };
@@ -21,7 +32,7 @@ function VideoPage({ key, video, idVideo, title, creator, nbView, poster }) {
   useEffect(() => {
     const addView = async () => {
       console.log("ajout d'une vue");
-      // await fetch('https://api.example.com/data');
+      // await fetch(`api/video/addView/${videoId}`);
     };
 
     const timer = setTimeout(() => {
@@ -35,15 +46,15 @@ function VideoPage({ key, video, idVideo, title, creator, nbView, poster }) {
     <div className="flex flex-col xl:flex-row w-full px-5 md:px-14 py-5 gap-5">
       <Helmet>
         <meta charSet="utf-8" />
-        <title>iSee - title</title>
+        <title>{`iSee - ${video.title}`}</title>
       </Helmet>
       <div className="flex flex-col w-full md:max-w-full gap-5 flex-grow">
         <div className="aspect-video align-top block m-auto w-full">
           <VideoPlayer options={videoJsOptions} video={video} />
         </div>
         <div className="bg-gray-300 w-full rounded-xl p-5">
-          <p className="text-2xl font-bold">{title}</p>
-          <p>{nbView} vues</p>
+          <p className="text-2xl font-bold">{video.title}</p>
+          <p>{video.nbView} vues</p>
           <div className="flex flex-row space-x-5 align-middle">
             <div className="flex profile-icon">
               <img
@@ -59,12 +70,12 @@ function VideoPage({ key, video, idVideo, title, creator, nbView, poster }) {
           </div>
         </div>
         <div className="flex-grow">
-          <Commentaires videoId={idVideo} />
+          <Commentaires videoId={videoId} />
         </div>
       </div>
       <div className="flex flex-col w-full xl:w-1/4 gap-5">
         <div className="w-full">
-          <LiveChat videoId={idVideo} />
+          <LiveChat videoId={videoId} />
         </div>
         <div className="w-full">
           <VideoSimilaires />

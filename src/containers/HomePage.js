@@ -4,8 +4,6 @@ import { Helmet } from "react-helmet";
 
 import makeRequest from "../Utils/RequestUtils";
 
-import { listOfVideo } from "./videoData";
-
 class HomePage extends Component {
   constructor(props) {
     super(props);

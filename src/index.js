@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 
 import "./index.css";
@@ -23,8 +19,8 @@ import VerificationPage from "./containers/VerificationPage";
 import HeaderBar from "./components/menu/HeaderBar";
 //import { getAuthToken } from "./Auth/authContext";
 import "react-toastify/dist/ReactToastify.css";
-import AuthProvider from "./Auth/authContext"
-import PrivateRoute from "./Auth/PrivateRoute"
+import AuthProvider from "./Auth/authContext";
+import PrivateRoute from "./Auth/PrivateRoute";
 import { ToastContainer } from "react-toastify";
 
 function App() {
@@ -37,16 +33,16 @@ function App() {
   //   return false;
   // }
 
- // const handleLogin = () => {};
+  // const handleLogin = () => {};
 
- // const handleLogout = () => {
-   // setUser(null);
- // };
+  // const handleLogout = () => {
+  // setUser(null);
+  // };
 
   return (
     <div className="relative">
       <Router>
-        <AuthProvider>  
+        <AuthProvider>
           <Helmet>
             <meta charSet="utf-8" />
             <title>iSee</title>
@@ -58,7 +54,7 @@ function App() {
               <Route exact path="/profile" element={<ProfilePage />} />
             </Route>
             <Route exact path="/" element={<HomePage />} />
-            <Route exact path="/verification" element={<VerificationPage/>}/> 
+            <Route exact path="/verification" element={<VerificationPage />} />
             <Route exact path="/search" element={<SearchPage />} />
             <Route exact path="/video/:id" element={<VideoPage />} />
             <Route exact path="/channel/:id" element={<ChannelPage />} />
@@ -66,7 +62,7 @@ function App() {
             <Route exact path="/login" element={<LoginPage />} />{" "}
             <Route exact path="/admin/dashboard" element={<Dashboard />} />
           </Routes>
-            <ToastContainer/>
+          <ToastContainer />
         </AuthProvider>
       </Router>
     </div>
@@ -76,6 +72,6 @@ function App() {
 const rootElement = document.getElementById("root");
 createRoot(rootElement).render(
   //<React.StrictMode>
-    <App />
- // </React.StrictMode>
+  <App />
+  // </React.StrictMode>
 );
