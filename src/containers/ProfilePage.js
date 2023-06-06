@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import makeRequest from "../Utils/RequestUtils";
@@ -36,44 +36,53 @@ function ProfilePage() {
     setProfileImage(URL.createObjectURL(event.target.files[0]));
   };
 
+  const handleUserInfo = () => {
+    makeRequest(`api/users/profile`, "GET", null, null, null, true)
+      .then((data) => {
+        setUsername(data.username)
+        setEmail(data.email)
+        setPassword(data.password)
+      })
+      .catch((error) => {
+        toast.error(
+          "Une erreur est survenu lors de la récupération des données, Veuillez réessayer..",
+          toastOptions
+        );
+      });
+  };
+
+  useEffect(() => {
+    handleUserInfo()
+  }, []);
+
   const handleSave = () => {
-
-
-    const body = JSON.stringify ({
-      username: "",
+    const body = JSON.stringify({
+      username: username,
       email: email,
-      password: password
-    })
-         makeRequest(
-           `api/users/update`,
-           "PUT",
-           null,
-           body,
-           null,
-           false
-         )
-           .then((data) => {
-             toast.error(
-               "Ton profil a bien été mit à jour :)",
-               toastOptions
-             );
-           })
-           .catch((error) => {
-             toast.error(
-               `Une erreur est survenu lors de la mise à jour de ton profil, Veuillez réessayer.. ${error.message}`,
-               toastOptions
-             );
-           });
+      password: password,
+    });
+    makeRequest(`api/users/update`, "PUT", null, body, null, true)
+      .then((data) => {
+        toast.error(`Ton profil a bien été mit à jour ${data.username} :)`, toastOptions);
+      })
+      .catch((error) => {
+        toast.error(
+          `Une erreur est survenu lors de la mise à jour de ton profil, Veuillez réessayer.. ${error.message}`,
+          toastOptions
+        );
+      });
 
-    console.log(`Saving changes: ${username}, ${email}, ${password}, ${profileImage}`);
+    console.log(
+      `Saving changes: ${username}, ${email}, ${password}, ${profileImage}`
+    );
   };
 
   return (
     <div className="max-w-xl mx-auto my-4 p-4 bg-white rounded-md">
       <Helmet>
-          <meta charSet="utf-8" />
-          <title>iSee - Profile</title>
-        </Helmet>
+        <meta charSet="utf-8" />
+        <title>iSee - Profile</title>
+      </Helmet>
       <h1 className="text-3xl font-bold mb-4">Profile Page</h1>
       <div className="mb-4">
         <label className="block font-medium mb-2">Username:</label>
@@ -112,11 +121,19 @@ function ProfilePage() {
         <div className="flex items-center">
           <button
             className="bg-gray-200 px-4 py-2 rounded-lg text-gray-700 font-medium mr-2"
-            onClick={''}
+            onClick={""}
           >
             Choose Image
           </button>
-          <div>{profileImage && <img src={profileImage} alt="Profile" className="w-20 h-20 rounded-full" />}</div>
+          <div>
+            {profileImage && (
+              <img
+                src={profileImage}
+                alt="Profile"
+                className="w-20 h-20 rounded-full"
+              />
+            )}
+          </div>
         </div>
       </div>
       <button
