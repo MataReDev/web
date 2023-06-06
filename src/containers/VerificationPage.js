@@ -32,10 +32,10 @@ const VerificationPage =  () => {
          null,
          false
        ).then((data) => { 
-            localStorage.setItem(
-              "toastMessage",
-              `Ton addresse mail a bien été validée ! tu peux maintenant te connecter !`
-            );      
+            localStorage.setItem("toastMessage",  JSON.stringify({
+              status:"success",
+              message: `Ton addresse mail a bien été validée ! tu peux maintenant te connecter !`
+            }));      
                  window.location.href = "/login";
          })
          .catch((error) => {

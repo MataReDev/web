@@ -22,7 +22,6 @@ const toastOptions = {
 function checkLocalStorage() {
   const storedValue = secureLocalStorage.getItem("user");
 
-
   if (storedValue === null) {
     return false;
   }
@@ -48,7 +47,6 @@ const AuthProvider = (props) => {
           isAuthenticated: false,
         });
       } else {
-        console.log("User: " + event.newValue);
         const userInformation = event.newValue;
         setUser({
           currentUser: userInformation,
@@ -62,18 +60,33 @@ const AuthProvider = (props) => {
     window.addEventListener("storage", handleStorageChange);
 
     //Affichage d'un toast
-    const toastMessage = localStorage.getItem("toastMessage");
-    //const toastOptions = JSON.parse(localStorage.getItem("toastOptions"));
+const toastMessage = localStorage.getItem("toastMessage");
 
-    if (toastMessage && toastOptions) {
-      toast.success(toastMessage, {
-        ...toastOptions,
-        onClose: () => {
-          localStorage.removeItem("toastMessage");
-          //localStorage.removeItem("toastOptions");
-        },
-      });
-    }
+if (toastMessage) {
+  const { status, message } = JSON.parse(toastMessage);
+
+//const status = localStorage.getItem("status");
+
+const toastOptionsMap = {
+  success: toast.success,
+  warning: toast.warning,
+  info: toast.info,
+};
+
+if (
+  message &&
+  status &&
+  toastOptionsMap[status]
+) {
+  const toastFunction = toastOptionsMap[status];
+  toastFunction(message, {
+    ...toastOptions,
+    onClose: () => {
+      localStorage.removeItem("toastMessage");
+    },
+  });
+}
+}
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
@@ -97,7 +110,6 @@ const AuthProvider = (props) => {
   useEffect(() => {
     if (user.currentUser == null) {
       const userInformation = secureLocalStorage.getItem("user");
-      console.log("isAuthenticated", userInformation);
       if (userInformation) {
         setUser({
           currentUser: userInformation,
@@ -163,10 +175,6 @@ const AuthProvider = (props) => {
     //     );
     //   });
 
-
-
-
-
 const body = {
   email: email.toString(),
   password: password.toString(),
@@ -182,10 +190,10 @@ await makeRequest("api/users/login", "POST", null, body, null, false)
       localStorage.setItem("xsrfToken", xsrfToken);
       addToSecureLocalStorage("user", user);
 
-      localStorage.setItem(
-        "toastMessage",
-        `Content de te revoir ${user.username} 👋`
-      );
+      localStorage.setItem("toastMessage", JSON.stringify({
+        status: "success",
+        message: `Content de te revoir ${user.username} 👋`,
+      }));
 
       if (location.state?.data) {
         window.location.href = location.state?.data;
@@ -206,10 +214,6 @@ await makeRequest("api/users/login", "POST", null, body, null, false)
       toastOptions
     );
   });
-
-
-
-
   };
 
   const register = async (username, email, password, isAdmin = false) => {
@@ -229,27 +233,31 @@ await makeRequest("api/users/login", "POST", null, body, null, false)
     //   credentials: "include",
     // };
 
-const body = JSON.stringify({
+const body = {
   email: email.toString(),
   username: username.toString(),
   password: password.toString(),
   isAdmin: isAdmin,
-});
-
+};
 
    await makeRequest("api/users/register", "POST", null, body, null, false)
      .then((data) => {
        const { user } = data;
        if (user) {
-         localStorage.setItem(
-           "toastMessage",
-           `Bienvenue parmis nous ${user.username} 👋 N'oublie pas de valider ton inscription ! `
-         );
+
+          localStorage.setItem(
+            "toastMessage",
+            JSON.stringify({
+              status: "success",
+              message: `Bienvenue parmis nous ${user.username} 👋 N'oublie pas de valider ton inscription ! `,
+            })
+          );
          // Redirigez l'utilisateur vers la page de login
          window.location.href = "/login";
        }
      })
      .catch((error) => {
+      console.log("user : " + error);
        toast.error(
          "Une erreur est survenu durant l'enregistrement, veuillez retentez dans quelques minutes.",
          toastOptions
