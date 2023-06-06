@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import VideoPlayer from "../components/VideoPage/VideoPlayer";
 import { listOfVideo } from "./videoData";
@@ -6,31 +6,44 @@ import LiveChat from "../components/VideoPage/LiveChat";
 import Commentaires from "../components/VideoPage/Commentaires";
 import VideoSimilaires from "../components/VideoPage/VideoSimilaires";
 
-function VideoPage() {
-  const videoId = window.location.pathname.split("/")[2];
-  const video = listOfVideo[videoId];
+function VideoPage({ key, video, idVideo, title, creator, nbView, poster }) {
   const videoJsOptions = {
     controls: true,
     sources: [
       {
-        src: video.video_path,
+        src: video,
       },
     ],
   };
+
+  // Fonction pour récupérer le propriétaire de la vidéo
+
+  useEffect(() => {
+    const addView = async () => {
+      console.log("ajout d'une vue");
+      // await fetch('https://api.example.com/data');
+    };
+
+    const timer = setTimeout(() => {
+      addView();
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="flex flex-col xl:flex-row w-full px-5 md:px-14 py-5 gap-5">
       <Helmet>
         <meta charSet="utf-8" />
-        <title>iSee - {video.titre}</title>
+        <title>iSee - title</title>
       </Helmet>
       <div className="flex flex-col w-full md:max-w-full gap-5 flex-grow">
         <div className="aspect-video align-top block m-auto w-full">
           <VideoPlayer options={videoJsOptions} video={video} />
         </div>
         <div className="bg-gray-300 w-full rounded-xl p-5">
-          <p className="text-2xl font-bold">{video.titre}</p>
-          <p>{video.nb_vues} vues</p>
+          <p className="text-2xl font-bold">{title}</p>
+          <p>{nbView} vues</p>
           <div className="flex flex-row space-x-5 align-middle">
             <div className="flex profile-icon">
               <img
@@ -46,12 +59,12 @@ function VideoPage() {
           </div>
         </div>
         <div className="flex-grow">
-          <Commentaires videoId={videoId} />
+          <Commentaires videoId={idVideo} />
         </div>
       </div>
       <div className="flex flex-col w-full xl:w-1/4 gap-5">
         <div className="w-full">
-          <LiveChat videoId={videoId} />
+          <LiveChat videoId={idVideo} />
         </div>
         <div className="w-full">
           <VideoSimilaires />
