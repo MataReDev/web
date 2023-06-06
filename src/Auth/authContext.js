@@ -22,7 +22,6 @@ const toastOptions = {
 function checkLocalStorage() {
   const storedValue = secureLocalStorage.getItem("user");
 
-
   if (storedValue === null) {
     return false;
   }
@@ -48,7 +47,6 @@ const AuthProvider = (props) => {
           isAuthenticated: false,
         });
       } else {
-        console.log("User: " + event.newValue);
         const userInformation = event.newValue;
         setUser({
           currentUser: userInformation,
@@ -112,7 +110,6 @@ if (
   useEffect(() => {
     if (user.currentUser == null) {
       const userInformation = secureLocalStorage.getItem("user");
-      console.log("isAuthenticated", userInformation);
       if (userInformation) {
         setUser({
           currentUser: userInformation,
@@ -178,10 +175,6 @@ if (
     //     );
     //   });
 
-
-
-
-
 const body = {
   email: email.toString(),
   password: password.toString(),
@@ -221,10 +214,6 @@ await makeRequest("api/users/login", "POST", null, body, null, false)
       toastOptions
     );
   });
-
-
-
-
   };
 
   const register = async (username, email, password, isAdmin = false) => {
@@ -250,7 +239,6 @@ const body = {
   password: password.toString(),
   isAdmin: isAdmin,
 };
-
 
    await makeRequest("api/users/register", "POST", null, body, null, false)
      .then((data) => {
