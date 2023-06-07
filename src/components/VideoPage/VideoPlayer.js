@@ -33,7 +33,9 @@ const VideoPlayer = ({ options, video }) => {
         preload="auto"
         className={`w-full h-full video-js vjs-big-play-centered`}
         type="video/mp4"
-      />
+      >
+        <source src={videoRef} type="video/mp4"/>
+      </video>
     </div>
   );
 };
