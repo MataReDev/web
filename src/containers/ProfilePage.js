@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import makeRequest from "../Utils/RequestUtils";
+import secureLocalStorage from "react-secure-storage";
+
 
 const toastOptions = {
   position: "top-right",
@@ -36,23 +38,23 @@ function ProfilePage() {
     setProfileImage(URL.createObjectURL(event.target.files[0]));
   };
 
-  const handleUserInfo = () => {
-    makeRequest(`api/users/profile`, "GET", null, null, null, true)
-      .then((data) => {
-        setUsername(data.username)
-        setEmail(data.email)
-        setPassword(data.password)
-      })
-      .catch((error) => {
-        toast.error(
-          "Une erreur est survenu lors de la récupération des données, Veuillez réessayer..",
-          toastOptions
-        );
-      });
-  };
+
+  function checkLocalStorage() {
+    const storedValue = secureLocalStorage.getItem("user");
+  
+    if (storedValue === null) {
+      return false;
+    }
+
+    
+    setUsername(storedValue.username)
+    setEmail(storedValue.email)
+  
+    return true;
+  }
 
   useEffect(() => {
-    handleUserInfo()
+    checkLocalStorage()
   }, []);
 
   const handleSave = () => {
