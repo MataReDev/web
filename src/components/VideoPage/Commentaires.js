@@ -93,6 +93,16 @@ function Commentaires({ videoId }) {
     }
   };
 
+  const updateCommentaire = (updatedCommentaire) => {
+    const updatedCommentaires = commentaires.map((commentaire) =>
+      commentaire._id === updatedCommentaire._id
+        ? updatedCommentaire
+        : commentaire
+    );
+    setCommentaires(updatedCommentaires);
+  };
+
+
   const handleLikeCommentaire = (commentId) => {
     console.log("like");
     if (user.isAuthenticated) {
@@ -105,11 +115,14 @@ function Commentaires({ videoId }) {
         true
       )
         .then((data) => {
-          const updatedCommentaires = commentaires.map((commentaire) =>
-            commentaire._id === data.id ? data : commentaire
-          );
-          setCommentaires("");
-          setCommentaires(updatedCommentaires);
+          // const updatedCommentaires = commentaires.map((commentaire) =>
+          //   commentaire._id === data.id ? data : commentaire
+          // );
+
+          console.log("updatedCommentaires", data);
+           updateCommentaire(data);
+          // setCommentaires("");
+          // setCommentaires(updatedCommentaires);
         })
         .catch((error) => console.error(error));
       // fetch(`https://iseevision.fr/api/comments/like/${commentId}`, {
@@ -148,10 +161,11 @@ function Commentaires({ videoId }) {
         true
       )
         .then((data) => {
-          const updatedCommentaires = commentaires.map((commentaire) =>
-            commentaire._id === data.id ? data : commentaire
-          );
-          setCommentaires(updatedCommentaires);
+          // const updatedCommentaires = commentaires.map((commentaire) =>
+          //   commentaire._id === data.id ? data : commentaire
+          // );
+          // setCommentaires(updatedCommentaires);
+          updateCommentaire(data);
         })
         .catch((error) => console.error(error));
 
@@ -181,7 +195,7 @@ function Commentaires({ videoId }) {
 
   const handleDeleteCommentaire = (commentId) => {
     if (user.isAuthenticated) {
-      makeRequest(`api/comments/${commentId}`, "DELETE", null, null, null, true)
+      makeRequest(`api/comments/delete/${commentId}`, "DELETE", null, null, null, true)
         .then((data) => {
           const updatedCommentaires = commentaires.filter(
             (commentaire) => commentaire._id !== commentId
