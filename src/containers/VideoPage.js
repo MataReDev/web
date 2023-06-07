@@ -17,7 +17,6 @@ function VideoPage() {
     sources: [
       {
         src: video.video_path,
-        type: 'video/mp4'
       },
     ],
   };
