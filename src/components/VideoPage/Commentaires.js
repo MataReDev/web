@@ -27,7 +27,7 @@ function Commentaires({ videoId }) {
   const fetchCommentaires = async () => {
     console.log("videoId ", videoId);
    await makeRequest(
-     `api/comments/video/647cb055147dcdbb63025138`,
+     `api/comments/video/${videoId}`,
      "GET",
      null,
      null,
@@ -35,7 +35,7 @@ function Commentaires({ videoId }) {
      false
    )
      .then((data) => {
-      console.log("data", data);
+       console.log("data", data);
        setCommentaires(data);
      })
      .catch((error) => console.error(error));
