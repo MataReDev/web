@@ -16,7 +16,7 @@ function VideoPage() {
     controls: true,
     sources: [
       {
-        src: video.video_path,
+        src: `file://${video.video_path}`,
       },
     ],
   };
