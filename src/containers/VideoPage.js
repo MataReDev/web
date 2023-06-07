@@ -15,7 +15,7 @@ function VideoPage() {
     controls: true,
     sources: [
       {
-        src: `${video.video_path}`,
+        src: `https://iseevision.fr/videos/6480f818273783655e8e84b8.mp4`,
       },
     ],
   };
