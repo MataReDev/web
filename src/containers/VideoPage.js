@@ -11,12 +11,6 @@ function VideoPage() {
   const [video, setVideo] = useState("")
 
   const videoId = window.location.pathname.split("/")[2];
-  makeRequest(`api/videos/${videoId}`, "GET", null, null, null, true)
-    .then((data) => {
-      console.log(data);
-      setVideo(data);
-    })
-    .catch((error) => console.error(error));
 
   const videoJsOptions = {
     controls: true,
@@ -28,8 +22,14 @@ function VideoPage() {
   };
 
   // Fonction pour récupérer le propriétaire de la vidéo
-
   useEffect(() => {
+    makeRequest(`api/videos/${videoId}`, "GET", null, null, null, false)
+    .then((data) => {
+      console.log(data);
+      setVideo(data);
+    })
+    .catch((error) => console.error(error));
+
     const addView = async () => {
       console.log("ajout d'une vue");
       // await fetch(`api/video/addView/${videoId}`);
