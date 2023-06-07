@@ -24,12 +24,21 @@ function Commentaires({ videoId }) {
     fetchCommentaires(videoId);
   }, [videoId]);
 
-  const fetchCommentaires = () => {
-    makeRequest(`api/comments/video/${videoId}`, "GET", null, null, null, true)
-      .then((data) => {
-        setCommentaires(data);
-      })
-      .catch((error) => console.error(error));
+  const fetchCommentaires = async () => {
+    console.log("videoId ", videoId);
+   await makeRequest(
+     `api/comments/video/647cb055147dcdbb63025138`,
+     "GET",
+     null,
+     null,
+     null,
+     false
+   )
+     .then((data) => {
+      console.log("data", data);
+       setCommentaires(data);
+     })
+     .catch((error) => console.error(error));
 
     // fetch(`https://iseevision.fr/api/comments/video/${videoId}`, {
     //   headers: {
@@ -46,15 +55,15 @@ function Commentaires({ videoId }) {
     //   .catch((error) => console.error(error));
   };
 
-  const handleCommentaireSubmit = (event) => {
+  const handleCommentaireSubmit = async (event) => {
     event.preventDefault();
     if (commentaire && user.isAuthenticated) {
-      const body = JSON.stringify({
+      const body = {
         videoId: videoId,
         content: commentaire,
-      });
+      };
 
-      makeRequest("api/comments/add", "POST", null, body, null, true)
+     await makeRequest("api/comments/add", "POST", null, body, null, true)
         .then((data) => {
           setCommentaires([...commentaires, data]);
         })
