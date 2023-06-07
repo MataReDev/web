@@ -10,7 +10,7 @@ const VideoPlayer = ({ options, video }) => {
 
   useEffect(() => {
     const player = playerRef.current;
-
+    console.log("options player : " + options);
     if (!player) {
       const videoElement = videoRef.current;
       if (!videoElement) return;

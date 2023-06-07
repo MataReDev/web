@@ -11,12 +11,13 @@ function VideoPage() {
   const [video, setVideo] = useState("")
 
   const videoId = window.location.pathname.split("/")[2];
-
+const videopath = "/mnt/iseeData/videos/647fb85b2ae285fec184e47f.mp4";
   const videoJsOptions = {
     controls: true,
     sources: [
       {
-        src: `file://${video.video_path}`,
+        src: `file://${videopath}`,
+        type: "video/mp4",
       },
     ],
   };
