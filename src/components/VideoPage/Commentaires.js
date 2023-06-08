@@ -271,7 +271,7 @@ function Commentaires({ videoId }) {
                       <div className="font-bold">
                         {commentaire.userId.username}
                       </div>
-                      {formatTimestamp(commentaire.userId.createdAt)}
+                      {formatTimestamp(commentaire.createdAt)}
                     </div>
 
                     <div

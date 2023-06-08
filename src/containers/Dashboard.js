@@ -11,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import makeRequest from '../Utils/RequestUtils';
 
 ChartJS.register(
   CategoryScale,
@@ -53,63 +54,25 @@ export const data = {
   ],
 };
 
-async function fetchNbUser() {
-  // try {
-  //   const response = await fetch("/api/nbUser");
-  //   const data = await response.json();
-  //   return data;
-  // } catch (error) {
-  //   console.error(
-  //     "Erreur lors de la récupération du nombre d'utilisateurs :",
-  //     error
-  //   );
-  //   return null;
-  // }
-}
-
-async function fetchNbVideo() {
-  // try {
-  //   const response = await fetch("/api/nbVideo");
-  //   const data = await response.json();
-  //   return data;
-  // } catch (error) {
-  //   console.error(
-  //     "Erreur lors de la récupération du nombre de vidéos :",
-  //     error
-  //   );
-  //   return null;
-  // }
-}
-
-async function fetchNbVues7LastDay() {
-  // try {
-  //   const response = await fetch("/api/nbVideo");
-  //   const data = await response.json();
-  //   return data;
-  // } catch (error) {
-  //   console.error(
-  //     "Erreur lors de la récupération du nombre de vidéos :",
-  //     error
-  //   );
-  //   return null;
-  // }
-}
 
 function Dashboard() {
-  const [userCount, setUserCount] = useState(500);
-  const [videoCount, setVideoCount] = useState(137);
-  const [view7lastdays, setView7lastdays] = useState(5343);
+  const [userCount, setUserCount] = useState("");
+  const [videoCount, setVideoCount] = useState("");
+  const [view7lastdays, setView7lastdays] = useState("");
 
   useEffect(() => {
-    // async function fetchData() {
-    //   const nbUser = await fetchNbUser();
-    //   const nbVideo = await fetchNbVideo();
-    //   const nbVue7DerniersJour = await fetchNbVues7LastDay();
-    //   if (nbUser != null) setUserCount(nbUser);
-    //   if (nbVideo != null) setVideoCount(nbVideo);
-    //   if (nbVue7DerniersJour != null) setView7lastdays(nbVue7DerniersJour);
-    // }
-    // fetchData();
+    makeRequest('api/dashboard/getNbUser',"GET", null, null, null, true)
+    .then((data) => {
+      setUserCount(data.nbUsers);
+    })
+    .catch((error) => console.error(error));
+
+    makeRequest('api/dashboard/getNbVideoUpload',"GET", null, null, null, true)
+    .then((data) => {
+      setVideoCount(data.nbVideos);
+    })
+    .catch((error) => console.error(error));
+    
   }, []);
 
   return (
@@ -129,7 +92,7 @@ function Dashboard() {
         </div>
         <div className="bg-white rounded-md shadow-md p-5 w-full md:w-1/3">
           <h2 className="text-lg font-bold mb-3">
-            Vues sur les vidéos (7 derniers jours)
+            Taille vidéo totale
             <p className="text-4xl font-bold">{view7lastdays}</p>
           </h2>
         </div>
