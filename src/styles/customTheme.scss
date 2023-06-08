@@ -6,3 +6,22 @@ $center-big-play-button: false;
     font-size: 14px;
     color: $primary-foreground-color;
 }
+
+.custom-error-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Centrer le contenu horizontalement et verticalement */
+    overflow: hidden;
+}
+
+.custom-error-message img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+}
+.vjs-error .vjs-error-display:before {
+    content: none;
+}
