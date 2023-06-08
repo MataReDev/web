@@ -41,8 +41,8 @@ function VideoPage() {
     if (user.isAuthenticated) {
       makeRequest(`api/videos/like/${videoId}`, "PUT", null, null, null, true)
         .then((data) => {
-          setLikeCount(data[0]);
-          setDislikeCount(data[1]);
+          setLikeCount(data.likeCount);
+          setDislikeCount(data.dislikeCount);
         })
         .catch((error) => console.error(error));
     } else {
@@ -61,8 +61,8 @@ function VideoPage() {
         true
       )
         .then((data) => {
-          setLikeCount(data[0]);
-          setDislikeCount(data[1]);
+          setLikeCount(data.likeCount);
+          setDislikeCount(data.dislikeCount);
         })
         .catch((error) => console.error(error));
     } else {
