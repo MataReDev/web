@@ -104,7 +104,6 @@ function Commentaires({ videoId }) {
 
 
   const handleLikeCommentaire = (commentId) => {
-    console.log("like");
     if (user.isAuthenticated) {
       makeRequest(
         `api/comments/like/${commentId}`,
@@ -118,7 +117,6 @@ function Commentaires({ videoId }) {
           // const updatedCommentaires = commentaires.map((commentaire) =>
           //   commentaire._id === data.id ? data : commentaire
           // );
-
           console.log("updatedCommentaires", data);
            updateCommentaire(data);
           // setCommentaires("");
@@ -150,7 +148,6 @@ function Commentaires({ videoId }) {
   };
 
   const handleDislikeCommentaire = (commentId) => {
-    console.log("dislike");
     if (user.isAuthenticated) {
       makeRequest(
         `api/comments/dislike/${commentId}`,
