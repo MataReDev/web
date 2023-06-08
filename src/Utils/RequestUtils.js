@@ -39,7 +39,7 @@ if (process.env.REACT_APP_ENVIRONMENT === "development") {
   if (body) {
     requestOptions.body = JSON.stringify(body);
   }
-  console.log(url);
+  
   return await fetch(url, requestOptions).then((response) => {
     if (response.ok) {
        const contentType = response.headers.get("content-type");

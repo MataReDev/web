@@ -25,7 +25,6 @@ function Commentaires({ videoId }) {
   }, [videoId]);
 
   const fetchCommentaires = async () => {
-    console.log("videoId ", videoId);
    await makeRequest(
      `api/comments/video/${videoId}`,
      "GET",
@@ -35,7 +34,6 @@ function Commentaires({ videoId }) {
      false
    )
      .then((data) => {
-       console.log("data", data);
        setCommentaires(data);
      })
      .catch((error) => console.error(error));
@@ -117,7 +115,6 @@ function Commentaires({ videoId }) {
           // const updatedCommentaires = commentaires.map((commentaire) =>
           //   commentaire._id === data.id ? data : commentaire
           // );
-          console.log("updatedCommentaires", data);
            updateCommentaire(data);
           // setCommentaires("");
           // setCommentaires(updatedCommentaires);
@@ -255,7 +252,6 @@ function Commentaires({ videoId }) {
         {commentaires &&
           commentaires.map(
             (commentaire, index) => (
-              console.log(commentaire),
               (
                 <div
                   key={`${commentaire._id}-${index}`}
