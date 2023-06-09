@@ -23,11 +23,7 @@ function VideoPage() {
   const [isVideoAvailable, setIsVideoAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useContext(AuthContext);
-
-  const [owner, setOwner] = useState("");
-
-  const videoId = window.location.pathname.split("/")[2];
-  const videoJsOptions = {
+const [videoJsOptions, setvideoJsOptions] = useState({
     controls: true,
     notSupportedMessage: "Cette vidéo n'est pas disponible pour le moment",
     sources: [
@@ -35,7 +31,19 @@ function VideoPage() {
         src: `${video.video_path}`,
       },
     ],
-  };
+  });
+  const [owner, setOwner] = useState("");
+
+  const videoId = window.location.pathname.split("/")[2];
+  // const videoJsOptions = {
+  //   controls: true,
+  //   notSupportedMessage: "Cette vidéo n'est pas disponible pour le moment",
+  //   sources: [
+  //     {
+  //       src: `${video.video_path}`,
+  //     },
+  //   ],
+  // };
 
   const handleLikeVideo = (videoId) => {
     if (user.isAuthenticated) {
@@ -73,12 +81,27 @@ function VideoPage() {
 
   // Fonction pour récupérer le propriétaire de la vidéo
   useEffect(() => {
+    console.log("debug")
     setIsLoading(true); // Définir isLoading à true lors du chargement initial
 
     makeRequest(`api/videos/${videoId}`, "GET", null, null, null, false)
       .then(async (data) => {
         setVideo(data);
-        videoJsOptions.sources[0].src = video.video_path;
+       // setvideoJsOptions(videoJsOptions.sources[0].src = video.video_path)
+        setvideoJsOptions((prevOptions) => {
+          // Créer une copie profonde des options existantes
+          const newOptions = { ...prevOptions };
+
+          // Modifier la valeur de src dans les sources
+          newOptions.sources = [
+            {
+              src: data.video_path,
+            },
+          ];
+
+          // Retourner les nouvelles options mises à jour
+          return newOptions;
+        });
         setLikeCount(data.likesCount);
         setDislikeCount(data.dislikesCount);
 
