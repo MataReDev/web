@@ -39,7 +39,6 @@ const AuthProvider = (props) => {
   const location = useLocation();
 
   const handleStorageChange = (event) => {
-    console.log("Event: ", event.key);
     if (event.key === "@secure.j.user") {
       if (event.newValue === null) {
         setUser({
@@ -320,7 +319,6 @@ const body = {
 
         await makeRequest("api/users/logout", "POST", null, null, null, false)
           .then(() => {
-            console.log("LOGOUT");
             removeFromSecureLocalStorage("user");
             localStorage.removeItem("xsrfToken");
             toast("Reviens vite nous voir, tu nous manque déjà 👋 ");

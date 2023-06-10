@@ -23,7 +23,6 @@ const PrivateRoute = () => {
           .then((data) => {
             const { user } = data;
             if (user) {
-              console.log("UserInfo1 " + user.username);
               addToSecureLocalStorage("user", user);
             }
           })

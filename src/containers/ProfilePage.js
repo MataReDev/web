@@ -76,9 +76,6 @@ function ProfilePage() {
         );
       });
 
-    console.log(
-      `Saving changes: ${username}, ${email}, ${password}, ${profileImage}`
-    );
   };
 
   return (
