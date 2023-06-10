@@ -220,7 +220,7 @@ function VideoPage() {
                       onClick={() => handleDislikeVideo(video._id)}
                       className="text-red-500 rounded-xl"
                     >
-                      {dislikeList.includes(user.currentUser?.id) ? (
+                      {dislikeList && dislikeList.includes(user.currentUser?.id) ? (
                         <FontAwesomeIcon
                           icon={faThumbsUpFull}
                           className="h-5"
