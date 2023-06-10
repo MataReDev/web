@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import makeRequest from "../Utils/RequestUtils";
 import secureLocalStorage from "react-secure-storage";
 
-
 const toastOptions = {
   position: "top-right",
   autoClose: 3000,
@@ -38,34 +37,37 @@ function ProfilePage() {
     setProfileImage(URL.createObjectURL(event.target.files[0]));
   };
 
-
   function checkLocalStorage() {
     const storedValue = secureLocalStorage.getItem("user");
-  
+
     if (storedValue === null) {
       return false;
     }
 
-    
-    setUsername(storedValue.username)
-    setEmail(storedValue.email)
-  
+    setUsername(storedValue.username);
+    setEmail(storedValue.email);
+
     return true;
   }
 
   useEffect(() => {
-    checkLocalStorage()
+    checkLocalStorage();
   }, []);
 
   const handleSave = () => {
-    const body = JSON.stringify({
+    const body = {
       username: username,
       email: email,
-      password: password,
-    });
+    };
+
+    if (password) body.password = password;
+    
     makeRequest(`api/users/update`, "PUT", null, body, null, true)
       .then((data) => {
-        toast.error(`Ton profil a bien été mit à jour ${data.username} :)`, toastOptions);
+        toast.error(
+          `Ton profil a bien été mit à jour ${data.username} :)`,
+          toastOptions
+        );
       })
       .catch((error) => {
         toast.error(

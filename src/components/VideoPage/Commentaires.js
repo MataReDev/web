@@ -19,24 +19,25 @@ function Commentaires({ videoId }) {
   const [commentaires, setCommentaires] = useState("");
   const { user } = useContext(AuthContext);
 
-
   useEffect(() => {
     fetchCommentaires(videoId);
   }, [videoId]);
 
   const fetchCommentaires = async () => {
-   await makeRequest(
-     `api/comments/video/${videoId}`,
-     "GET",
-     null,
-     null,
-     null,
-     false
-   )
-     .then((data) => {
-       setCommentaires(data);
-     })
-     .catch((error) => console.error(error));
+    console.log("videoId ", videoId);
+    await makeRequest(
+      `api/comments/video/${videoId}`,
+      "GET",
+      null,
+      null,
+      null,
+      false
+    )
+      .then((data) => {
+        console.log("data", data);
+        setCommentaires(data);
+      })
+      .catch((error) => console.error(error));
 
     // fetch(`https://iseevision.fr/api/comments/video/${videoId}`, {
     //   headers: {
@@ -61,7 +62,7 @@ function Commentaires({ videoId }) {
         content: commentaire,
       };
 
-     await makeRequest("api/comments/add", "POST", null, body, null, true)
+      await makeRequest("api/comments/add", "POST", null, body, null, true)
         .then((data) => {
           setCommentaires([...commentaires, data]);
         })
@@ -100,7 +101,6 @@ function Commentaires({ videoId }) {
     setCommentaires(updatedCommentaires);
   };
 
-
   const handleLikeCommentaire = (commentId) => {
     if (user.isAuthenticated) {
       makeRequest(
@@ -115,7 +115,8 @@ function Commentaires({ videoId }) {
           // const updatedCommentaires = commentaires.map((commentaire) =>
           //   commentaire._id === data.id ? data : commentaire
           // );
-           updateCommentaire(data);
+          console.log("updatedCommentaires", data);
+          updateCommentaire(data);
           // setCommentaires("");
           // setCommentaires(updatedCommentaires);
         })
@@ -189,7 +190,14 @@ function Commentaires({ videoId }) {
 
   const handleDeleteCommentaire = (commentId) => {
     if (user.isAuthenticated) {
-      makeRequest(`api/comments/delete/${commentId}`, "DELETE", null, null, null, true)
+      makeRequest(
+        `api/comments/delete/${commentId}`,
+        "DELETE",
+        null,
+        null,
+        null,
+        true
+      )
         .then((data) => {
           const updatedCommentaires = commentaires.filter(
             (commentaire) => commentaire._id !== commentId
@@ -252,6 +260,7 @@ function Commentaires({ videoId }) {
         {commentaires &&
           commentaires.map(
             (commentaire, index) => (
+              console.log(commentaire),
               (
                 <div
                   key={`${commentaire._id}-${index}`}
@@ -271,12 +280,27 @@ function Commentaires({ videoId }) {
                     >
                       <button
                         onClick={() => handleLikeCommentaire(commentaire._id)}
-                        className="text-green-500 rounded-xl "
+                        className="text-green-500 rounded-xl"
                       >
-                        <FontAwesomeIcon
-                          icon={faThumbsUpEmpty}
-                          className="h-5"
-                        />{" "}
+                        {console.log("--------------------------------------")}
+                        {console.log("USER " + JSON.stringify(user))}
+                        {console.log(
+                          "COMMENT " +
+                            commentaire.likes.includes(user.currentUser?.id)
+                        )}
+
+                        {commentaire.likes.includes(user.currentUser?.id) ? (
+                          <FontAwesomeIcon
+                            icon={faThumbsUpFull}
+                            className="h-5"
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faThumbsUpEmpty}
+                            className="h-5"
+                          />
+                        )}
+
                         {commentaire.likesCount}
                       </button>
                       <button
@@ -285,10 +309,17 @@ function Commentaires({ videoId }) {
                         }
                         className="text-red-500 rounded-xl"
                       >
-                        <FontAwesomeIcon
-                          icon={faThumbsDownEmpty}
-                          className="h-5"
-                        />{" "}
+                        {commentaire.dislikes.includes(user.currentUser?.id) ? (
+                          <FontAwesomeIcon
+                            icon={faThumbsUpFull}
+                            className="h-5"
+                          />
+                        ) : (
+                          <FontAwesomeIcon
+                            icon={faThumbsUpEmpty}
+                            className="h-5"
+                          />
+                        )}{" "}
                         {commentaire.dislikesCount}
                       </button>
                       {user.currentUser?.id === commentaire.userId._id && (

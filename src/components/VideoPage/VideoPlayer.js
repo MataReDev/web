@@ -16,34 +16,31 @@ const VideoPlayer = ({ options, video }) => {
       if (!videoElement) return;
 
       playerRef.current = videojs(videoElement, options);
-      
-       playerRef.current.on("error", () => {
-         const errorDisplay = playerRef.current.getChild("errorDisplay");
-         if (errorDisplay) {
-           const modalDialogContent = errorDisplay
-             .el()
-             .querySelector(".vjs-modal-dialog-content");
-           if (modalDialogContent) {
-         //    modalDialogContent.textContent = ""; // Supprime le texte à l'intérieur du vjs-modal-dialog-content
-             modalDialogContent.classList.add("custom-error-message");
 
-             
-             const customErrorMessage = document.createElement("div");
-             customErrorMessage.className = "custom-error-message";
+      playerRef.current.on("error", () => {
+        const errorDisplay = playerRef.current.getChild("errorDisplay");
+        if (errorDisplay) {
+          const modalDialogContent = errorDisplay
+            .el()
+            .querySelector(".vjs-modal-dialog-content");
+          if (modalDialogContent) {
+                modalDialogContent.textContent = options.notSupportedMessage; // Supprime le texte à l'intérieur du vjs-modal-dialog-content
+            modalDialogContent.classList.add("custom-error-message");
 
-             const imageElement = document.createElement("img");
-             imageElement.src = img;
-             imageElement.style.width = "200px";
-             imageElement.style.height = "200px";
+            const customErrorMessage = document.createElement("div");
+            customErrorMessage.className = "custom-error-message";
 
-             
-             customErrorMessage.appendChild(imageElement);
+            const imageElement = document.createElement("img");
+            imageElement.src = img;
+            imageElement.style.width = "200px";
+            imageElement.style.height = "200px";
 
-             modalDialogContent.appendChild(customErrorMessage);
-           }
-         }
-       });
-  
+            customErrorMessage.appendChild(imageElement);
+
+            modalDialogContent.appendChild(customErrorMessage);
+          }
+        }
+      });
     }
     return () => {
       if (player) {
