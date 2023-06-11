@@ -9,12 +9,11 @@ export default function ChannelPage() {
   const userId = window.location.pathname.split("/")[2];
 
   const { user } = useContext(AuthContext);
-  const userLogId = user.currentUser.id
 
   console.log(user);
   return (
     <div>
-      {userId == userLogId ? (
+      {userId === user.currentUser?.id ? (
         <PrivateChannel userId={userId} />
       ) : (
         <PublicChannel />
