@@ -38,7 +38,6 @@ const AuthProvider = (props) => {
   const location = useLocation();
 
   const handleStorageChange = (event) => {
-    console.log("Event: ", event.key);
     if (event.key === "@secure.j.user") {
       if (event.newValue === null) {
         setUser({
@@ -320,20 +319,21 @@ const AuthProvider = (props) => {
     //     }
     //   })
 
-    await makeRequest("api/users/logout", "POST", null, null, null, false)
-      .then(() => {
-        console.log("LOGOUT");
-        removeFromSecureLocalStorage("user");
-        localStorage.removeItem("xsrfToken");
-        toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
-      })
-      .catch((error) => {
-        console.log(error.message);
-        toast.error(
-          "Une erreur est survenu durant la déconexion, veuillez retentez dans quelques minutes.",
-          toastOptions
-        );
-      });
+        await makeRequest("api/users/logout", "POST", null, null, null, false)
+          .then(() => {
+            removeFromSecureLocalStorage("user");
+            localStorage.removeItem("xsrfToken");
+            toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
+          })
+          .catch((error) => {
+            console.log(error.message);
+            toast.error(
+              "Une erreur est survenu durant la déconexion, veuillez retentez dans quelques minutes.",
+              toastOptions
+            );
+          });
+
+    
   };
 
   return (
