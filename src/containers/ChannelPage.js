@@ -16,7 +16,7 @@ export default function ChannelPage() {
       {userId === user.currentUser?.id ? (
         <PrivateChannel userId={userId} />
       ) : (
-        <PublicChannel />
+        <PublicChannel userId={userId} username={"MataRed"}/>
       )}
     </div>
   );
