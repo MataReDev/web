@@ -298,12 +298,12 @@ function Commentaires({ videoId }) {
                       >
                         {commentaire.dislikes.includes(user.currentUser?.id) ? (
                           <FontAwesomeIcon
-                            icon={faThumbsUpFull}
+                            icon={faThumbsDownFull}
                             className="h-5"
                           />
                         ) : (
                           <FontAwesomeIcon
-                            icon={faThumbsUpEmpty}
+                            icon={faThumbsDownEmpty}
                             className="h-5"
                           />
                         )}{" "}
