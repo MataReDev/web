@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import VideoCard from "../Home/VideoCard";
-import { listOfVideo } from "../../containers/videoData";
 
 function VideoSimilaires() {
   const [videos, setVideos] = useState([]);
 
   useEffect(() => {
-    setVideos(listOfVideo);
+    setVideos();
     // fetch("/api/videoSimilaire")
     //   .then((response) => response.json())
     //   .then((data) => {
@@ -21,7 +20,8 @@ function VideoSimilaires() {
     <div className="p-3 rounded-xl h-fit bg-gray-100">
       <h2 className="text-xl font-bold mb-4">Vidéos similaires</h2>
       <div className="flex flex-wrap gap-2 justify-center">
-        {videos.map((video) => (
+        {videos &&
+        videos.map((video) => (
           <VideoCard
             key={video.video_id}
             video={video.video_path}

@@ -18,12 +18,18 @@ import {
 
 function VideoPage() {
   const [video, setVideo] = useState("");
+
   const [likeCount, setLikeCount] = useState("");
+  const [likeList, setLikeList] = useState([]);
   const [dislikeCount, setDislikeCount] = useState("");
+  const [dislikeList, setDislikeList] = useState([]);
+
   const [isVideoAvailable, setIsVideoAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+
   const { user } = useContext(AuthContext);
-const [videoJsOptions, setvideoJsOptions] = useState({
+
+  const [videoJsOptions, setvideoJsOptions] = useState({
     controls: true,
     notSupportedMessage: "Cette vidéo n'est pas disponible pour le moment",
     sources: [
@@ -49,8 +55,11 @@ const [videoJsOptions, setvideoJsOptions] = useState({
     if (user.isAuthenticated) {
       makeRequest(`api/videos/like/${videoId}`, "PUT", null, null, null, true)
         .then((data) => {
-          setLikeCount(data.likeCount);
-          setDislikeCount(data.dislikeCount);
+          setLikeCount(data.likesCount);
+          setLikeList(data.likes);
+
+          setDislikeCount(data.dislikesCount);
+          setDislikeList(data.dislikes);
         })
         .catch((error) => console.error(error));
     } else {
@@ -69,8 +78,11 @@ const [videoJsOptions, setvideoJsOptions] = useState({
         true
       )
         .then((data) => {
-          setLikeCount(data.likeCount);
-          setDislikeCount(data.dislikeCount);
+          setLikeCount(data.likesCount);
+          setLikeList(data.likes);
+
+          setDislikeCount(data.dislikesCount);
+          setDislikeList(data.dislikes);
         })
         .catch((error) => console.error(error));
     } else {
@@ -78,16 +90,14 @@ const [videoJsOptions, setvideoJsOptions] = useState({
     }
   };
 
-
   // Fonction pour récupérer le propriétaire de la vidéo
   useEffect(() => {
-    console.log("debug")
     setIsLoading(true); // Définir isLoading à true lors du chargement initial
 
     makeRequest(`api/videos/${videoId}`, "GET", null, null, null, false)
       .then(async (data) => {
         setVideo(data);
-       // setvideoJsOptions(videoJsOptions.sources[0].src = video.video_path)
+        // setvideoJsOptions(videoJsOptions.sources[0].src = video.video_path)
         setvideoJsOptions((prevOptions) => {
           // Créer une copie profonde des options existantes
           const newOptions = { ...prevOptions };
@@ -103,7 +113,10 @@ const [videoJsOptions, setvideoJsOptions] = useState({
           return newOptions;
         });
         setLikeCount(data.likesCount);
+        setLikeList(data.likes);
+
         setDislikeCount(data.dislikesCount);
+        setDislikeList(data.dislikes);
 
         getOwnerInfo(data.ownerId);
         // Vérifier si le lien de la vidéo est valide
@@ -189,17 +202,35 @@ const [videoJsOptions, setvideoJsOptions] = useState({
                       onClick={() => handleLikeVideo(video._id)}
                       className="text-green-500 rounded-xl "
                     >
-                      <FontAwesomeIcon icon={faThumbsUpEmpty} className="h-5" />{" "}
+                      {likeList && likeList.includes(user.currentUser?.id) ? (
+                        <FontAwesomeIcon
+                          icon={faThumbsUpFull}
+                          className="h-5"
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={faThumbsUpEmpty}
+                          className="h-5"
+                        />
+                      )}
+
                       {likeCount}
                     </button>
                     <button
                       onClick={() => handleDislikeVideo(video._id)}
                       className="text-red-500 rounded-xl"
                     >
-                      <FontAwesomeIcon
-                        icon={faThumbsDownEmpty}
-                        className="h-5"
-                      />{" "}
+                      {dislikeList && dislikeList.includes(user.currentUser?.id) ? (
+                        <FontAwesomeIcon
+                          icon={faThumbsUpFull}
+                          className="h-5"
+                        />
+                      ) : (
+                        <FontAwesomeIcon
+                          icon={faThumbsUpEmpty}
+                          className="h-5"
+                        />
+                      )}{" "}
                       {dislikeCount}
                     </button>
                   </div>

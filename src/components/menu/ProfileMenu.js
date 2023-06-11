@@ -16,11 +16,10 @@ function ProfileMenu() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" onClick={handleMenuToggle}>
       <button
         className="profile-icon rounded-full w-8 h-8 bg-black text-white flex items-center justify-center"
         aria-label="Menu"
-        onClick={handleMenuToggle}
       >
         {user.currentUser.logo_path ? (
           <img
@@ -37,12 +36,16 @@ function ProfileMenu() {
       {showMenu && (
         <div className="absolute right-0 mt-4 w-40 bg-gray-200 rounded-lg shadow-xl z-10">
           <div className="m-2">
-            <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
-              <Link to="/channel">Ma chaine</Link>
-            </button>
-            <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
-              <Link to="/profile">Paramètres du compte</Link>
-            </button>
+            <Link to="/chanel">
+              <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
+                Ma chaine
+              </button>
+            </Link>
+            <Link to="/profile">
+              <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
+                Paramètres du compte
+              </button>
+            </Link>
             <hr className="border-gray-400" />
             <button
               onClick={handleLogout}
