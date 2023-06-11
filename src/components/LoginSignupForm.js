@@ -1,17 +1,20 @@
 import React, { useEffect, useState, useContext } from "react";
+import { useLocation } from "react-router-dom";
+import { AuthContext } from "../Auth/authContext";
+
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Upload, message, Progress, Modal } from "antd";
+import ImgCrop from "antd-img-crop";
+
 import axios from "axios";
-import { useLocation,  } from "react-router-dom";
-import { AuthContext  } from "../Auth/authContext";
 
-
-function LoginForm(){
- 
+function LoginForm() {
   const { login, isLoggedIn } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const location = useLocation();
 
+  const location = useLocation();
 
   // useEffect(() => {
   //   setAuthToken(getAuthToken());
@@ -26,7 +29,7 @@ function LoginForm(){
   const handleSubmit = (e) => {
     e.preventDefault();
     if (checkEmail(email)) {
-      login(email,password);
+      login(email, password);
       // axios
       //   .post("https://iseevision.fr/api/users/login", {
       //     email: email.toString(),
@@ -48,12 +51,12 @@ function LoginForm(){
       //     console.log(error);
       //     setErrorMessage("Email ou mot de passe incorrect");
       //     setPassword("");
-          
+
       //   });
-    }
-    else 
-    {
-      setErrorMessage("Email non reconnu, merci d'utiliser une autre adresse e-mail");
+    } else {
+      setErrorMessage(
+        "Email non reconnu, merci d'utiliser une autre adresse e-mail"
+      );
     }
   };
 
@@ -62,9 +65,7 @@ function LoginForm(){
   };
 
   return (
-    <div
-      className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4"
-    >
+    <div className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
       <div className="mb-4">
         <label htmlFor="email" className="block text-black font-bold mb-2">
           Email:
@@ -111,37 +112,117 @@ function LoginForm(){
 }
 
 function SignupForm() {
-const { register, isLoggedIn } = useContext(AuthContext);
+  const { register, isLoggedIn } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(""); 
-  
-  // useEffect(() => {
-  //   setAuthToken(getAuthToken());
-  // }, [getAuthToken()]);
+  const [password, setPassword] = useState("");
+  const [logo, setLogo] = useState(null);
+
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [defaultFileList, setDefaultFileList] = useState([]);
+
+  const uploadImage = async (options) => {
+    const { onSuccess, onError, file, onProgress } = options;
+
+    const config = {
+      onUploadProgress: (event) => {
+        const percent = Math.floor((event.loaded / event.total) * 100);
+        setProgress(percent);
+        if (percent === 100) {
+          setTimeout(() => setProgress(0), 1000);
+        }
+        onProgress({ percent: (event.loaded / event.total) * 100 });
+      },
+    };
+
+    try {
+      console.log(file);
+      setLogo(file);
+
+      onSuccess("Ok");
+    } catch (err) {
+      console.log("Eroor: ", err);
+      const error = new Error("Some error");
+      onError({ err });
+    }
+  };
+
+  const handleOnChange = ({ file, fileList, event }) => {
+    // console.log(file, fileList, event);
+    //Using Hooks to update the state to the current filelist
+    setDefaultFileList(fileList);
+    //filelist - [{uid: "-1",url:'Some url to image'}]
+  };
+
+  // -------------- PREVIEW --------------- //
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+  // -------------------------------------- //
 
   const handleSubmit = () => {
-
-    register(username,email,password);
-
-    // axios
-    //   .post("https://iseevision.fr/api/users/register", {
-    //     email: email.toString(),
-    //     username: username.toString(),
-    //     password: password.toString(),
-    //     isAdmin: false,
-    //   })
-    //   .then((response) => {
-    //    // saveAuthToken(response);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+    register(username, email, password, logo);
   };
 
   return (
     <div className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
+      <div className="mb-4 text-center">
+        <ImgCrop rotationSlider>
+          <Upload
+            // accept="image/*"
+            name="logo"
+            listType="picture-circle"
+            showUploadList={true}
+            onPreview={handlePreview}
+            // beforeUpload={() => false}
+            onChange={handleOnChange}
+            defaultFileList={defaultFileList}
+            customRequest={uploadImage}
+            multiple={false}
+            maxCount={1}
+          >
+            {" "}
+            <div>
+              {loading ? <LoadingOutlined /> : <PlusOutlined />}
+              <div style={{ marginTop: 8 }}>Avatar</div>
+            </div>
+          </Upload>
+        </ImgCrop>
+        <Modal
+          open={previewOpen}
+          title={previewTitle}
+          footer={null}
+          onCancel={handleCancel}
+        >
+          <img alt="example" style={{ width: "100%" }} src={previewImage} />
+        </Modal>
+        {progress > 0 ? <Progress percent={progress} /> : null}
+      </div>
+
       <div className="mb-4">
         <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
           Name:

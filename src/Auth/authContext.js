@@ -18,7 +18,6 @@ const toastOptions = {
   theme: "colored",
 };
 
-
 function checkLocalStorage() {
   const storedValue = secureLocalStorage.getItem("user");
 
@@ -60,33 +59,29 @@ const AuthProvider = (props) => {
     window.addEventListener("storage", handleStorageChange);
 
     //Affichage d'un toast
-const toastMessage = localStorage.getItem("toastMessage");
+    const toastMessage = localStorage.getItem("toastMessage");
 
-if (toastMessage) {
-  const { status, message } = JSON.parse(toastMessage);
+    if (toastMessage) {
+      const { status, message } = JSON.parse(toastMessage);
 
-//const status = localStorage.getItem("status");
+      //const status = localStorage.getItem("status");
 
-const toastOptionsMap = {
-  success: toast.success,
-  warning: toast.warning,
-  info: toast.info,
-};
+      const toastOptionsMap = {
+        success: toast.success,
+        warning: toast.warning,
+        info: toast.info,
+      };
 
-if (
-  message &&
-  status &&
-  toastOptionsMap[status]
-) {
-  const toastFunction = toastOptionsMap[status];
-  toastFunction(message, {
-    ...toastOptions,
-    onClose: () => {
-      localStorage.removeItem("toastMessage");
-    },
-  });
-}
-}
+      if (message && status && toastOptionsMap[status]) {
+        const toastFunction = toastOptionsMap[status];
+        toastFunction(message, {
+          ...toastOptions,
+          onClose: () => {
+            localStorage.removeItem("toastMessage");
+          },
+        });
+      }
+    }
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
@@ -175,48 +170,50 @@ if (
     //     );
     //   });
 
-const body = {
-  email: email.toString(),
-  password: password.toString(),
+    const body = {
+      email: email.toString(),
+      password: password.toString(),
+    };
 
-};
+    await makeRequest("api/users/login", "POST", null, body, null, false)
+      .then((tokens) => {
+        const { xsrfToken, user } = tokens;
 
-await makeRequest("api/users/login", "POST", null, body, null, false)
-  .then((tokens) => {
-    const { xsrfToken, user } = tokens;
+        if (user.isValidated) {
+          setIsLoggedIn(true);
+          localStorage.setItem("xsrfToken", xsrfToken);
+          addToSecureLocalStorage("user", user);
 
-    if (user.isValidated) {
-      setIsLoggedIn(true);
-      localStorage.setItem("xsrfToken", xsrfToken);
-      addToSecureLocalStorage("user", user);
+          localStorage.setItem(
+            "toastMessage",
+            JSON.stringify({
+              status: "success",
+              message: `Content de te revoir ${user.username} 👋`,
+            })
+          );
 
-      localStorage.setItem("toastMessage", JSON.stringify({
-        status: "success",
-        message: `Content de te revoir ${user.username} 👋`,
-      }));
-
-      if (location.state?.data) {
-        window.location.href = location.state?.data;
-      } else {
-        // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
-        window.location.href = "/";
-      }
-    } else {
-      toast.warning(
-        "Veuillez vérifier votre compte, si vous n'avez pas reçu de mail veuillez nous contacter !",
-        toastOptions
-      );
-    }
-  })
-  .catch(() => {
-    toast.error(
-      "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes.",
-      toastOptions
-    );
-  });
+          if (location.state?.data) {
+            window.location.href = location.state?.data;
+          } else {
+            // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
+            window.location.href = "/";
+          }
+        } else {
+          toast.warning(
+            "Veuillez vérifier votre compte, si vous n'avez pas reçu de mail veuillez nous contacter !",
+            toastOptions
+          );
+        }
+      })
+      .catch(() => {
+        toast.error(
+          "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes.",
+          toastOptions
+        );
+      });
   };
 
-  const register = async (username, email, password, isAdmin = false) => {
+  const register = async (username, email, password, logo, isAdmin = false) => {
     // const headers = new Headers();
     // headers.append("Content-Type", "application/json");
 
@@ -233,18 +230,27 @@ await makeRequest("api/users/login", "POST", null, body, null, false)
     //   credentials: "include",
     // };
 
-const body = {
-  email: email.toString(),
-  username: username.toString(),
-  password: password.toString(),
-  isAdmin: isAdmin,
-};
+    const formData = new FormData()
 
-   await makeRequest("api/users/register", "POST", null, body, null, false)
-     .then((data) => {
-       const { user } = data;
-       if (user) {
+    formData.append("username", username)
+    formData.append("email", email)
+    formData.append("password", password)
+    formData.append("isAdmin", isAdmin)
+    formData.append("logo", logo)
 
+
+    // const body = {
+    //   email: email.toString(),
+    //   username: username.toString(),
+    //   password: password.toString(),
+    //   logo: logo,
+    //   isAdmin: isAdmin,
+    // };
+
+    await makeRequest("api/users/register", "POST", null, formData, null, false)
+      .then((data) => {
+        const { user } = data;
+        if (user) {
           localStorage.setItem(
             "toastMessage",
             JSON.stringify({
@@ -252,17 +258,17 @@ const body = {
               message: `Bienvenue parmis nous ${user.username} 👋 N'oublie pas de valider ton inscription ! `,
             })
           );
-         // Redirigez l'utilisateur vers la page de login
-         window.location.href = "/login";
-       }
-     })
-     .catch((error) => {
-      console.log("user : " + error);
-       toast.error(
-         "Une erreur est survenu durant l'enregistrement, veuillez retentez dans quelques minutes.",
-         toastOptions
-       );
-     });
+          // Redirigez l'utilisateur vers la page de login
+          window.location.href = "/login";
+        }
+      })
+      .catch((error) => {
+        console.log("user : " + error);
+        toast.error(
+          "Une erreur est survenu durant l'enregistrement, veuillez retentez dans quelques minutes.",
+          toastOptions
+        );
+      });
 
     // await fetch("https://iseevision.fr/api/users/register", options)
     //   .then((response) => {
@@ -292,7 +298,6 @@ const body = {
   };
 
   const logout = async () => {
-
     //  const headers = new Headers();
     // headers.append("Content-Type", "application/json");
 
@@ -315,25 +320,20 @@ const body = {
     //     }
     //   })
 
-
-
-
-        await makeRequest("api/users/logout", "POST", null, null, null, false)
-          .then(() => {
-            console.log("LOGOUT");
-            removeFromSecureLocalStorage("user");
-            localStorage.removeItem("xsrfToken");
-            toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
-          })
-          .catch((error) => {
-            console.log(error.message);
-            toast.error(
-              "Une erreur est survenu durant la déconexion, veuillez retentez dans quelques minutes.",
-              toastOptions
-            );
-          });
-
-    
+    await makeRequest("api/users/logout", "POST", null, null, null, false)
+      .then(() => {
+        console.log("LOGOUT");
+        removeFromSecureLocalStorage("user");
+        localStorage.removeItem("xsrfToken");
+        toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
+      })
+      .catch((error) => {
+        console.log(error.message);
+        toast.error(
+          "Une erreur est survenu durant la déconexion, veuillez retentez dans quelques minutes.",
+          toastOptions
+        );
+      });
   };
 
   return (
@@ -353,5 +353,3 @@ const body = {
 };
 
 export default AuthProvider;
-
-
