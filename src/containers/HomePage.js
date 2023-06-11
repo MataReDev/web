@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { useLocation, useNavigate } from "react-router-dom";
 import VideoCard from "../components/Home/VideoCard";
 import makeRequest from "../Utils/RequestUtils";
-
+import ScrollArrow from "../components/ScrollArrow";
 const HomePage = () => {
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -13,15 +13,15 @@ const HomePage = () => {
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
-
+  const [hasMore, setHasMore] = useState(true);
 
   const fetchVideos = async () => {
 
     setIsLoading(true);
     try {
-      const page = Math.ceil(videos.length / 24) + 1;
+      const page = Math.ceil(videos.length / 3) + 1;
       const response = await makeRequest(
-        `api/videos/getAll?page=${page}&perPage=24`,
+        `api/videos/getAll?page=${page}&perPage=3`,
         "GET",
         null,
         null,
@@ -32,6 +32,7 @@ const HomePage = () => {
       if (response.length > 0) {
         setVideos((prevVideos) => [...prevVideos, ...response]);
       }
+      else setHasMore(false);
     } catch (error) {
       console.log(error);
     }
@@ -145,22 +146,32 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div
-      id="Cards-elements"
-      className="flex flex-wrap justify-center"
-      ref={containerRef}
-    >
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>iSee - Accueil</title>
-      </Helmet>
+    <>
+      <div
+        id="Cards-elements"
+        className="flex flex-wrap justify-center"
+        ref={containerRef}
+      >
+        <Helmet>
+          <meta charSet="utf-8" />
+          <title>iSee - Accueil</title>
+        </Helmet>
 
-      {videos.map((item, index) => (
-        <VideoCard video={item} />
-      ))}
-
-      {isLoading && <p>Loading...</p>}
-    </div>
+        {videos.map((item, index) => (
+          <VideoCard video={item} />
+        ))}        
+      </div>
+      {hasMore && loading ? (
+        <div data-testid="loadMore" className="relative flex">
+          <div className="absolute  bottom-0 w-full flex justify-center items-center">
+            <div className="border-t-transparent border-solid animate-spin  rounded-full border-slate-400 border-8 h-10 w-10"></div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+      <ScrollArrow />
+    </>
   );
 };
 
