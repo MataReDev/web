@@ -64,6 +64,7 @@ function App() {
             <Route exact path="/params/:id" element={<ParamsPage />} />
             <Route exact path="/login" element={<LoginPage />} />{" "}
             <Route exact path="/admin/dashboard" element={<Dashboard />} />
+            <Route exact path="/upload" element={<UploadVideoPage />} />  
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <ToastContainer />
