@@ -17,6 +17,9 @@ import UploadVideoPage from "./containers/UploadVideoPage";
 import Dashboard from "./containers/Dashboard";
 import VerificationPage from "./containers/VerificationPage";
 import HeaderBar from "./components/menu/HeaderBar";
+import NotFoundPage from "./containers/NotFoundPage";
+
+
 //import { getAuthToken } from "./Auth/authContext";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./Auth/authContext";
@@ -61,6 +64,7 @@ function App() {
             <Route exact path="/params/:id" element={<ParamsPage />} />
             <Route exact path="/login" element={<LoginPage />} />{" "}
             <Route exact path="/admin/dashboard" element={<Dashboard />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <ToastContainer />
         </AuthProvider>

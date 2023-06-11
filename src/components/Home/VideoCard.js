@@ -44,7 +44,7 @@ function VideoCard({ video }) {
   }
   return (
     <div className="max-w-sm rounded-xl overflow-hidden shadow-lg m-4">
-      <div onClick={handleClick}>
+      <div className="max-h-80" onClick={handleClick}>
         <video
           ref={videoRef}
           poster={video?.thumbnail_path}
@@ -55,7 +55,6 @@ function VideoCard({ video }) {
           onMouseOut={handleMouseOut}
         />
       </div>
-      <div></div>
       <div className="px-1 py-4 flex">
         <Link to={`/channel/${video.user?.username}`}>
           <div className="profile-icon rounded-full w-8 h-8 bg-black text-white flex items-center justify-center">
