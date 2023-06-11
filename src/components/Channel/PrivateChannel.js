@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../../Auth/authContext";
 import makeRequest from "../../Utils/RequestUtils";
 
-import VideoTable from "./PrivateVideoTable";
+import VideoTable from "./VideoTable";
 
 export default function PrivateChannel({ userId }) {
   const [videos, setVideos] = useState([]);
