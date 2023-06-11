@@ -2,25 +2,13 @@ import React, { useState, useEffect } from "react";
 import makeRequest from "../../Utils/RequestUtils";
 import VideoCard from "../Home/VideoCard";
 
-export default function PublicChannel({ userId, username }) {
+export default function PublicChannel({ username }) {
   const [videos, setVideos] = useState(null);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(10);
   const [channel, setChannel] = useState([]);
 
-  const getUserVideo = async (userId) => {
-    await makeRequest(
-      `api/videos/user/${userId}?page=${page}&perPage=${perPage}`,
-      "GET",
-      null,
-      null,
-      null,
-      false
-    )
-      .then((data) => setVideos(data))
-      .catch((error) => console.error(error));
-  };
-
+  
   const getUserInfo = async (username) => {
     await makeRequest(
       `api/users/channel/${username}`,
@@ -29,17 +17,28 @@ export default function PublicChannel({ userId, username }) {
       null,
       null,
       false
-    )
+      )
       .then((data) => {
-        console.log(data);
         setChannel(data);
+        getUserVideo(data.id);
       })
       .catch((error) => console.error(error));
-  };
-
+    };
+    
+    const getUserVideo = async (userId) => {
+      await makeRequest(
+        `api/videos/user/${userId}?page=${page}&perPage=${perPage}`,
+        "GET",
+        null,
+        null,
+        null,
+        false
+      )
+        .then((data) => setVideos(data))
+        .catch((error) => console.error(error));
+    };
   // Exemple de récupération des vidéos depuis une API
   useEffect(() => {
-    getUserVideo(userId);
     getUserInfo(username);
   }, []);
 

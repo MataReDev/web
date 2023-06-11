@@ -5,14 +5,15 @@ import makeRequest from "../../Utils/RequestUtils";
 
 import VideoTable from "./VideoTable";
 
-export default function PrivateChannel({ userId }) {
+export default function PrivateChannel({ username }) {
   const [videos, setVideos] = useState(null);
   const [page, setPage] = useState(1)
   const [perPage, setPerPage] = useState(10)
+  const [channel, setChannel] = useState([]);
 
   // Exemple de récupération des vidéos depuis une API
   useEffect(() => {
-    getUserVideo(userId);
+    getUserInfo(username);
   }, []);
 
   const getUserVideo = async (userId) => {
@@ -28,6 +29,22 @@ export default function PrivateChannel({ userId }) {
       .catch((error) => console.error(error));
   };
 
+  const getUserInfo = async (username) => {
+    await makeRequest(
+      `api/users/channel/${username}`,
+      "GET",
+      null,
+      null,
+      null,
+      false
+      )
+      .then((data) => {
+        setChannel(data);
+        getUserVideo(data.id);
+      })
+      .catch((error) => console.error(error));
+    };
+    
   // Fonction de suppression d'une vidéo
   const handleDelete = (videoId) => {
     makeRequest(`api/videos/delete/${videoId}`,"DELETE",null,null,null,true)
@@ -43,7 +60,7 @@ export default function PrivateChannel({ userId }) {
       null,
       true
     )
-    getUserVideo(userId)
+    getUserInfo(username)
   };
 
   return (
