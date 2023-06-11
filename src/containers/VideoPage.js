@@ -52,6 +52,7 @@ function VideoPage() {
   // };
 
   const handleLikeVideo = (videoId) => {
+    console.log(videoId);
     if (user.isAuthenticated) {
       makeRequest(`api/videos/like/${videoId}`, "PUT", null, null, null, true)
         .then((data) => {
@@ -68,6 +69,7 @@ function VideoPage() {
   };
 
   const handleDislikeVideo = (videoId) => {
+    console.log(videoId);
     if (user.isAuthenticated) {
       makeRequest(
         `api/videos/dislike/${videoId}`,
@@ -112,6 +114,7 @@ function VideoPage() {
           // Retourner les nouvelles options mises à jour
           return newOptions;
         });
+        console.log(data);
         setLikeCount(data.likesCount);
         setLikeList(data.likes);
 
@@ -213,7 +216,7 @@ function VideoPage() {
                           className="h-5"
                         />
                       )}
-
+                      
                       {likeCount}
                     </button>
                     <button
