@@ -5,10 +5,12 @@ import VideoCard from "../components/Home/VideoCard";
 export default function SearchPage() {
   const [searchResults, setSearchResults] = useState([]);
   const searchValue = new URLSearchParams(window.location.search).get("query");
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
 
   const searchVideo = (searchValue) => {
     makeRequest(
-      `api/videos/search/${searchValue}`,
+      `api/videos/search/${searchValue}?page=${page}&perPage=${perPage}`,
       "GET",
       null,
       null,
@@ -33,9 +35,13 @@ export default function SearchPage() {
       <div className="text-center text-2xl font-bold my-4">{`Résultat pour : "${searchValue}"`}</div>
 
       <div className="flex flex-wrap justify-center">
-        {searchResults.map((video, index) => (
-          <VideoCard key={index} video={video} />
-        ))}
+        {searchResults.size !== 0 ? (
+          searchResults.map((video, index) => (
+            <VideoCard key={index} video={video} />
+          ))
+        ) : (
+          <div>{`Aucun resultat pour ${searchValue}`}</div>
+        )}
       </div>
     </div>
   );
