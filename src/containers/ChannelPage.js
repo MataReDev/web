@@ -1,19 +1,24 @@
-import React, { Component } from "react";
+import React, { Component, useContext } from "react";
 import { Helmet } from "react-helmet";
+import PrivateChannel from "../components/Channel/PrivateChannel";
+import PublicChannel from "../components/Channel/PublicChannel";
 
+import { AuthContext } from "../Auth/authContext";
 
-export default class ChannelPage extends Component {
-  render() {
-    return (
-      <div>
-        <Helmet>
-          <meta charSet="utf-8" />
-          <title>iSee - [Pseudo]</title>
-        </Helmet>
-        <div>
-          Channel
-        </div>
-      </div>
-    );
-  }
+export default function ChannelPage() {
+  const userId = window.location.pathname.split("/")[2];
+
+  const { user } = useContext(AuthContext);
+  const userLogId = user.currentUser.id
+
+  console.log(user);
+  return (
+    <div>
+      {userId == userLogId ? (
+        <PrivateChannel userId={userId} />
+      ) : (
+        <PublicChannel />
+      )}
+    </div>
+  );
 }

@@ -5,7 +5,7 @@ import { AuthContext } from "../../Auth/authContext";
 import Avatar from "../Avatar";
 function ProfileMenu() {
   const [showMenu, setShowMenu] = useState(false);
-  const { logout,user } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
 
   const handleMenuToggle = () => {
     setShowMenu(!showMenu);
@@ -36,7 +36,7 @@ function ProfileMenu() {
       {showMenu && (
         <div className="absolute right-0 mt-4 w-40 bg-gray-200 rounded-lg shadow-xl z-10">
           <div className="m-2">
-            <Link to="/chanel">
+            <Link to={`/channel/${user.currentUser.id}`}>
               <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
                 Ma chaine
               </button>

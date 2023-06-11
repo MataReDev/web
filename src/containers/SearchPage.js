@@ -33,16 +33,8 @@ export default function SearchPage() {
       <div className="text-center text-2xl font-bold my-4">{`Résultat pour : "${searchValue}"`}</div>
 
       <div className="flex flex-wrap justify-center">
-        {searchResults.map((video) => (
-          <VideoCard
-            key={video._id}
-            video={video.video_path}
-            idVideo={video._id}
-            title={video.title}
-            creator={video.ownerId}
-            nbView={video.views}
-            poster={video.thumbnail_path}
-          />
+        {searchResults.map((video, index) => (
+          <VideoCard key={index} video={video} />
         ))}
       </div>
     </div>

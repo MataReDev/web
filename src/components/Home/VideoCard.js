@@ -2,7 +2,7 @@ import React, { useState,useEffect,useRef } from "react";
 import { Navigate } from "react-router-dom";
 import Avatar from "../Avatar";
 
-function VideoCard({ video}) {
+function VideoCard({ video }) {
   const [redirect, setRedirect] = useState(false);
   const videoRef = useRef(null);
   const [hoverDuration, setHoverDuration] = useState(-1);
@@ -35,8 +35,6 @@ useEffect(() => {
     clearInterval(timer);
   };
 }, [hoverDuration]);
-
-console.log(video)
   const handleClick = () => {
     setRedirect(true);
   };
