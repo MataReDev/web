@@ -1,9 +1,41 @@
-import React, { useState,useEffect } from "react";
+import React, { useState,useEffect,useRef } from "react";
 import { Navigate } from "react-router-dom";
 import Avatar from "../Avatar";
 
 function VideoCard({ video}) {
   const [redirect, setRedirect] = useState(false);
+  const videoRef = useRef(null);
+  const [hoverDuration, setHoverDuration] = useState(-1);
+
+const handleMouseOver = () => {
+  setHoverDuration(0);
+};
+
+const handleMouseOut = () => {
+   setHoverDuration(-1);
+videoRef.current.pause();
+videoRef.current.load()
+};
+
+useEffect(() => {
+  let timer = null;
+
+  if (hoverDuration >= 2 ) {
+    console.log("playing hover duration");
+    videoRef.current.play();
+  }
+
+  if (hoverDuration < 2 && hoverDuration > -1) {
+    timer = setInterval(() => {
+      setHoverDuration((prevDuration) => prevDuration + 1);
+    }, 1000);
+  }
+
+  return () => {
+    clearInterval(timer);
+  };
+}, [hoverDuration]);
+
 console.log(video)
   const handleClick = () => {
     setRedirect(true);
@@ -16,11 +48,13 @@ console.log(video)
     <div className="max-w-sm rounded-xl overflow-hidden shadow-lg m-4">
       <div onClick={handleClick}>
         <video
+          ref={videoRef}
           poster={video?.thumbnail_path}
           src={video?.video_path}
-          muted
           width="500"
           height="300"
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
         />
       </div>
       <div></div>
