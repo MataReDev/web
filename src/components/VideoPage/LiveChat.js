@@ -3,7 +3,13 @@ import io from "socket.io-client";
 
 import { AuthContext } from "../../Auth/authContext";
 
-  const socket = io("https://iseevision.fr", {
+let socketUrl = "https://iseevision.fr/";
+
+if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
+  socketUrl = "http://localhost:3001/";
+}
+
+  const socket = io(socketUrl, {
     path: "/socket.io",
   });
 function LiveChat({ videoId }) {

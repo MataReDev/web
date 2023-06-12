@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Helmet } from "react-helmet";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import VideoCard from "../components/Home/VideoCard";
 import makeRequest from "../Utils/RequestUtils";
 import ScrollArrow from "../components/ScrollArrow";
@@ -8,8 +8,6 @@ const HomePage = () => {
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
-  const isRedirectedRef = useRef(false); // Utilisation d'une référence pour suivre si la redirection a déjà été effectuée
   const containerRef = useRef(null);
   const [loading, setLoading] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -19,16 +17,15 @@ const HomePage = () => {
 
     setIsLoading(true);
     try {
-      const page = Math.ceil(videos.length / 3) + 1;
+      const page = Math.ceil(videos.length / 24) + 1;
       const response = await makeRequest(
-        `api/videos/getAll?page=${page}&perPage=3`,
+        `api/videos/getAll?page=${page}&perPage=24`,
         "GET",
         null,
         null,
         null,
         true
       );
-      console.log("setvideo reponse", response);
       if (response.length > 0) {
         setVideos((prevVideos) => [...prevVideos, ...response]);
       }
@@ -43,16 +40,9 @@ const HomePage = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      console.log("scroll");
-
-      // if (containerRef.current) {
-      //   const { scrollTop, clientHeight, scrollHeight } = containerRef.current;
-      //   console.log(scrollTop + clientHeight >= scrollHeight - 1 && !isLoading);
-      //   if (scrollTop + clientHeight >= scrollHeight - 1 && !isLoading) {
-      //     fetchVideos();
-      //   }
-      // }
+        if (window.location.pathname === "/") {
        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      console.log(scrollTop);
 
        setScrollPosition(scrollTop);
 
@@ -64,13 +54,13 @@ const HomePage = () => {
       if (targetDivRect.bottom <= window.innerHeight + 3) return;
 
       if (!loading) {
-        window.history.pushState(
-          { scrollPosition: window.innerHeight, videos },
-          "",
-          window.location.href
-        );
+
+         const state = { scrollPosition: scrollTop, videos: videos };
+         window.history.pushState(state, "", window.location.href);
         setLoading(true);
       }
+
+    }
     };
     
     window.addEventListener("scroll", handleScroll);
@@ -84,21 +74,18 @@ const HomePage = () => {
     // Vérifier si les données des vidéos sont présentes dans l'état de l'historique
 
     if (window.history && window.history?.state?.videos?.length > 0) {
-      console.log("setVideos...");
-      console.log("state :", window.history.state);
       setVideos(window.history?.state?.videos);
-      console.log(
-        "window.history.state?.scrollPosition",
-        window.history.state?.scrollPosition
-      );
+      console.log("scroposition :",window.history.state?.scrollPosition);
       if (window.history.state?.scrollPosition != undefined) {
         const parsedScrollPosition = parseInt(
           window.history.state?.scrollPosition
         );
-        console.log("parsedScrollPosition:", parsedScrollPosition);
+          console.log("Scroll position",parsedScrollPosition)
         if (!isNaN(parsedScrollPosition)) {
           setTimeout(() => {
             window.scrollTo(0, parsedScrollPosition);
+            
+            
           }, 0);
         }
       }
@@ -126,6 +113,7 @@ const HomePage = () => {
  
 
   useEffect(() => {
+    console.log("scrollPosition : ", scrollPosition , videos);
     const state = { scrollPosition: scrollPosition, videos : videos };
 
     window.history.pushState(state, "", window.location.href);
@@ -135,7 +123,6 @@ const HomePage = () => {
     const handlePopState = (event) => {
       if (event.state) {
         setVideos(event.state.videos);
-        isRedirectedRef.current = true;
       }
     };
 
@@ -157,8 +144,8 @@ const HomePage = () => {
           <title>iSee - Accueil</title>
         </Helmet>
 
-        {videos.map((item, index) => (
-          <VideoCard video={item} />
+        {videos.map((item,index) => (
+          <VideoCard key={index} video={item} />
         ))}        
       </div>
       {hasMore && loading ? (

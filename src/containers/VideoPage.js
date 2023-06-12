@@ -120,8 +120,8 @@ function VideoPage() {
 
         setDislikeCount(data.dislikesCount);
         setDislikeList(data.dislikes);
-
-        getOwnerInfo(data.ownerId);
+          console.log(data);
+        getOwnerInfo(data.user.username);
         // Vérifier si le lien de la vidéo est valide
       })
       .catch((error) => {
@@ -150,7 +150,7 @@ function VideoPage() {
   }, []);
 
   const getOwnerInfo = (ownerId) => {
-    makeRequest(`api/users/${ownerId}`)
+    makeRequest(`api/users/channel/${ownerId}`)
       .then((data) => {
         setOwner(data);
       })
