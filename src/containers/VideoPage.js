@@ -163,7 +163,7 @@ function VideoPage() {
     const months = Math.floor(weeks / 5);
     const years = Math.floor(months / 12);
 
-    let timeString = "";  
+    let timeString = "";
 
     switch (true) {
       case years > 0:
@@ -176,9 +176,7 @@ function VideoPage() {
         timeString = `il y a ${weeks} ${weeks === 1 ? "semaine" : "semaines"}`;
         break;
       case days > 0:
-        timeString = `il y a ${days} ${
-          days === 1 ? "jour" : "jours"
-        }`;
+        timeString = `il y a ${days} ${days === 1 ? "jour" : "jours"}`;
         break;
       case hours > 0:
         timeString = `il y a ${hours} ${hours === 1 ? "heure" : "heures"}`;
@@ -201,6 +199,24 @@ function VideoPage() {
     console.log(days, months, years);
     setElapsedTime(timeString);
   };
+
+  const [nbLinesDescriptionLimtited , setNbLinesDescriptionLimtited] = useState(3)
+  const [showFullDescription, setShowFullDescription] = useState(false);
+
+  const handleToggleDescription = () => {
+    setShowFullDescription(!showFullDescription);
+  };
+
+  const descriptionLines = video?.description?.split("\n");
+
+  const fullDescription = descriptionLines?.join("\n");
+
+  if (descriptionLines?.[nbLinesDescriptionLimtited-1]?.trim() === "") {
+    setNbLinesDescriptionLimtited(2)
+  }
+  const limitedDescription = descriptionLines?.slice(0, nbLinesDescriptionLimtited)?.join("\n");
+
+  const hasMoreLines = descriptionLines?.length > nbLinesDescriptionLimtited;
 
   return (
     <div className="flex flex-col xl:flex-row w-full px-5 md:px-14 py-5 gap-5">
@@ -246,10 +262,10 @@ function VideoPage() {
                     </div>
                   </div>
                 </div>
-                <div className="w-1/2">
+                <div className="flex w-1/2 justify-end items-start">
                   <div
                     name="action-button"
-                    className="flex gap-2 text-sm font-bold h-5"
+                    className="flex gap-2 text-sm font-bold bg-gray-200 p-4 rounded-xl align-top"
                   >
                     <button
                       onClick={() => handleLikeVideo(video._id)}
@@ -266,7 +282,6 @@ function VideoPage() {
                           className="h-5"
                         />
                       )}
-
                       {likeCount}
                     </button>
                     <button
@@ -291,9 +306,22 @@ function VideoPage() {
                 </div>
               </div>
               <div className="bg-gray-200 w-full rounded-xl p-5">
-                <p>
-                  {video.views} vues, {elapsedTime}
+                <p className="font-bold">
+                  {video.views} vues {elapsedTime}
                 </p>
+                <h2></h2>
+                <pre className="font-sans">
+                  {showFullDescription ? fullDescription : limitedDescription}
+                  <br />
+                  {hasMoreLines && (
+                    <button
+                      className="text-blue-500 font-bold"
+                      onClick={handleToggleDescription}
+                    >
+                      {showFullDescription ? "Moins" : "Plus"}
+                    </button>
+                  )}
+                </pre>
               </div>
             </div>
             <div className="flex-grow">
