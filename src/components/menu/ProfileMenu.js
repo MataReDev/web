@@ -18,13 +18,13 @@ function ProfileMenu() {
   return (
     <div className="relative" onClick={handleMenuToggle}>
       <button
-        className="profile-icon rounded-full w-8 h-8 bg-black text-white flex items-center justify-center"
+        className="profile-icon rounded-full w-10 h-10 text-white flex items-center justify-center"
         aria-label="Menu"
       >
-        {user.currentUser.logo_path ? (
+        {user.currentUser.logo ? (
           <img
-            className="rounded-full max-h-10 border"
-            src="https://yt3.ggpht.com/yti/AHXOFjWk3fA1QQQyPyV4tgkBuC2paUw8uE5ZsYLUFiCZQA=s88-c-k-c0x00ffffff-no-rj-mo"
+            className="rounded-full max-h-10"
+            src={user.currentUser.logo}
             alt="Votre icône de profil"
           />
         ) : (

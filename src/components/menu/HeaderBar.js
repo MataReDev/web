@@ -72,8 +72,9 @@ function HeaderBar() {
               <VideoCallIcon />
             </Link>
           </div>
-
+          <div className="my-auto">
           <ProfileMenu handleLogout={logout} />
+          </div>
         </div>
       ) : (
         <div className="login-button flex-grow justify-end flex items-center">
