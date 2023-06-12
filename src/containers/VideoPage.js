@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../Auth/authContext";
 import { Helmet } from "react-helmet";
 import VideoPlayer from "../components/VideoPage/VideoPlayer";
+import Avatar from "../components/Avatar";
 import LiveChat from "../components/VideoPage/LiveChat";
 import Commentaires from "../components/VideoPage/Commentaires";
 import VideoSimilaires from "../components/VideoPage/VideoSimilaires";
@@ -154,26 +155,49 @@ function VideoPage() {
     const uploadAt = new Date(dateUpload);
     const timeElapsed = Date.now() - uploadAt.getTime();
 
-    const days = Math.floor(timeElapsed / (24 * 60 * 60 * 1000));
-    const months = Math.floor(days / 30);
+    const seconds = Math.floor(timeElapsed / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(weeks / 5);
     const years = Math.floor(months / 12);
 
-    const remainingDays = days % 30;
-    const remainingMonths = months % 12;
+    let timeString = "";  
 
-    let timeString = "";
-    if (years > 0) {
-      timeString += `${years} ${years === 1 ? "an" : "ans"} `;
+    switch (true) {
+      case years > 0:
+        timeString = `${years} ${years === 1 ? "an" : "ans"}`;
+        break;
+      case months > 0:
+        timeString = `il y a ${months} mois`;
+        break;
+      case weeks > 0:
+        timeString = `il y a ${weeks} ${weeks === 1 ? "semaine" : "semaines"}`;
+        break;
+      case days > 0:
+        timeString = `il y a ${days} ${
+          days === 1 ? "jour" : "jours"
+        }`;
+        break;
+      case hours > 0:
+        timeString = `il y a ${hours} ${hours === 1 ? "heure" : "heures"}`;
+        break;
+      case minutes > 0:
+        timeString = `il y a ${minutes} ${
+          minutes === 1 ? "minute" : "minutes"
+        }`;
+        break;
+      case seconds > 0:
+        timeString = `il y a  ${seconds} ${
+          seconds === 1 ? "seconde" : "secondes"
+        }`;
+        break;
+      default:
+        timeString = "À l'instant";
+        break;
     }
-    if (remainingMonths > 0) {
-      timeString += `${remainingMonths} "mois"
-      } `;
-    }
-    if (remainingDays > 0) {
-      timeString += `${remainingDays} ${
-        remainingDays === 1 ? "jour" : "jours"
-      } `;
-    }
+
     console.log(days, months, years);
     setElapsedTime(timeString);
   };
@@ -216,7 +240,9 @@ function VideoPage() {
                       )}
                     </div>
                     <div className="flex flex-col">
-                      <p className="text-lg font-bold">{video.user?.username}</p>
+                      <p className="text-lg font-bold">
+                        {video.user?.username}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -266,7 +292,7 @@ function VideoPage() {
               </div>
               <div className="bg-gray-200 w-full rounded-xl p-5">
                 <p>
-                  {video.views} vues, il y a {elapsedTime}
+                  {video.views} vues, {elapsedTime}
                 </p>
               </div>
             </div>
