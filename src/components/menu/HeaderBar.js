@@ -7,11 +7,11 @@ import logo from "../../img/Logo.svg";
 import { AuthContext } from "../../Auth/authContext";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import makeRequest from "../../Utils/RequestUtils";
 
-library.add(faSearch);
+library.add(faSearch, faVideo);
 
 function HeaderBar() {
   const { logout, user } = useContext(AuthContext);
@@ -21,16 +21,18 @@ function HeaderBar() {
   const [searchValue, setSearchValue] = useState("");
 
   const searchVideo = () => {
-        window.location.href = `/search?query=${searchValue}`; // Redirige vers la page /search avec la valeur de recherche dans l'URL
+    window.location.href = `/search?query=${searchValue}`; // Redirige vers la page /search avec la valeur de recherche dans l'URL
   };
-
 
   return (
     <header className="flex flex-row justify-items-center align-middle bg-white space-x-8 py-2 px-5">
-      <Link to="/" className="flex flex-row justify-items-center align-middle bg-white space-x-8">
+      <Link
+        to="/"
+        className="flex flex-row justify-items-center align-middle bg-white space-x-8"
+      >
         <img className="w-20 max-h-10" src={logo} alt="Logo" />
       </Link>
-      <div className="search-bar flex-grow justify-center flex relative">
+      <div className="search-bar justify-center flex relative w-96">
         <input
           type="text"
           placeholder="Rechercher..."
@@ -40,24 +42,31 @@ function HeaderBar() {
         />
         <button
           type="submit"
-          className="absolute top-1/2 right-4 transform -translate-y-1/2"
           onClick={searchVideo}
+          className="absolute right-0 top-0 h-full flex items-center justify-center px-3 text-gray-400"
         >
-          <FontAwesomeIcon icon="search" className="text-gray-400" />
+          <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
       {user.isAuthenticated ? (
-        <div className="flex-grow justify-end flex gap-4 lg:max-w-fit">
-          {isAdmin && (
-            <div className="flex flex-row justify-center items-center">
+        <div className="flex-grow justify-end flex gap-4">
+          <div className="flex flex-row justify-center items-center">
+            {isAdmin && (
               <Link
                 to={"admin/dashboard"}
-                className="px-4 py-2 font-bold hover:bg-gray-300 border border-black active:bg-gray-500 text-black rounded-lg"
+                className="px-4 py-2 h-10 m-1 font-bold hover:bg-gray-300 border border-black active:bg-gray-500 text-black rounded-lg"
               >
                 Admin Dashboard
               </Link>
-            </div>
-          )}
+            )}
+            <Link
+              to={"/upload"}
+              className="px-4 py-2 h-10 m-1 font-bold hover:bg-gray-300 border border-black active:bg-gray-500 text-black rounded-lg flex items-center"
+            >
+              <FontAwesomeIcon icon="video" />
+            </Link>
+          </div>
+
           <ProfileMenu handleLogout={logout} />
         </div>
       ) : (

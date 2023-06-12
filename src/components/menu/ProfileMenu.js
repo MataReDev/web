@@ -36,7 +36,7 @@ function ProfileMenu() {
       {showMenu && (
         <div className="absolute right-0 mt-4 w-40 bg-gray-200 rounded-lg shadow-xl z-10">
           <div className="m-2">
-            <Link to={`/channel/${user.currentUser.id}`}>
+            <Link to={`/channel/${user.currentUser.username}`}>
               <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
                 Ma chaine
               </button>

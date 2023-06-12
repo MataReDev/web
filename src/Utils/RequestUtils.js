@@ -6,14 +6,20 @@ async function makeRequest(
   options = { mode: "cors" },
   xsrfToken = false
 ) {
-  const defaultHeaders = {
-    "Content-Type": "application/json",
-  };
+  let defaultHeaders = {};
+
+  if (body instanceof FormData) {
+    defaultHeaders['Content-Type'] = 'multipart/form-data';
+  } else if (typeof body === "object") {
+    defaultHeaders['Content-Type'] = 'application/json';
+  }
 
   const mergedHeaders = {
     ...defaultHeaders,
     ...headers,
   };
+
+  console.log(mergedHeaders);
 
 let defaultUrl = "https://iseevision.fr/";
 
@@ -36,7 +42,9 @@ if (process.env.REACT_APP_ENVIRONMENT === "development") {
     ...options,
   };
 
-  if (body) {
+  if (body instanceof FormData) {
+    requestOptions.body = body;
+  } else if (typeof body === "object") {
     requestOptions.body = JSON.stringify(body);
   }
   
