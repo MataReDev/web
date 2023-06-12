@@ -39,6 +39,11 @@ function HeaderBar() {
           className="w-full px-4 py-2 rounded-full shadow-sm focus:outline-none border-2 transition border-black focus:ring-2 focus:ring-gray-500 focus:border-transparent"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              searchVideo();
+            }
+          }}
         />
         <button
           type="submit"

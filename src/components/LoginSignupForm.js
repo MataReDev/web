@@ -194,16 +194,14 @@ function SignupForm() {
             listType="picture-circle"
             showUploadList={true}
             onPreview={handlePreview}
-            // beforeUpload={() => false}
             onChange={handleOnChange}
             defaultFileList={defaultFileList}
             customRequest={uploadImage}
             multiple={false}
             maxCount={1}
           >
-            {" "}
             <div>
-              {loading ? <LoadingOutlined /> : <PlusOutlined />}
+              <PlusOutlined />
               <div style={{ marginTop: 8 }}>Avatar</div>
             </div>
           </Upload>
@@ -211,12 +209,11 @@ function SignupForm() {
         <Modal
           open={previewOpen}
           title={previewTitle}
-          footer={null}
+          footer={""}
           onCancel={handleCancel}
         >
           <img alt="example" style={{ width: "100%" }} src={previewImage} />
         </Modal>
-        {progress > 0 ? <Progress percent={progress} /> : null}
       </div>
 
       <div className="mb-4">

@@ -66,7 +66,7 @@ function LiveChat({ videoId }) {
   };
 
   return (
-    <div className="bg-gray-100 p-3 rounded-xl h-96 relative flex flex-col">
+    <div className="bg-gray-200 border border-solid border-gray-300 shadow-lg p-3 rounded-xl h-96 relative flex flex-col">
       <h2 className="text-xl font-bold mb-4">Chat</h2>
       <ul className="overflow-auto flex-1" ref={chatListRef}>
         {messages.map((message, index) => (
