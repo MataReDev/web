@@ -24,7 +24,7 @@ function VideoPage() {
   const [dislikeCount, setDislikeCount] = useState("");
   const [dislikeList, setDislikeList] = useState([]);
 
-  const [elapsedTime, setElapsedTime] = useState("")
+  const [elapsedTime, setElapsedTime] = useState("");
 
   const [isVideoAvailable, setIsVideoAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -126,7 +126,7 @@ function VideoPage() {
 
         console.log(data);
 
-        getElapsedTime(data.uploadAt)
+        getElapsedTime(data.uploadAt);
       })
       .catch((error) => {
         setIsVideoAvailable(false);
@@ -181,10 +181,12 @@ function VideoPage() {
       } `;
     }
     if (remainingDays > 0) {
-      timeString += `${remainingDays} ${remainingDays === 1 ? "jour" : "jours"} `;
+      timeString += `${remainingDays} ${
+        remainingDays === 1 ? "jour" : "jours"
+      } `;
     }
-    console.log(days,months,years);
-    setElapsedTime(timeString)
+    console.log(days, months, years);
+    setElapsedTime(timeString);
   };
 
   return (
@@ -214,11 +216,15 @@ function VideoPage() {
                 <div className="w-1/2">
                   <div className="flex flex-row space-x-5 align-middle">
                     <div className="flex profile-icon">
-                      <img
-                        className="rounded-full max-h-10"
-                        src="https://yt3.googleusercontent.com/2cZBFrVMMwZQFA2W3z4JI5Z50AAHA4Wb9mdIOqi_z7Q-pw0p-p7-v8lqRtheppvNUa9B3jvh=s176-c-k-c0x00ffffff-no-rj"
-                        alt="Votre icône de profil"
-                      />
+                      {owner?.logo_path ? (
+                        <img
+                          className="rounded-full max-h-10 border"
+                          src={owner?.logo_path}
+                          alt="Votre icône de profil"
+                        />
+                      ) : (
+                        <Avatar username={video.user?.username} />
+                      )}
                     </div>
                     <div className="flex flex-col">
                       <p className="text-lg font-bold">{owner.username}</p>
