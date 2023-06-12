@@ -174,15 +174,14 @@ function VideoPage() {
 
     let timeString = "";
     if (years > 0) {
-      timeString += `${years} ${years === 1 ? "year" : "years"} `;
+      timeString += `${years} ${years === 1 ? "an" : "ans"} `;
     }
     if (remainingMonths > 0) {
-      timeString += `${remainingMonths} ${
-        remainingMonths === 1 ? "month" : "months"
+      timeString += `${remainingMonths} "mois"
       } `;
     }
     if (remainingDays > 0) {
-      timeString += `${remainingDays} ${remainingDays === 1 ? "day" : "days"} `;
+      timeString += `${remainingDays} ${remainingDays === 1 ? "jour" : "jours"} `;
     }
     console.log(days,months,years);
     setElapsedTime(timeString)
