@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Helmet } from "react-helmet";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import VideoCard from "../components/Home/VideoCard";
 import makeRequest from "../Utils/RequestUtils";
 import ScrollArrow from "../components/ScrollArrow";
@@ -12,9 +12,9 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const navigate = useNavigate();
 
   const fetchVideos = async () => {
-
     setIsLoading(true);
     try {
       const page = Math.ceil(videos.length / 24) + 1;
@@ -28,8 +28,7 @@ const HomePage = () => {
       );
       if (response.length > 0) {
         setVideos((prevVideos) => [...prevVideos, ...response]);
-      }
-      else setHasMore(false);
+      } else setHasMore(false);
     } catch (error) {
       console.log(error);
     }
@@ -40,29 +39,26 @@ const HomePage = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-        if (window.location.pathname === "/") {
-       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      console.log(scrollTop);
+      if (window.location.pathname === "/") {
+        const scrollTop =
+          window.pageYOffset || document.documentElement.scrollTop;
 
-       setScrollPosition(scrollTop);
+        setScrollPosition(scrollTop);
 
-      const targetDiv = document.querySelector("#Cards-elements");
-      if (!targetDiv) return;
+        const targetDiv = document.querySelector("#Cards-elements");
+        if (!targetDiv) return;
 
-      const targetDivRect = targetDiv.getBoundingClientRect();
-      
-      if (targetDivRect.bottom <= window.innerHeight + 3) return;
+        const targetDivRect = targetDiv.getBoundingClientRect();
 
-      if (!loading) {
+        if (targetDivRect.bottom <= window.innerHeight + 3) return;
 
-         const state = { scrollPosition: scrollTop, videos: videos };
-         window.history.pushState(state, "", window.location.href);
-        setLoading(true);
+        if (!loading) {
+          const state = { scrollPosition: scrollTop, videos: videos };
+          setLoading(true);
+        }
       }
-
-    }
     };
-    
+
     window.addEventListener("scroll", handleScroll);
 
     return () => {
@@ -75,17 +71,13 @@ const HomePage = () => {
 
     if (window.history && window.history?.state?.videos?.length > 0) {
       setVideos(window.history?.state?.videos);
-      console.log("scroposition :",window.history.state?.scrollPosition);
       if (window.history.state?.scrollPosition != undefined) {
         const parsedScrollPosition = parseInt(
           window.history.state?.scrollPosition
         );
-          console.log("Scroll position",parsedScrollPosition)
         if (!isNaN(parsedScrollPosition)) {
           setTimeout(() => {
             window.scrollTo(0, parsedScrollPosition);
-            
-            
           }, 0);
         }
       }
@@ -110,13 +102,9 @@ const HomePage = () => {
     };
   }, [loading]);
 
- 
-
   useEffect(() => {
-    console.log("scrollPosition : ", scrollPosition , videos);
-    const state = { scrollPosition: scrollPosition, videos : videos };
+    const state = { scrollPosition: scrollPosition, videos: videos };
 
-    window.history.pushState(state, "", window.location.href);
   }, [videos]);
 
   useEffect(() => {
@@ -132,6 +120,14 @@ const HomePage = () => {
     };
   }, []);
 
+const handleClickVideo = (video_id) => {
+  const state = { scrollPosition: scrollPosition, videos: videos };
+
+  window.history.pushState(state, "", window.location.href);
+  navigate(`video/${video_id}`, {replace: false, relative: true});
+
+};
+
   return (
     <>
       <div
@@ -144,9 +140,13 @@ const HomePage = () => {
           <title>iSee - Accueil</title>
         </Helmet>
 
-        {videos.map((item, index) => (
-          <VideoCard key={index} video={item} />
-        ))}        
+        {videos?.map((item, index) => (
+          <VideoCard
+            key={index}
+            video={item}
+            onClick={() => handleClickVideo(item._id)}
+          />
+        ))}
       </div>
       {hasMore && loading ? (
         <div data-testid="loadMore" className="relative flex">

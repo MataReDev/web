@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Avatar from "../Avatar";
 
-function VideoCard({ video }) {
+function VideoCard({ video, onClick }) {
   const [redirect, setRedirect] = useState(false);
   const videoRef = useRef(null);
   const [hoverDuration, setHoverDuration] = useState(-1);
-
+  const navigate = useNavigate()
   const handleMouseOver = () => {
     setHoverDuration(0);
   };
@@ -22,7 +22,9 @@ function VideoCard({ video }) {
 
     if (hoverDuration >= 2) {
       console.log("playing hover duration");
-      videoRef.current.play();
+      if (videoRef.current) {
+        videoRef.current.play();
+      }
     }
 
     if (hoverDuration < 2 && hoverDuration > -1) {
@@ -35,16 +37,21 @@ function VideoCard({ video }) {
       clearInterval(timer);
     };
   }, [hoverDuration]);
-  const handleClick = () => {
-    setRedirect(true);
-  };
-
-  if (redirect) {
-    return <Navigate to={`/video/${video?._id}`} />;
-  }
+ const handleClick =
+   onClick ??
+   (() => {
+     // Fonction par défaut
+    navigate(`video/${video?._id}`, { replace: false });
+   });
   return (
     <div className="max-w-sm rounded-xl overflow-hidden shadow-lg m-4">
-      <div className="max-h-80" onClick={handleClick}>
+      <div
+        className="max-h-80"
+        // onClick={() => {
+        //   navigate(`/video/${video?._id}`, { replace: true });
+        // }}
+        onClick={handleClick}
+      >
         <video
           ref={videoRef}
           poster={video?.thumbnail_path}
