@@ -40,7 +40,6 @@ function VideoPage() {
       },
     ],
   });
-  const [owner, setOwner] = useState("");
 
   const videoId = window.location.pathname.split("/")[2];
   // const videoJsOptions = {
@@ -122,8 +121,6 @@ function VideoPage() {
         setDislikeCount(data.dislikesCount);
         setDislikeList(data.dislikes);
 
-        getOwnerInfo(data.user.username);
-
         console.log(data);
 
         getElapsedTime(data.uploadAt);
@@ -152,14 +149,6 @@ function VideoPage() {
 
     return () => clearTimeout(timer);
   }, []);
-
-  const getOwnerInfo = (ownerId) => {
-    makeRequest(`api/users/channel/${ownerId}`)
-      .then((data) => {
-        setOwner(data);
-      })
-      .catch((error) => console.error(error));
-  };
 
   const getElapsedTime = (dateUpload) => {
     const uploadAt = new Date(dateUpload);
@@ -216,10 +205,10 @@ function VideoPage() {
                 <div className="w-1/2">
                   <div className="flex flex-row space-x-5 align-middle">
                     <div className="flex profile-icon">
-                      {owner?.logo_path ? (
+                      {video.user?.logo_path ? (
                         <img
                           className="rounded-full max-h-10 border"
-                          src={owner?.logo_path}
+                          src={video.user?.logo_path}
                           alt="Votre icône de profil"
                         />
                       ) : (
@@ -227,7 +216,7 @@ function VideoPage() {
                       )}
                     </div>
                     <div className="flex flex-col">
-                      <p className="text-lg font-bold">{owner.username}</p>
+                      <p className="text-lg font-bold">{video.user?.username}</p>
                     </div>
                   </div>
                 </div>
