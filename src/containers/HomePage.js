@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
-import { useLocation } from "react-router-dom";
 import VideoCard from "../components/Home/VideoCard";
 import makeRequest from "../Utils/RequestUtils";
 import ScrollArrow from "../components/ScrollArrow";
@@ -18,7 +17,6 @@ const HomePage = () => {
 
     setIsLoading(true);
     try {
-      const page = Math.ceil(videos.length / 24) + 1;
       const page = Math.ceil(videos.length / 24) + 1;
       const response = await makeRequest(
         `api/videos/getAll?page=${page}&perPage=24`,
