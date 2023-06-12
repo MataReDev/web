@@ -24,6 +24,8 @@ function VideoPage() {
   const [dislikeCount, setDislikeCount] = useState("");
   const [dislikeList, setDislikeList] = useState([]);
 
+  const [elapsedTime, setElapsedTime] = useState("")
+
   const [isVideoAvailable, setIsVideoAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -114,15 +116,17 @@ function VideoPage() {
           // Retourner les nouvelles options mises à jour
           return newOptions;
         });
-        console.log(data);
         setLikeCount(data.likesCount);
         setLikeList(data.likes);
 
         setDislikeCount(data.dislikesCount);
         setDislikeList(data.dislikes);
 
-        getOwnerInfo(data.ownerId);
-        // Vérifier si le lien de la vidéo est valide
+        getOwnerInfo(data.user.username);
+
+        console.log(data);
+
+        getElapsedTime(data.uploadAt)
       })
       .catch((error) => {
         setIsVideoAvailable(false);
@@ -150,11 +154,38 @@ function VideoPage() {
   }, []);
 
   const getOwnerInfo = (ownerId) => {
-    makeRequest(`api/users/${ownerId}`)
+    makeRequest(`api/users/channel/${ownerId}`)
       .then((data) => {
         setOwner(data);
       })
       .catch((error) => console.error(error));
+  };
+
+  const getElapsedTime = (dateUpload) => {
+    const uploadAt = new Date(dateUpload);
+    const timeElapsed = Date.now() - uploadAt.getTime();
+
+    const days = Math.floor(timeElapsed / (24 * 60 * 60 * 1000));
+    const months = Math.floor(days / 30);
+    const years = Math.floor(months / 12);
+
+    const remainingDays = days % 30;
+    const remainingMonths = months % 12;
+
+    let timeString = "";
+    if (years > 0) {
+      timeString += `${years} ${years === 1 ? "year" : "years"} `;
+    }
+    if (remainingMonths > 0) {
+      timeString += `${remainingMonths} ${
+        remainingMonths === 1 ? "month" : "months"
+      } `;
+    }
+    if (remainingDays > 0) {
+      timeString += `${remainingDays} ${remainingDays === 1 ? "day" : "days"} `;
+    }
+    console.log(days,months,years);
+    setElapsedTime(timeString)
   };
 
   return (
@@ -178,11 +209,10 @@ function VideoPage() {
                 <VideoPlayer options={videoJsOptions} video={video} />
               </div>
             )}
-            <div className="bg-gray-300 w-full rounded-xl p-5">
+            <div className="space-y-5">
               <p className="text-2xl font-bold">{video.title}</p>
               <div className="flex flex-row">
                 <div className="w-1/2">
-                  <p>{video.views} vues</p>
                   <div className="flex flex-row space-x-5 align-middle">
                     <div className="flex profile-icon">
                       <img
@@ -216,14 +246,15 @@ function VideoPage() {
                           className="h-5"
                         />
                       )}
-                      
+
                       {likeCount}
                     </button>
                     <button
                       onClick={() => handleDislikeVideo(video._id)}
                       className="text-red-500 rounded-xl"
                     >
-                      {dislikeList && dislikeList.includes(user.currentUser?.id) ? (
+                      {dislikeList &&
+                      dislikeList.includes(user.currentUser?.id) ? (
                         <FontAwesomeIcon
                           icon={faThumbsDownFull}
                           className="h-5"
@@ -238,6 +269,11 @@ function VideoPage() {
                     </button>
                   </div>
                 </div>
+              </div>
+              <div className="bg-gray-200 w-full rounded-xl p-5">
+                <p>
+                  {video.views} vues, il y a {elapsedTime}
+                </p>
               </div>
             </div>
             <div className="flex-grow">

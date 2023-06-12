@@ -8,10 +8,12 @@ async function makeRequest(
 ) {
   let defaultHeaders = {};
 
-  if (body instanceof FormData) {
-    defaultHeaders['Content-Type'] = 'multipart/form-data';
-  } else if (typeof body === "object") {
-    defaultHeaders['Content-Type'] = 'application/json';
+  if (body) {
+    if (typeof body === "object" && !(body instanceof FormData)) {
+      defaultHeaders["Content-Type"] = "application/json";
+    }
+  } else {
+    defaultHeaders["Content-Type"] = "application/json";
   }
 
   const mergedHeaders = {
@@ -21,14 +23,14 @@ async function makeRequest(
 
   console.log(mergedHeaders);
 
-let defaultUrl = "https://iseevision.fr/";
+  let defaultUrl = "https://iseevision.fr/";
 
-if (process.env.REACT_APP_ENVIRONMENT === "development") {
-  defaultUrl = "/";
-} else if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
-  defaultUrl = "http://localhost:3001/";
-}
- 
+  if (process.env.REACT_APP_ENVIRONMENT === "development") {
+    defaultUrl = "/";
+  } else if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
+    defaultUrl = "http://localhost:3001/";
+  }
+
   const url = defaultUrl + path;
 
   if (xsrfToken) {
@@ -42,25 +44,27 @@ if (process.env.REACT_APP_ENVIRONMENT === "development") {
     ...options,
   };
 
-  if (body instanceof FormData) {
-    requestOptions.body = body;
-  } else if (typeof body === "object") {
-    requestOptions.body = JSON.stringify(body);
+  if (body) {
+    if (body instanceof FormData) {
+      requestOptions.body = body;
+    } else if (typeof body === "object") {
+      requestOptions.body = JSON.stringify(body);
+    }
   }
-  
+
   return await fetch(url, requestOptions).then((response) => {
     if (response.ok) {
-       const contentType = response.headers.get("content-type");
-       if (contentType && contentType.includes("application/json")) {
-         return response.json();
-       } else {
-         return response.text();
-       }
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        return response.json();
+      } else {
+        return response.text();
+      }
     } else {
       throw new Error(`Request failed with status ${response.status}`);
     }
   });
 }
 
-// Exportez la fonction makeRequest 
+// Exportez la fonction makeRequest
 export default makeRequest;

@@ -1,10 +1,24 @@
 import React, { useState } from "react";
+import makeRequest from '../Utils/RequestUtils'
+import { toast } from "react-toastify";
 
 function UploadVideoPage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [videoFile, setVideoFile] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
+
+  const toastOptions = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  };
+  
 
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
@@ -22,14 +36,36 @@ function UploadVideoPage() {
     setThumbnailFile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("videoFile", videoFile);
-    formData.append("thumbnailFile", thumbnailFile);
-    // send form data to server using fetch or axios
+    formData.append("video", videoFile);
+    formData.append("thumbnail", thumbnailFile);
+
+    await makeRequest("api/videos/upload", "POST", null, formData, null, true)
+      .then((data) => {
+        const { user } = data;
+        if (user) {
+          localStorage.setItem(
+            "toastMessage",
+            JSON.stringify({
+              status: "success",
+              message: `Vidéo upload avec succès ${user.username} ! `,
+            })
+          );
+          // Redirigez l'utilisateur vers la page de login
+          window.location.href = "/login";
+        }
+      })
+      .catch((error) => {
+        console.log("user : " + error);
+        toast.error(
+          "Une erreur est survenu durant l'enregistrement, veuillez retentez dans quelques minutes.",
+          toastOptions
+        );
+      });
   };
 
   return (
@@ -55,12 +91,13 @@ function UploadVideoPage() {
         </label>
         <label className="block">
           <p className="font-bold">Fichier Vidéo</p>
-          <input type="file" onChange={handleVideoChange} className="mt-1" />
+          <input type="file" accept="video/*" onChange={handleVideoChange} className="mt-1" />
         </label>
         <label className="block">
           <p className="font-bold">Miniature</p>
           <input
             type="file"
+            accept="image/*"
             onChange={handleThumbnailChange}
             className="mt-1"
           />
