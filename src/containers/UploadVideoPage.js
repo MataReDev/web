@@ -19,7 +19,6 @@ function UploadVideoPage() {
     theme: "colored",
   };
   
-
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
   };
@@ -56,7 +55,7 @@ function UploadVideoPage() {
             })
           );
           // Redirigez l'utilisateur vers la page de login
-          window.location.href = "/login";
+          window.location.href = `/channel/${user.username}`;
         }
       })
       .catch((error) => {

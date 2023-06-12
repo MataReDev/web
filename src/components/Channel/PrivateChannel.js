@@ -48,6 +48,8 @@ export default function PrivateChannel({ username }) {
   // Fonction de suppression d'une vidéo
   const handleDelete = (videoId) => {
     makeRequest(`api/videos/delete/${videoId}`,"DELETE",null,null,null,true)
+    
+    getUserInfo(username)
   };
 
   // Fonction de modification de l'état d'une vidéo

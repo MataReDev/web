@@ -46,7 +46,6 @@ function VideoCard({ video, onClick }) {
   return (
     <div className="max-w-sm rounded-xl overflow-hidden shadow-lg m-4">
       <div
-        className="max-h-80"
         // onClick={() => {
         //   navigate(`/video/${video?._id}`, { replace: true });
         // }}
@@ -68,7 +67,7 @@ function VideoCard({ video, onClick }) {
             {video.user?.logo_path ? (
               <img
                 className="rounded-full max-h-10 border"
-                src="https://yt3.ggpht.com/yti/AHXOFjWk3fA1QQQyPyV4tgkBuC2paUw8uE5ZsYLUFiCZQA=s88-c-k-c0x00ffffff-no-rj-mo"
+                src={video.user?.logo_path}
                 alt="Votre icône de profil"
               />
             ) : (
