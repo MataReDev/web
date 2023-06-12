@@ -63,10 +63,10 @@ function VideoCard({ video, onClick }) {
       </div>
       <div className="px-1 py-4 flex">
         <Link to={`/channel/${video.user?.username}`}>
-          <div className="profile-icon rounded-full w-8 h-8 bg-black text-white flex items-center justify-center">
+          <div className="profile-icon rounded-full w-10 h-10 text-white flex items-center justify-center">
             {video.user?.logo_path ? (
               <img
-                className="rounded-full max-h-10 border"
+                className="rounded-full max-h-10"
                 src={video.user?.logo_path}
                 alt="Votre icône de profil"
               />
@@ -81,7 +81,7 @@ function VideoCard({ video, onClick }) {
           </div>
         </Link>
         <div className=" px-3 items-center">
-          <div className="font-bold text-xl mb-2">{video?.title}</div>
+          <div className="font-semibold text-xl mb-2">{video?.title}</div>
           <Link to={`/channel/${video.user?.username}`}>
             <p className="text-gray-700 text-base">{video.user?.username}</p>
           </Link>
