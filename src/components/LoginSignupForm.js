@@ -1,61 +1,30 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useLocation } from "react-router-dom";
 import { AuthContext } from "../Auth/authContext";
 
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Upload, message, Progress, Modal } from "antd";
+import { Upload, Progress, Modal } from "antd";
 import ImgCrop from "antd-img-crop";
 
-import axios from "axios";
+ function checkEmail(email) {
+   var re =
+     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+   return re.test(email);
+ }
 
 function LoginForm() {
-  const { login, isLoggedIn } = useContext(AuthContext);
+  const { login, user } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const location = useLocation();
-
-  // useEffect(() => {
-  //   setAuthToken(getAuthToken());
-  // }, [getAuthToken()]);
-
-  function checkEmail(email) {
-    var re =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (checkEmail(email)) {
       login(email, password);
-      // axios
-      //   .post("https://iseevision.fr/api/users/login", {
-      //     email: email.toString(),
-      //     password: password.toString(),
-      //   })
-      //   .then((response) => {
-      //     login();
-      //     saveAuthToken(response.data.token);
-      //     setAuthToken(getAuthToken());
-
-      //      if (location.state?.data) {
-      //        window.location.href = location.state?.data;
-      //      } else {
-      //        // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
-      //        window.location.href = "/";
-      //      }
-      //   })
-      //   .catch((error) => {
-      //     console.log(error);
-      //     setErrorMessage("Email ou mot de passe incorrect");
-      //     setPassword("");
-
-      //   });
     } else {
       setErrorMessage(
-        "Email non reconnu, merci d'utiliser une autre adresse e-mail"
+        "Email non valide, merci d'utiliser une autre adresse e-mail"
       );
     }
   };
@@ -63,9 +32,20 @@ function LoginForm() {
   const handleInputFocus = () => {
     setErrorMessage("");
   };
+ const handleKeyDown = (event) => {
+   if (event.key === "Enter") {
+     if (event.preventDefault) {
+       event.preventDefault();
+     }
+     handleSubmit(event);
+   }
+ };
 
   return (
-    <div className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
+    <div
+      onKeyDown={handleKeyDown}
+      className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4"
+    >
       <div className="mb-4">
         <label htmlFor="email" className="block text-black font-bold mb-2">
           Email:
@@ -96,7 +76,7 @@ function LoginForm() {
       </div>
       {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
       <div>
-        {isLoggedIn ? (
+        {user.isAuthenticated ? (
           <p>Vous êtes connecté !</p>
         ) : (
           <button
@@ -112,7 +92,7 @@ function LoginForm() {
 }
 
 function SignupForm() {
-  const { register, isLoggedIn } = useContext(AuthContext);
+  const { register, user } = useContext(AuthContext);
 
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -122,6 +102,7 @@ function SignupForm() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [defaultFileList, setDefaultFileList] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const uploadImage = async (options) => {
     const { onSuccess, onError, file, onProgress } = options;
@@ -150,10 +131,7 @@ function SignupForm() {
   };
 
   const handleOnChange = ({ file, fileList, event }) => {
-    // console.log(file, fileList, event);
-    //Using Hooks to update the state to the current filelist
     setDefaultFileList(fileList);
-    //filelist - [{uid: "-1",url:'Some url to image'}]
   };
 
   // -------------- PREVIEW --------------- //
@@ -184,12 +162,30 @@ function SignupForm() {
   };
   // -------------------------------------- //
 
-  const handleSubmit = () => {
-    register(username, email, password, logo);
+  const handleSubmit = (e) => {
+        e.preventDefault();
+        if (checkEmail(email)) {
+          register(username, email, password, logo);
+        } else {
+          setErrorMessage(
+            "Email non valide, merci d'utiliser une autre adresse e-mail"
+          );
+        }    
   };
 
+ const handleKeyDown = (event) => {
+   if (event.key === "Enter") {
+     if (event.preventDefault) {
+       event.preventDefault();
+     }
+     handleSubmit(event);
+   }
+ };
   return (
-    <div className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4">
+    <div
+      onKeyDown={handleKeyDown}
+      className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-4"
+    >
       <div className="mb-4 text-center">
         <ImgCrop rotationSlider>
           <Upload
@@ -264,8 +260,11 @@ function SignupForm() {
           required
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
+        {errorMessage && (
+          <div className="text-red-500 mb-4">{errorMessage}</div>
+        )}
       </div>
-      {isLoggedIn ? (
+      {user.isAuthenticated ? (
         <p>Vous êtes connecté !</p>
       ) : (
         <button

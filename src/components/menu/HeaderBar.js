@@ -72,7 +72,7 @@ function HeaderBar() {
       ) : (
         <div className="login-button flex-grow justify-end flex items-center">
           <Link
-            to={{ pathname: "login", state: { data: location.pathname } }}
+            to={{ pathname: "/login"}} state={{ data: location.pathname }}  
             className="px-4 py-2 border border-black hover:bg-gray-300 focus:border focus:border-black active:bg-gray-500 text-black rounded-lg"
           >
             Se connecter

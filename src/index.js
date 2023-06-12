@@ -25,6 +25,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./Auth/authContext";
 import PrivateRoute from "./Auth/PrivateRoute";
 import { ToastContainer } from "react-toastify";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -45,13 +46,13 @@ function App() {
   return (
     <div className="relative bg-gray-100 min-h-screen h-full">
       <Router>
+        <ScrollToTop/>
         <AuthProvider>
           <Helmet>
             <meta charSet="utf-8" />
             <title>iSee</title>
           </Helmet>
           <HeaderBar user={user} />
-
           <Routes>
             <Route element={<PrivateRoute />}>
               <Route exact path="/profile" element={<ProfilePage />} />
@@ -64,7 +65,7 @@ function App() {
             <Route exact path="/params/:id" element={<ParamsPage />} />
             <Route exact path="/login" element={<LoginPage />} />{" "}
             <Route exact path="/admin/dashboard" element={<Dashboard />} />
-            <Route exact path="/upload" element={<UploadVideoPage />} />  
+            <Route exact path="/upload" element={<UploadVideoPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <ToastContainer />

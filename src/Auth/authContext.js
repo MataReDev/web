@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -34,6 +34,7 @@ const AuthProvider = (props) => {
     currentUser: undefined,
     isAuthenticated: false,
   });
+      const navigate = useNavigate();
 
   const location = useLocation();
 
@@ -114,62 +115,7 @@ const AuthProvider = (props) => {
   }, []);
 
   const login = async (email, password) => {
-    // const headers = new Headers();
-    // headers.append("Content-Type", "application/json");
-
-    // const options = {
-    //   method: "POST",
-    //   mode: "cors",
-    //   body: JSON.stringify({
-    //     email: email.toString(),
-    //     password: password.toString(),
-    //   }),
-    //   headers: headers,
-    //   credentials: "include",
-    // };
-
-    // await fetch("/api/users/login", options)
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       return response.json();
-    //     } else {
-    //       throw new Error("Erreur lors de l'authentification."); // Authentification échouée
-    //     }
-    //   })
-    //   .then((tokens) => {
-    //     const { xsrfToken, user } = tokens;
-
-    //     if (user.isValidated) {
-    //       setIsLoggedIn(true);
-    //       localStorage.setItem("xsrfToken", xsrfToken);
-    //       addToSecureLocalStorage("user", user);
-
-    //       localStorage.setItem(
-    //         "toastMessage",
-    //         `Content de te revoir ${user.username} 👋`
-    //       );
-
-    //       if (location.state?.data) {
-    //         window.location.href = location.state?.data;
-    //       } else {
-    //         // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
-    //         window.location.href = "/";
-    //       }
-    //     } else {
-    //       toast.warning(
-    //         "Veuillez vérifier votre compte, si vous n'avez pas reçu de mail veuillez nous contacter !",
-    //         toastOptions
-    //       );
-    //     }
-    //   })
-    //   .catch(() => {
-    //     toast.error(
-    //       "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes.",
-    //       toastOptions
-    //     );
-    //   });
-
-    const body = {
+   const body = {
       email: email.toString(),
       password: password.toString(),
     };
@@ -190,12 +136,11 @@ const AuthProvider = (props) => {
               message: `Content de te revoir ${user.username} 👋`,
             })
           );
-
-          if (location.state?.data) {
+          if (location.state?.data && location.state?.data !== "/login") {
             window.location.href = location.state?.data;
+            navigate(`/${location.state?.data}`, { replace: true });
           } else {
-            // Redirigez l'utilisateur vers la page d'accueil s'il n'y a pas de returnUrl
-            window.location.href = "/";
+            navigate("/", { replace: true });
           }
         } else {
           toast.warning(
@@ -269,66 +214,27 @@ const AuthProvider = (props) => {
         );
       });
 
-    // await fetch("https://iseevision.fr/api/users/register", options)
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       return response.json();
-    //     } else {
-    //       throw new Error("Erreur lors de l'authentification"); // Authentification échouée
-    //     }
-    //   })
-    //   .then((tokens) => {
-    //     const { user } = tokens;
-
-    //     localStorage.setItem(
-    //       "toastMessage",
-    //       `Bienvenue parmis nous ${user.username} 👋 N'oublie pas de valider ton inscription ! `
-    //     );
-
-    //     // Redirigez l'utilisateur vers la page de login
-    //     window.location.href = "/login";
-    //   })
-    //   .catch(() => {
-    //     toast.error(
-    //       "Une erreur est survenu durant l'enregistrement, veuillez retentez dans quelques minutes.",
-    //       toastOptions
-    //     );
-    //   });
+  
   };
 
   const logout = async () => {
-    //  const headers = new Headers();
-    // headers.append("Content-Type", "application/json");
 
-    // const options = {
-    //   method: "POST",
-    //   mode: "cors",
-    //   headers: headers,
-    //   credentials: "include",
-    // };
-
-    // await fetch("https://iseevision.fr/api/users/logout", options)
-    //   .then((response) => {
-    //     if (response.ok) {
-    //       //TODO  authLogout();
-    //       console.log("LOGOUT");
-    //       removeFromSecureLocalStorage("user");
-    //       toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
-    //     } else {
-    //       throw new Error("Erreur lors de l'authentification."); // Authentification échouée
-    //     }
-    //   })
 
         await makeRequest("api/users/logout", "POST", null, null, null, false)
           .then(() => {
             removeFromSecureLocalStorage("user");
             localStorage.removeItem("xsrfToken");
+            setIsLoggedIn(false);
             toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
           })
           .catch((error) => {
             console.log(error.message);
+            removeFromSecureLocalStorage("user");
+            localStorage.removeItem("xsrfToken");
+            setIsLoggedIn(false);
+            toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
             toast.error(
-              "Une erreur est survenu durant la déconexion, veuillez retentez dans quelques minutes.",
+              "Une erreur est survenu durant la déconexion, nous avons tout de même réussi à te déconnecter à bientôt.",
               toastOptions
             );
           });
