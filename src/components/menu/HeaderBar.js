@@ -25,7 +25,7 @@ function HeaderBar() {
   };
 
   return (
-    <header className="flex flex-row justify-items-center align-middle bg-white space-x-8 py-2 px-5">
+    <header className="sticky top-0 z-10 flex flex-row justify-items-center align-middle bg-white space-x-8 py-2 px-5">
       <Link
         to="/"
         className="flex flex-row justify-items-center align-middle bg-white space-x-8"
