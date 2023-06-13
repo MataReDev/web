@@ -189,7 +189,7 @@ function SignupForm() {
       <div className="mb-4 text-center">
         <ImgCrop rotationSlider>
           <Upload
-            // accept="image/*"
+            accept="image/png, image/jpeg, image/jpg"
             name="logo"
             listType="picture-circle"
             showUploadList={true}
