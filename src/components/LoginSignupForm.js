@@ -99,24 +99,11 @@ function SignupForm() {
   const [password, setPassword] = useState("");
   const [logo, setLogo] = useState(null);
 
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [defaultFileList, setDefaultFileList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
 
   const uploadImage = async (options) => {
-    const { onSuccess, onError, file, onProgress } = options;
-
-    const config = {
-      onUploadProgress: (event) => {
-        const percent = Math.floor((event.loaded / event.total) * 100);
-        setProgress(percent);
-        if (percent === 100) {
-          setTimeout(() => setProgress(0), 1000);
-        }
-        onProgress({ percent: (event.loaded / event.total) * 100 });
-      },
-    };
+    const { onSuccess, onError, file } = options;
 
     try {
       console.log(file);
@@ -170,7 +157,7 @@ function SignupForm() {
           setErrorMessage(
             "Email non valide, merci d'utiliser une autre adresse e-mail"
           );
-        }    
+        }
   };
 
  const handleKeyDown = (event) => {
@@ -189,7 +176,7 @@ function SignupForm() {
       <div className="mb-4 text-center">
         <ImgCrop rotationSlider>
           <Upload
-            // accept="image/*"
+            accept="image/png, image/jpeg, image/jpg"
             name="logo"
             listType="picture-circle"
             showUploadList={true}

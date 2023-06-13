@@ -212,7 +212,7 @@ function Commentaires({ videoId }) {
                         )}{" "}
                         {commentaire.dislikesCount}
                       </button>
-                      {user.currentUser?.id === commentaire.userId._id && (
+                      {(user.currentUser?.id === commentaire.userId._id || user.currentUser?.isAdmin === true) && (
                         <button
                           onClick={() =>
                             handleDeleteCommentaire(commentaire._id)
