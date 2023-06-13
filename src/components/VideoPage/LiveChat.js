@@ -3,20 +3,20 @@ import io from "socket.io-client";
 
 import { AuthContext } from "../../Auth/authContext";
 
-let socketUrl = "https://iseevision.fr/";
+
+let socketUrl = "https://iseevision.fr";
 
 if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
   socketUrl = "http://localhost:3001/";
 }
 
-  const socket = io(socketUrl, {
-    path: "/socket.io",
-  });
-function LiveChat({ videoId }) {
+
+
+
+function LiveChat({ videoId, socket }) {
   const { user } = useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [draftMessage, setDraftMessage] = useState("");
-
 
   const chatListRef = useRef(null);
 
@@ -26,7 +26,7 @@ function LiveChat({ videoId }) {
     socket.on("chat message", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
-   
+
     socket.on("disconnect", () => {
       console.log("Disconnected from server");
     });
@@ -100,8 +100,16 @@ function LiveChat({ videoId }) {
 function ConditionalLiveChat({ videoId }) {
     const { user } = useContext(AuthContext);
   if (user.isAuthenticated) {
-    return <LiveChat videoId={videoId} />;
+      const socket = io(socketUrl, {
+        path: "/socket.io",
+        withCredentials: true,
+        extraHeaders: {
+          "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
+        },
+      });
+    return <LiveChat videoId={videoId} socket={socket} />;
   } else {
+    
     return (
       <div className="bg-gray-100 p-3 rounded-xl h-96 relative flex flex-col">
         <h2 className="text-xl font-bold mb-4">Chat</h2>

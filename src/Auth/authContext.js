@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { useLocation,useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,12 +29,24 @@ function checkLocalStorage() {
 }
 
 const AuthProvider = (props) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState({
+  let initialUser = {
     currentUser: undefined,
     isAuthenticated: false,
-  });
-      const navigate = useNavigate();
+  };
+
+  if (initialUser.currentUser === null) {
+    const userInformation = secureLocalStorage.getItem("user");
+    if (userInformation) {
+      initialUser = {
+        currentUser: userInformation,
+        isAuthenticated: checkLocalStorage(),
+      };
+    }
+  }
+
+  const [user, setUser] = useState(initialUser);
+
+  const navigate = useNavigate();
 
   const location = useLocation();
 
@@ -54,6 +66,39 @@ const AuthProvider = (props) => {
       }
     }
   };
+
+  useEffect(() => {
+    console.log("Effect");
+
+    const checkAuthentication = async () => {
+      console.log("CheckingAuth");
+      makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
+        .then((data) => {
+          const { user } = data;
+          if (user) {
+            addToSecureLocalStorage("user", user);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    };
+
+    console.log("currentUser : ", JSON.stringify(user.currentUser));
+    if (user.currentUser?.expiresAt) {
+      console.log("user.currentUser :", user.currentUser?.expiresAt);
+      const currentTime = Date.now();
+      const expiresAtDate = new Date(user.currentUser?.expiresAt);
+      const refreshTokenExpired =
+        expiresAtDate && currentTime > expiresAtDate.getTime();
+      const refreshTokenExpiringSoon =
+        expiresAtDate && currentTime > expiresAtDate.getTime() - 19 * 60 * 1000;
+      if (refreshTokenExpired || refreshTokenExpiringSoon) {
+        console.log("user is expired ...");
+        checkAuthentication();
+      }
+    }
+  }, [location]);
 
   useEffect(() => {
     window.addEventListener("storage", handleStorageChange);
@@ -115,17 +160,16 @@ const AuthProvider = (props) => {
   }, []);
 
   const login = async (email, password) => {
-   const body = {
+    const body = {
       email: email.toString(),
       password: password.toString(),
     };
 
-    await makeRequest("api/users/login", "POST", null, body, null, false)
+    makeRequest("api/users/login", "POST", null, body, null, false)
       .then((tokens) => {
         const { xsrfToken, user } = tokens;
 
         if (user.isValidated) {
-          setIsLoggedIn(true);
           localStorage.setItem("xsrfToken", xsrfToken);
           addToSecureLocalStorage("user", user);
 
@@ -174,14 +218,13 @@ const AuthProvider = (props) => {
     //   credentials: "include",
     // };
 
-    const formData = new FormData()
+    const formData = new FormData();
 
-    formData.append("username", username)
-    formData.append("email", email)
-    formData.append("password", password)
-    formData.append("isAdmin", isAdmin)
-    formData.append("logo", logo)
-
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("isAdmin", isAdmin);
+    formData.append("logo", logo);
 
     // const body = {
     //   email: email.toString(),
@@ -191,7 +234,7 @@ const AuthProvider = (props) => {
     //   isAdmin: isAdmin,
     // };
 
-    await makeRequest("api/users/register", "POST", null, formData, null, false)
+    makeRequest("api/users/register", "POST", null, formData, null, false)
       .then((data) => {
         const { user } = data;
         if (user) {
@@ -213,39 +256,30 @@ const AuthProvider = (props) => {
           toastOptions
         );
       });
-
-  
   };
 
   const logout = async () => {
-
-
-        await makeRequest("api/users/logout", "POST", null, null, null, false)
-          .then(() => {
-            removeFromSecureLocalStorage("user");
-            localStorage.removeItem("xsrfToken");
-            setIsLoggedIn(false);
-            toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
-          })
-          .catch((error) => {
-            console.log(error.message);
-            removeFromSecureLocalStorage("user");
-            localStorage.removeItem("xsrfToken");
-            setIsLoggedIn(false);
-            toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
-            toast.error(
-              "Une erreur est survenu durant la déconexion, nous avons tout de même réussi à te déconnecter à bientôt.",
-              toastOptions
-            );
-          });
-
-    
+    makeRequest("api/users/logout", "POST", null, null, null, false)
+      .then(() => {
+        removeFromSecureLocalStorage("user");
+        localStorage.removeItem("xsrfToken");
+        toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
+      })
+      .catch((error) => {
+        console.log(error.message);
+        removeFromSecureLocalStorage("user");
+        localStorage.removeItem("xsrfToken");
+        toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
+        toast.error(
+          "Une erreur est survenu durant la déconexion, nous avons tout de même réussi à te déconnecter à bientôt.",
+          toastOptions
+        );
+      });
   };
 
   return (
     <AuthContext.Provider
       value={{
-        isLoggedIn,
         login,
         register,
         logout,
