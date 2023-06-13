@@ -3,6 +3,9 @@ import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import makeRequest from "../Utils/RequestUtils";
 import secureLocalStorage from "react-secure-storage";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
+import { Upload, Progress, Modal } from "antd";
+import ImgCrop from "antd-img-crop";
 
 const toastOptions = {
   position: "top-right",
@@ -19,7 +22,9 @@ function ProfilePage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [profileImage, setProfileImage] = useState("");
+  const [logo, setLogo] = useState(null);
+
+  const [defaultFileList, setDefaultFileList] = useState([]);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -31,10 +36,6 @@ function ProfilePage() {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-  };
-
-  const handleProfileImageChange = function (event) {
-    setProfileImage(URL.createObjectURL(event.target.files[0]));
   };
 
   function checkLocalStorage() {
@@ -55,14 +56,16 @@ function ProfilePage() {
   }, []);
 
   const handleSave = () => {
-    const body = {
-      username: username,
-      email: email,
-    };
 
-    if (password) body.password = password;
-    
-    makeRequest(`api/users/update`, "PUT", null, body, null, true)
+    const formData = new FormData()
+
+    formData.append("username", username)
+    formData.append("email", email)
+    formData.append("logo", logo)
+
+    if (password) formData.password = password;
+
+    makeRequest(`api/users/update`, "PUT", null, formData, null, true)
       .then((data) => {
         toast.error(
           `Ton profil a bien été mit à jour ${data.username} :)`,
@@ -75,8 +78,54 @@ function ProfilePage() {
           toastOptions
         );
       });
-
   };
+
+  const uploadImage = async (options) => {
+    const { onSuccess, onError, file } = options;
+
+    try {
+      console.log(file);
+      setLogo(file);
+
+      onSuccess("Ok");
+    } catch (err) {
+      console.log("Eroor: ", err);
+      const error = new Error("Some error");
+      onError({ err });
+    }
+  };
+
+  const handleOnChange = ({ file, fileList, event }) => {
+    setDefaultFileList(fileList);
+  };
+
+  // -------------- PREVIEW --------------- //
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+  // -------------------------------------- //
 
   return (
     <div className="max-w-xl mx-auto my-4 p-4 bg-white rounded-md">
@@ -85,6 +134,40 @@ function ProfilePage() {
         <title>iSee - Profile</title>
       </Helmet>
       <h1 className="text-3xl font-bold mb-4">Profile Page</h1>
+      <div className="mb-4 text-center">
+        <ImgCrop rotationSlider>
+          <Upload
+            accept="image/png, image/jpeg, image/jpg"
+            name="logo"
+            listType="picture-circle"
+            showUploadList={true}
+            onPreview={handlePreview}
+            onChange={handleOnChange}
+            defaultFileList={defaultFileList}
+            customRequest={uploadImage}
+            multiple={false}
+            maxCount={1}
+          >
+            <div>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Avatar</div>
+            </div>
+          </Upload>
+        </ImgCrop>
+        <Modal
+          open={previewOpen}
+          title={previewTitle}
+          footer={""}
+          onCancel={handleCancel}
+        >
+          <img alt="example" style={{ width: "100%" }} src={previewImage} />
+        </Modal>
+        <div>
+          {logo && (
+            <img src={logo} alt="Profile" className="w-20 h-20 rounded-full" />
+          )}
+        </div>
+      </div>
       <div className="mb-4">
         <label className="block font-medium mb-2">Username:</label>
         <input
@@ -111,31 +194,6 @@ function ProfilePage() {
           value={password}
           onChange={handlePasswordChange}
         />
-      </div>
-      <div className="mb-4">
-        <label className="block font-medium mb-2">Profile Image:</label>
-        <input
-          className="hidden"
-          type="file"
-          onChange={handleProfileImageChange}
-        />
-        <div className="flex items-center">
-          <button
-            className="bg-gray-200 px-4 py-2 rounded-lg text-gray-700 font-medium mr-2"
-            onClick={""}
-          >
-            Choose Image
-          </button>
-          <div>
-            {profileImage && (
-              <img
-                src={profileImage}
-                alt="Profile"
-                className="w-20 h-20 rounded-full"
-              />
-            )}
-          </div>
-        </div>
       </div>
       <button
         className="bg-blue-500 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
