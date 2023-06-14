@@ -1,31 +1,30 @@
-import React, { useState, useEffect, useRef,useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import io from "socket.io-client";
 import makeRequest from "../../Utils/RequestUtils";
 
 import { AuthContext } from "../../Auth/authContext";
-
+import ChatMenu from "./ChatMenu";
+import { toast } from "react-toastify";
 
 let socketUrl = "https://iseevision.fr";
 
 if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
   socketUrl = "http://localhost:3001/";
 }
-      const socket = io(socketUrl, {
-        path: "/socket.io",
-        withCredentials: true,
-        extraHeaders: {
-          "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
-        },
-      });
+const socket = io(socketUrl, {
+  path: "/socket.io",
+  withCredentials: true,
+  extraHeaders: {
+    "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
+  },
+});
 
-
-
-
-function LiveChat({ videoId, socket }) {
-  const { user } = useContext(AuthContext);
+function LiveChat({ videoId }) {
+  const { user, addToSecureLocalStorage, removeFromSecureLocalStorage } =
+    useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [draftMessage, setDraftMessage] = useState("");
-const [connectedUsers, setConnectedUsers] = useState([]);
+  const [connectedUsers, setConnectedUsers] = useState([]);
   const socketRef = useRef(null);
 
   const chatListRef = useRef(null);
@@ -41,21 +40,20 @@ const [connectedUsers, setConnectedUsers] = useState([]);
     theme: "colored",
   };
 
-      const checkAuthentication = async () => {
-        makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
-          .then((data) => {
-            const { user } = data;
-            if (user) {
-              addToSecureLocalStorage("user", user);
-            }
-          })
-          .catch((error) => {
-            removeFromSecureLocalStorage("user");
+  const checkAuthentication = async () => {
+    makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
+      .then((data) => {
+        const { user } = data;
+        if (user) {
+          addToSecureLocalStorage("user", user);
+        }
+      })
+      .catch((error) => {
+        removeFromSecureLocalStorage("user");
 
-            toast.error("An error occurred, please reconnect",toastOptions);
-          });
-      };
-
+        toast.error("An error occurred, please reconnect", toastOptions);
+      });
+  };
 
   useEffect(() => {
     socketRef.current = io(socketUrl, {
@@ -86,21 +84,20 @@ const [connectedUsers, setConnectedUsers] = useState([]);
 
     socket.on("rafraichir-token", () => {
       checkAuthentication();
-
     });
     const handleUnload = () => {
       socket.disconnect(videoId);
-    }
+    };
     //Handle for disconnect user when refreshing page
     const handleBeforeUnload = () => {
- //     socket.emit("leave video chat", videoId);
+      //     socket.emit("leave video chat", videoId);
       socket.emit("disconnect user", videoId);
       socket.off("user joined");
       socket.off("user left");
       socket.off("chat message");
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
-     window.addEventListener("unload", handleUnload);
+    window.addEventListener("unload", handleUnload);
 
     return () => {
       console.log("unmounted");
@@ -122,20 +119,17 @@ const [connectedUsers, setConnectedUsers] = useState([]);
   const handleNewMessageSubmit = (event) => {
     if (draftMessage !== "") {
       const socket = socketRef.current;
-            event.preventDefault();
-        if (socket.id)
-        {
-          // Send the new message to the server for the specific video
-          socket.emit("chat message", {
-            videoId: videoId,
-            author: user.currentUser.username,
-            message: draftMessage,
-            timestamp: new Date().toJSON(),
-          });
-          setDraftMessage("");
-        }
-
-
+      event.preventDefault();
+      if (socket.id) {
+        // Send the new message to the server for the specific video
+        socket.emit("chat message", {
+          videoId: videoId,
+          author: user.currentUser.username,
+          message: draftMessage,
+          timestamp: new Date().toJSON(),
+        });
+        setDraftMessage("");
+      }
     }
   };
 
