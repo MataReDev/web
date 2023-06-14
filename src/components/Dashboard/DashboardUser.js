@@ -102,14 +102,11 @@ function DashboardUser() {
   const handleConfirmAction = () => {
     switch (actionType) {
       case "unban":
-        const body = {
-          userId: selectedUserId
-          }
         makeRequest(
-          "api/users/unbanUser",
+          `api/users/unbanUser/${selectedUserId}`,
           "put",
           null,
-          body,
+          null,
           null,
           true
         )
