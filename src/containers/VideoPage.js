@@ -237,7 +237,7 @@ function VideoPage() {
               </div>
             ) : (
               <div className="aspect-video align-top block m-auto w-full">
-                <VideoPlayer options={videoJsOptions} video={video} />
+                {/* <VideoPlayer options={videoJsOptions} video={video} /> */}
                 <PlyrPlayer video={video} />
               </div>
             )}
