@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import makeRequest from "../Utils/RequestUtils";
 import { toast } from "react-toastify";
+import { AuthContext } from "../Auth/authContext";
+import Axios from "axios";
 
 function UploadVideoPage() {
+
+    const [uploadPercentage, setUploadPercentage] = useState(0);
+    const [showProgressBar, setProgressBarVisibility] = useState(false);
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [videoFile, setVideoFile] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [state, setState] = useState("Public"); // État pour la valeur sélectionnée
-
+  const [progress, setProgress] = useState(0);
+  const {user} = useContext(AuthContext);
   const toastOptions = {
     position: "top-right",
     autoClose: 3000,
@@ -47,21 +54,28 @@ function UploadVideoPage() {
     formData.append("description", description);
     formData.append("video", videoFile);
     formData.append("thumbnail", thumbnailFile);
-    formData.append("state", state); 
+    formData.append("state", state);
 
-    await makeRequest("api/videos/upload", "POST", null, formData, null, true)
+    await makeRequest(
+      "api/videos/upload",
+      "POST",
+      null,
+      formData,
+      null,
+      true,
+      onUploadProgress
+    )
       .then((data) => {
-        const { user } = data;
         if (user) {
           localStorage.setItem(
             "toastMessage",
             JSON.stringify({
               status: "success",
-              message: `Vidéo upload avec succès ${user.username} ! `,
+              message: `Vidéo upload avec succès ${user.currentUser?.username} ! `,
             })
           );
-          // Redirigez l'utilisateur vers la page de login
-          window.location.href = `/channel/${user.username}`;
+          // Redirigez l'utilisateur vers la chaine
+          window.location.href = `/channel/${user.currentUser?.username}`;
         }
       })
       .catch((error) => {
@@ -71,6 +85,17 @@ function UploadVideoPage() {
           toastOptions
         );
       });
+
+
+  
+  };
+
+  
+  const onUploadProgress = (progressEvent) => {
+    const progress = Math.round(
+      (progressEvent.loaded / progressEvent.total) * 100
+    );
+    setProgress(progress);
   };
 
   return (
@@ -161,6 +186,7 @@ function UploadVideoPage() {
           <p className="font-bold">Ajouter ma vidéo</p>
         </button>
       </form>
+      <progress value={progress} max="100" />
     </div>
   );
 }

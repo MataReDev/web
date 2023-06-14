@@ -87,29 +87,22 @@ function LiveChat({ videoId }) {
     socket.on("rafraichir-token", () => {
       checkAuthentication();
     });
-    const handleUnload = () => {
-      socket.disconnect(videoId);
-    };
+
+
     //Handle for disconnect user when refreshing page
-    const handleBeforeUnload = () => {
-      //     socket.emit("leave video chat", videoId);
-      socket.emit("disconnect user", videoId);
-      socket.off("user joined");
-      socket.off("user left");
-      socket.off("chat message");
+    const handleVisibilityChange = () => {
+      socket.emit("leave video chat", videoId);
     };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    window.addEventListener("unload", handleUnload);
-
+    window.addEventListener("visibilitychange", handleVisibilityChange);
+  
     return () => {
-      console.log("unmounted");
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("unload", handleUnload);
+      socket.emit("leave video chat", videoId);
+      window.removeEventListener("visibilitychange", handleVisibilityChange);
 
       socket.off("chat message");
       socket.off("user joined");
       socket.off("user left");
-      socket.disconnect();
+      socket.disconnect()
     };
   }, [user]);
 
