@@ -162,11 +162,6 @@ function ProfilePage() {
         >
           <img alt="example" style={{ width: "100%" }} src={previewImage} />
         </Modal>
-        <div>
-          {logo && (
-            <img src={logo} alt="Profile" className="w-20 h-20 rounded-full" />
-          )}
-        </div>
       </div>
       <div className="mb-4">
         <label className="block font-medium mb-2">Username:</label>
