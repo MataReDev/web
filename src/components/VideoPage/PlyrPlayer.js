@@ -10,14 +10,14 @@ const VideoPlayer2 = ({ options, video }) => {
     const player = videoRef.current.plyr;
     const playerT = playerRef.current;
 
-    console.log(player);
-    console.log(playerT);
+    // console.log(player);
+    // console.log(playerT);
 
-    if (player) {
-      // Vous pouvez personnaliser le lecteur Plyr ici
-      // Exemple: player.play() pour lire automatiquement la vidéo
-      //   player.play(); // Lecture automatique
-    }
+    // if (player) {
+    //   // Vous pouvez personnaliser le lecteur Plyr ici
+    //   // Exemple: player.play() pour lire automatiquement la vidéo
+    //   //   player.play(); // Lecture automatique
+    // }
   });
 
   const videoPath = video.video_path;
@@ -29,14 +29,7 @@ const VideoPlayer2 = ({ options, video }) => {
         {
           src: videoPath,
           type: "video/mp4",
-          size: "576", // qualité par défaut
         },
-        {
-          src: videoPath,
-          type: "video/mp4",
-          size: "1080", // autre qualité disponible
-        },
-
         // Ajoutez d'autres sources si nécessaire (par exemple, différents formats de vidéo)
       ],
     },
@@ -61,10 +54,6 @@ const VideoPlayer2 = ({ options, video }) => {
       settings: ["captions", "quality", "speed", "loop"], // Ajout des paramètres supplémentaires
       // ... autres options Plyr
       autoplay: true,
-      quality: {
-        default: '576', // qualité par défaut
-        options: ['576', '1080'], // autres options de qualité disponibles
-      },
       captions: {
         active: true, // Activer les sous-titres
         languages: [
