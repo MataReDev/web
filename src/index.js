@@ -24,6 +24,7 @@ import NotFoundPage from "./containers/NotFoundPage";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./Auth/authContext";
 import PrivateRoute from "./Auth/PrivateRoute";
+import AdminRoute from "./Auth/AdminRoute"
 import { ToastContainer } from "react-toastify";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -64,7 +65,9 @@ function App() {
             <Route exact path="/channel/:id" element={<ChannelPage />} />
             <Route exact path="/params/:id" element={<ParamsPage />} />
             <Route exact path="/login" element={<LoginPage />} />{" "}
-            <Route exact path="/admin/dashboard" element={<Dashboard />} />
+            <Route element={<AdminRoute />}>
+              <Route exact path="/admin/dashboard" element={<Dashboard />} />
+            </Route>
             <Route exact path="/upload" element={<UploadVideoPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
