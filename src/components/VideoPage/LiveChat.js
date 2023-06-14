@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useRef,useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import io from "socket.io-client";
 
 import { AuthContext } from "../../Auth/authContext";
-
+import ChatMenu from "./ChatMenu";
 
 let socketUrl = "https://iseevision.fr";
 
 if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
   socketUrl = "http://localhost:3001/";
 }
-
-
-
 
 function LiveChat({ videoId, socket }) {
   const { user } = useContext(AuthContext);
@@ -67,6 +64,7 @@ function LiveChat({ videoId, socket }) {
 
   return (
     <div className="bg-gray-200 border border-solid border-gray-300 shadow-lg p-3 rounded-xl h-96 relative flex flex-col">
+      <ChatMenu />
       <h2 className="text-xl font-bold mb-4">Chat</h2>
       <ul className="overflow-auto flex-1" ref={chatListRef}>
         {messages.map((message, index) => (
@@ -98,18 +96,17 @@ function LiveChat({ videoId, socket }) {
 }
 
 function ConditionalLiveChat({ videoId }) {
-    const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   if (user.isAuthenticated) {
-      const socket = io(socketUrl, {
-        path: "/socket.io",
-        withCredentials: true,
-        extraHeaders: {
-          "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
-        },
-      });
+    const socket = io(socketUrl, {
+      path: "/socket.io",
+      withCredentials: true,
+      extraHeaders: {
+        "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
+      },
+    });
     return <LiveChat videoId={videoId} socket={socket} />;
   } else {
-    
     return (
       <div className="bg-gray-100 p-3 rounded-xl h-96 relative flex flex-col">
         <h2 className="text-xl font-bold mb-4">Chat</h2>

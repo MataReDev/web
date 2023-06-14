@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import makeRequest from "../Utils/RequestUtils";
 import secureLocalStorage from "react-secure-storage";
-import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
+import { PlusOutlined, LoadingOutlined, EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
 import { Upload, Modal } from "antd";
 import ImgCrop from "antd-img-crop";
 
@@ -25,6 +25,11 @@ function ProfilePage() {
   const [logo, setLogo] = useState(null);
 
   const [defaultFileList, setDefaultFileList] = useState([]);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -56,12 +61,11 @@ function ProfilePage() {
   }, []);
 
   const handleSave = () => {
+    const formData = new FormData();
 
-    const formData = new FormData()
-
-    formData.append("username", username)
-    formData.append("email", email)
-    formData.append("logo", logo)
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("logo", logo);
 
     if (password) formData.password = password;
 
@@ -71,6 +75,9 @@ function ProfilePage() {
           `Ton profil a bien été mit à jour ${data.username} :)`,
           toastOptions
         );
+        setTimeout(() => {
+          window.location.reload(); // Reload the page after 3 seconds
+        }, 4000);
       })
       .catch((error) => {
         toast.error(
@@ -181,14 +188,21 @@ function ProfilePage() {
           onChange={handleEmailChange}
         />
       </div>
-      <div className="mb-4">
+      <div className="mb-4 relative">
         <label className="block font-medium mb-2">Password:</label>
         <input
           className="px-4 py-2 rounded-lg border border-gray-300 w-full"
-          type="password"
+          type={showPassword ? "text" : "password"}
           value={password}
           onChange={handlePasswordChange}
         />
+        <button
+          type="button"
+          onClick={togglePasswordVisibility}
+          className="absolute right-0 top-0 mr-2 mt-[36px] text-[#868686]"
+        >
+          {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+        </button>
       </div>
       <button
         className="bg-blue-500 text-white py-2 px-4 rounded-md font-medium hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
