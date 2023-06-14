@@ -87,31 +87,23 @@ const [connectedUsers, setConnectedUsers] = useState([]);
 
     socket.on("rafraichir-token", () => {
       checkAuthentication();
-
     });
-    const handleUnload = () => {
-      socket.disconnect(videoId);
-    }
+
+
     //Handle for disconnect user when refreshing page
-    const handleBeforeUnload = () => {
- //     socket.emit("leave video chat", videoId);
-      socket.emit("disconnect user", videoId);
-      socket.off("user joined");
-      socket.off("user left");
-      socket.off("chat message");
+    const handleVisibilityChange = () => {
+      socket.emit("leave video chat", videoId);
     };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-     window.addEventListener("unload", handleUnload);
-
+    window.addEventListener("visibilitychange", handleVisibilityChange);
+  
     return () => {
-      console.log("unmounted");
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      window.removeEventListener("unload", handleUnload);
+      socket.emit("leave video chat", videoId);
+      window.removeEventListener("visibilitychange", handleVisibilityChange);
 
       socket.off("chat message");
       socket.off("user joined");
       socket.off("user left");
-      socket.disconnect();
+      socket.disconnect()
     };
   }, [user]);
 
@@ -148,35 +140,36 @@ const [connectedUsers, setConnectedUsers] = useState([]);
     return `${hours}:${minutes}`;
   };
 
+
   return (
-    <div className="bg-gray-200 border border-solid border-gray-300 shadow-lg p-3 rounded-xl h-96 relative flex flex-col">
-      <h2 className="text-xl font-bold mb-4">Chat</h2>
-      <ul className="overflow-auto flex-1" ref={chatListRef}>
-        {messages.map((message, index) => (
-          <li key={index}>
-            <p>
-              {formatTimestamp(message.timestamp)} {message.author} :{" "}
-              {message.content}{" "}
-            </p>
-          </li>
-        ))}
-      </ul>
-      <div className="flex w-auto gap-3 bottom-0">
-        <input
-          type="text"
-          value={draftMessage}
-          onChange={(event) => setDraftMessage(event.target.value)}
-          className="flex p-1 border border-black rounded-lg w-full"
-        />
-        <button
-          type="submit"
-          onClick={handleNewMessageSubmit}
-          className="flex border border-black p-2 bg-gray-200 rounded-lg w-auto"
-        >
-          Envoyer
-        </button>
+      <div className="bg-gray-200 border border-solid border-gray-300 shadow-lg p-3 rounded-xl h-96 relative flex flex-col">
+        <h2 className="text-xl font-bold mb-4">Chat</h2>
+        <ul className="overflow-auto flex-1" ref={chatListRef}>
+          {messages.map((message, index) => (
+            <li key={index}>
+              <p>
+                {formatTimestamp(message.timestamp)} {message.author} :{" "}
+                {message.content}{" "}
+              </p>
+            </li>
+          ))}
+        </ul>
+        <div className="flex w-auto gap-3 bottom-0">
+          <input
+            type="text"
+            value={draftMessage}
+            onChange={(event) => setDraftMessage(event.target.value)}
+            className="flex p-1 border border-black rounded-lg w-full"
+          />
+          <button
+            type="submit"
+            onClick={handleNewMessageSubmit}
+            className="flex border border-black p-2 bg-gray-200 rounded-lg w-auto"
+          >
+            Envoyer
+          </button>
+        </div>
       </div>
-    </div>
   );
 }
 
