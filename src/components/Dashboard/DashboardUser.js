@@ -102,12 +102,14 @@ function DashboardUser() {
   const handleConfirmAction = () => {
     switch (actionType) {
       case "unban":
-        console.log(selectedUserId);
+        const body = {
+          userId: selectedUserId
+          }
         makeRequest(
-          "put",
           "api/users/unbanUser",
+          "put",
           null,
-          { userId: selectedUserId },
+          body,
           null,
           true
         )
@@ -250,7 +252,7 @@ function DashboardUser() {
                   }}
                 >
                   <FontAwesomeIcon icon={faUserCheck} className="mr-1" />
-                  Actif
+                  Débannir
                 </button>
                 <button
                   className="transition duration-300 ease-in-out text-blue-600 hover:text-blue-900 border border-blue-600 hover:border-blue-900 rounded-md px-3 py-1 m-1 hover:bg-blue-200"
@@ -260,7 +262,7 @@ function DashboardUser() {
                   }}
                 >
                   <FontAwesomeIcon icon={faClock} className="mr-1" />
-                  Bloquer temporairement
+                  Ban temporairement
                 </button>
                 <button
                   className="transition duration-300 ease-in-out text-gray-600 hover:text-gray-900 border border-gray-600 hover:border-gray-900 rounded-md px-3 py-1 m-1 hover:bg-gray-200"
@@ -270,7 +272,7 @@ function DashboardUser() {
                   }}
                 >
                   <FontAwesomeIcon icon={faLock} className="mr-1" />
-                  Bloquer
+                  Bannir
                 </button>
                 <button
                   className="transition duration-300 ease-in-out text-red-600 hover:text-red-900 border border-red-600 hover:border-red-900 rounded-md px-3 py-1 m-1 hover:bg-red-200"
