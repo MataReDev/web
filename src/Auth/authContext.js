@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate,redirect } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -46,7 +46,6 @@ const AuthProvider = (props) => {
 
   const [user, setUser] = useState(initialUser);
 
-  const navigate = useNavigate();
 
   const location = useLocation();
 
@@ -68,10 +67,7 @@ const AuthProvider = (props) => {
   };
 
   useEffect(() => {
-    console.log("Effect");
-
     const checkAuthentication = async () => {
-      console.log("CheckingAuth");
       makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
         .then((data) => {
           const { user } = data;
@@ -84,9 +80,7 @@ const AuthProvider = (props) => {
         });
     };
 
-    console.log("currentUser : ", JSON.stringify(user.currentUser));
     if (user.currentUser?.expiresAt) {
-      console.log("user.currentUser :", user.currentUser?.expiresAt);
       const currentTime = Date.now();
       const expiresAtDate = new Date(user.currentUser?.expiresAt);
       const refreshTokenExpired =
@@ -94,7 +88,6 @@ const AuthProvider = (props) => {
       const refreshTokenExpiringSoon =
         expiresAtDate && currentTime > expiresAtDate.getTime() - 19 * 60 * 1000;
       if (refreshTokenExpired || refreshTokenExpiringSoon) {
-        console.log("user is expired ...");
         checkAuthentication();
       }
     }
@@ -181,10 +174,9 @@ const AuthProvider = (props) => {
             })
           );
           if (location.state?.data && location.state?.data !== "/login") {
-            window.location.href = location.state?.data;
-            navigate(`/${location.state?.data}`, { replace: true });
+            window.location.replace(location.state?.data);
           } else {
-            navigate("/", { replace: true });
+             window.location.replace("/");
           }
         } else {
           toast.warning(
@@ -193,7 +185,8 @@ const AuthProvider = (props) => {
           );
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log("erreur ",error)
         toast.error(
           "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes.",
           toastOptions
@@ -285,6 +278,7 @@ const AuthProvider = (props) => {
         logout,
         user,
         addToSecureLocalStorage,
+        removeFromSecureLocalStorage,
       }}
     >
       {props.children}

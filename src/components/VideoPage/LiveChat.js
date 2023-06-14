@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef,useContext } from "react";
+import { users } from "@heroicons/react/24/outline";
 import io from "socket.io-client";
+import makeRequest from "../../Utils/RequestUtils";
 
 import { AuthContext } from "../../Auth/authContext";
+import { toast } from "react-toastify";
 
 
 let socketUrl = "https://iseevision.fr";
@@ -9,34 +12,108 @@ let socketUrl = "https://iseevision.fr";
 if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
   socketUrl = "http://localhost:3001/";
 }
+      const socket = io(socketUrl, {
+        path: "/socket.io",
+        withCredentials: true,
+        extraHeaders: {
+          "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
+        },
+      });
 
 
-
-
-function LiveChat({ videoId, socket }) {
-  const { user } = useContext(AuthContext);
+function LiveChat({ videoId }) {
+  const { user, addToSecureLocalStorage, removeFromSecureLocalStorage } =
+    useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [draftMessage, setDraftMessage] = useState("");
+const [connectedUsers, setConnectedUsers] = useState([]);
+  const socketRef = useRef(null);
 
   const chatListRef = useRef(null);
 
+  const toastOptions = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  };
+
+      const checkAuthentication = async () => {
+        makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
+          .then((data) => {
+            const { user } = data;
+            if (user) {
+              addToSecureLocalStorage("user", user);
+            }
+          })
+          .catch((error) => {
+            removeFromSecureLocalStorage("user");
+
+            toast.error("An error occurred, please reconnect",toastOptions);
+          });
+      };
+
+
   useEffect(() => {
-    socket.emit("join video chat", videoId);
+    socketRef.current = io(socketUrl, {
+      path: "/socket.io",
+      withCredentials: true,
+      extraHeaders: {
+        "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
+      },
+    });
+
+    const socket = socketRef.current;
+
+    socket.emit("join video chat", videoId, user.currentUser);
     // Listen for new messages from the server for the specific video
     socket.on("chat message", (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
 
-    socket.on("disconnect", () => {
-      console.log("Disconnected from server");
+    //Listen for new users joined to the video
+    socket.on("user joined", (users) => {
+      setConnectedUsers(users);
     });
 
-    return () => {
-      // Leave the room for the specific video when the component unmounts
-      socket.emit("leave video chat", videoId);
+    //Listen for users leaving the video
+    socket.on("user left", (users) => {
+      setConnectedUsers(users);
+    });
+
+    socket.on("rafraichir-token", () => {
+      checkAuthentication();
+
+    });
+    const handleUnload = () => {
+      socket.disconnect(videoId);
+    }
+    //Handle for disconnect user when refreshing page
+    const handleBeforeUnload = () => {
+ //     socket.emit("leave video chat", videoId);
+      socket.emit("disconnect user", videoId);
+      socket.off("user joined");
+      socket.off("user left");
       socket.off("chat message");
     };
-  }, []);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+     window.addEventListener("unload", handleUnload);
+
+    return () => {
+      console.log("unmounted");
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("unload", handleUnload);
+
+      socket.off("chat message");
+      socket.off("user joined");
+      socket.off("user left");
+      socket.disconnect();
+    };
+  }, [user]);
 
   useEffect(() => {
     // Scroll to the bottom of the chat list whenever the messages state changes
@@ -45,15 +122,21 @@ function LiveChat({ videoId, socket }) {
 
   const handleNewMessageSubmit = (event) => {
     if (draftMessage !== "") {
-      event.preventDefault();
-      // Send the new message to the server for the specific video
-      socket.emit("chat message", {
-        videoId: videoId,
-        author: user.currentUser.username,
-        message: draftMessage,
-        timestamp: new Date().toJSON(),
-      });
-      setDraftMessage("");
+      const socket = socketRef.current;
+            event.preventDefault();
+        if (socket.id)
+        {
+          // Send the new message to the server for the specific video
+          socket.emit("chat message", {
+            videoId: videoId,
+            author: user.currentUser.username,
+            message: draftMessage,
+            timestamp: new Date().toJSON(),
+          });
+          setDraftMessage("");
+        }
+
+
     }
   };
 
@@ -100,14 +183,7 @@ function LiveChat({ videoId, socket }) {
 function ConditionalLiveChat({ videoId }) {
     const { user } = useContext(AuthContext);
   if (user.isAuthenticated) {
-      const socket = io(socketUrl, {
-        path: "/socket.io",
-        withCredentials: true,
-        extraHeaders: {
-          "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
-        },
-      });
-    return <LiveChat videoId={videoId} socket={socket} />;
+    return <LiveChat videoId={videoId} />;
   } else {
     
     return (
