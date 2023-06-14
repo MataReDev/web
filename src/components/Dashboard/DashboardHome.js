@@ -57,7 +57,22 @@ export const data = {
 function DashboardHome() {
   const [userCount, setUserCount] = useState("");
   const [videoCount, setVideoCount] = useState("");
-  const [view7lastdays, setView7lastdays] = useState("");
+  const [videoTotalSize, setVideoTotalSize] = useState("");
+  
+
+  const formatSize = (size) => {
+    if (size < 1024) {
+      return size + " octets";
+    } else if (size < 1024 * 1024) {
+      return (size / 1024).toFixed(2) + " Ko";
+    } else if (size < 1024 * 1024 * 1024) {
+      return (size / (1024 * 1024)).toFixed(2) + " Mo";
+    } else if (size < 1024 * 1024 * 1024 * 1024) {
+      return (size / (1024 * 1024 * 1024)).toFixed(2) + " Go";
+    } else {
+      return (size / (1024 * 1024 * 1024 * 1024)).toFixed(2) + " To";
+    }
+  }
   
 
   useEffect(() => {
@@ -72,6 +87,12 @@ function DashboardHome() {
         setVideoCount(data.nbVideos);
       })
       .catch((error) => console.error(error));
+
+    makeRequest("api/dashboard/getSizeVideoUpload", "GET", null, null, null, true)
+      .then((data) => {
+        setVideoTotalSize(formatSize(data.totalSize))
+      })
+      .catch((error) => console.error(error))
   }, []);
 
 
@@ -89,7 +110,7 @@ function DashboardHome() {
         <div className="bg-white rounded-md shadow-md p-5 w-full md:w-1/3">
           <h2 className="text-lg font-bold mb-3">
             Taille vidéo totale
-            <p className="text-4xl font-bold">{view7lastdays}</p>
+            <p className="text-4xl font-bold">{videoTotalSize}</p>
           </h2>
         </div>
       </div>

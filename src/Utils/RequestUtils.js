@@ -21,8 +21,6 @@ async function makeRequest(
     ...headers,
   };
 
-  console.log(mergedHeaders);
-
   let defaultUrl = "https://iseevision.fr/";
 
   if (process.env.REACT_APP_ENVIRONMENT === "development") {
@@ -32,7 +30,6 @@ async function makeRequest(
   }
 
   const url = defaultUrl + path;
-  console.log("url : ",url);
 
   if (xsrfToken) {
     mergedHeaders["x-xsrf-token"] = localStorage.getItem("xsrfToken");
