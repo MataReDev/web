@@ -1,32 +1,30 @@
-import React, { useState, useEffect, useRef,useContext } from "react";
-import { users } from "@heroicons/react/24/outline";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import io from "socket.io-client";
 import makeRequest from "../../Utils/RequestUtils";
 
 import { AuthContext } from "../../Auth/authContext";
+import ChatMenu from "./ChatMenu";
 import { toast } from "react-toastify";
-
 
 let socketUrl = "https://iseevision.fr";
 
 if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
   socketUrl = "http://localhost:3001/";
 }
-      const socket = io(socketUrl, {
-        path: "/socket.io",
-        withCredentials: true,
-        extraHeaders: {
-          "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
-        },
-      });
-
+const socket = io(socketUrl, {
+  path: "/socket.io",
+  withCredentials: true,
+  extraHeaders: {
+    "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
+  },
+});
 
 function LiveChat({ videoId }) {
   const { user, addToSecureLocalStorage, removeFromSecureLocalStorage } =
     useContext(AuthContext);
   const [messages, setMessages] = useState([]);
   const [draftMessage, setDraftMessage] = useState("");
-const [connectedUsers, setConnectedUsers] = useState([]);
+  const [connectedUsers, setConnectedUsers] = useState([]);
   const socketRef = useRef(null);
 
   const chatListRef = useRef(null);
@@ -42,21 +40,20 @@ const [connectedUsers, setConnectedUsers] = useState([]);
     theme: "colored",
   };
 
-      const checkAuthentication = async () => {
-        makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
-          .then((data) => {
-            const { user } = data;
-            if (user) {
-              addToSecureLocalStorage("user", user);
-            }
-          })
-          .catch((error) => {
-            removeFromSecureLocalStorage("user");
+  const checkAuthentication = async () => {
+    makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
+      .then((data) => {
+        const { user } = data;
+        if (user) {
+          addToSecureLocalStorage("user", user);
+        }
+      })
+      .catch((error) => {
+        removeFromSecureLocalStorage("user");
 
-            toast.error("An error occurred, please reconnect",toastOptions);
-          });
-      };
-
+        toast.error("An error occurred, please reconnect", toastOptions);
+      });
+  };
 
   useEffect(() => {
     socketRef.current = io(socketUrl, {
@@ -115,20 +112,17 @@ const [connectedUsers, setConnectedUsers] = useState([]);
   const handleNewMessageSubmit = (event) => {
     if (draftMessage !== "") {
       const socket = socketRef.current;
-            event.preventDefault();
-        if (socket.id)
-        {
-          // Send the new message to the server for the specific video
-          socket.emit("chat message", {
-            videoId: videoId,
-            author: user.currentUser.username,
-            message: draftMessage,
-            timestamp: new Date().toJSON(),
-          });
-          setDraftMessage("");
-        }
-
-
+      event.preventDefault();
+      if (socket.id) {
+        // Send the new message to the server for the specific video
+        socket.emit("chat message", {
+          videoId: videoId,
+          author: user.currentUser.username,
+          message: draftMessage,
+          timestamp: new Date().toJSON(),
+        });
+        setDraftMessage("");
+      }
     }
   };
 
@@ -142,43 +136,43 @@ const [connectedUsers, setConnectedUsers] = useState([]);
 
 
   return (
-      <div className="bg-gray-200 border border-solid border-gray-300 shadow-lg p-3 rounded-xl h-96 relative flex flex-col">
-        <h2 className="text-xl font-bold mb-4">Chat</h2>
-        <ul className="overflow-auto flex-1" ref={chatListRef}>
-          {messages.map((message, index) => (
-            <li key={index}>
-              <p>
-                {formatTimestamp(message.timestamp)} {message.author} :{" "}
-                {message.content}{" "}
-              </p>
-            </li>
-          ))}
-        </ul>
-        <div className="flex w-auto gap-3 bottom-0">
-          <input
-            type="text"
-            value={draftMessage}
-            onChange={(event) => setDraftMessage(event.target.value)}
-            className="flex p-1 border border-black rounded-lg w-full"
-          />
-          <button
-            type="submit"
-            onClick={handleNewMessageSubmit}
-            className="flex border border-black p-2 bg-gray-200 rounded-lg w-auto"
-          >
-            Envoyer
-          </button>
-        </div>
+    <div className="bg-gray-200 border border-solid border-gray-300 shadow-lg p-3 rounded-xl h-96 relative flex flex-col">
+      <ChatMenu />
+      <h2 className="text-xl font-bold mb-4">Chat</h2>
+      <ul className="overflow-auto flex-1" ref={chatListRef}>
+        {messages.map((message, index) => (
+          <li key={index}>
+            <p>
+              {formatTimestamp(message.timestamp)} {message.author} :{" "}
+              {message.content}{" "}
+            </p>
+          </li>
+        ))}
+      </ul>
+      <div className="flex w-auto gap-3 bottom-0">
+        <input
+          type="text"
+          value={draftMessage}
+          onChange={(event) => setDraftMessage(event.target.value)}
+          className="flex p-1 border border-black rounded-lg w-full"
+        />
+        <button
+          type="submit"
+          onClick={handleNewMessageSubmit}
+          className="flex border border-black p-2 bg-gray-200 rounded-lg w-auto"
+        >
+          Envoyer
+        </button>
       </div>
+    </div>
   );
 }
 
 function ConditionalLiveChat({ videoId }) {
-    const { user } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   if (user.isAuthenticated) {
     return <LiveChat videoId={videoId} />;
   } else {
-    
     return (
       <div className="bg-gray-100 p-3 rounded-xl h-96 relative flex flex-col">
         <h2 className="text-xl font-bold mb-4">Chat</h2>

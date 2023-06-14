@@ -17,6 +17,8 @@ Ouvrez http://localhost:3000 dans votre navigateur pour voir l'application en ac
 [<img src="https://github.com/MataReDev.png" width="25"/> MataReDev](https://github.com/MataReDev)
 <br>
 [<img src="https://github.com/MitryDim.png" width="25"/> MitryDim](https://github.com/MitryDim)
+<br>
+[<img src="https://github.com/Valt1-0.png" width="25"/> Valt1-0](https://github.com/Valt1-0)
 
 ## Contribution
 Nous sommes ravis de recevoir des contributions de la communauté open-source. Si vous souhaitez contribuer à iSee, veuillez consulter le fichier CONTRIBUTING.md pour en savoir plus.
