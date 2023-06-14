@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import makeRequest from "../Utils/RequestUtils";
 import secureLocalStorage from "react-secure-storage";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
-import { Upload, Progress, Modal } from "antd";
+import { Upload, Modal } from "antd";
 import ImgCrop from "antd-img-crop";
 
 const toastOptions = {
@@ -162,11 +162,6 @@ function ProfilePage() {
         >
           <img alt="example" style={{ width: "100%" }} src={previewImage} />
         </Modal>
-        <div>
-          {logo && (
-            <img src={logo} alt="Profile" className="w-20 h-20 rounded-full" />
-          )}
-        </div>
       </div>
       <div className="mb-4">
         <label className="block font-medium mb-2">Username:</label>
