@@ -1,15 +1,19 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../Auth/authContext";
-
-import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  LoadingOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+} from "@ant-design/icons";
 import { Upload, Progress, Modal } from "antd";
 import ImgCrop from "antd-img-crop";
 
- function checkEmail(email) {
-   var re =
-     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-   return re.test(email);
- }
+function checkEmail(email) {
+  var re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
+}
 
 function LoginForm() {
   const { login, user } = useContext(AuthContext);
@@ -17,6 +21,11 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,14 +41,14 @@ function LoginForm() {
   const handleInputFocus = () => {
     setErrorMessage("");
   };
- const handleKeyDown = (event) => {
-   if (event.key === "Enter") {
-     if (event.preventDefault) {
-       event.preventDefault();
-     }
-     handleSubmit(event);
-   }
- };
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      if (event.preventDefault) {
+        event.preventDefault();
+      }
+      handleSubmit(event);
+    }
+  };
 
   return (
     <div
@@ -60,12 +69,12 @@ function LoginForm() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
-      <div className="mb-6">
+      <div className="mb-6 relative">
         <label htmlFor="password" className="block text-black font-bold mb-2">
           Password:
         </label>
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -73,6 +82,13 @@ function LoginForm() {
           required
           className="shadow appearance-none border rounded w-full py-2 px-3 text-black leading-tight focus:outline-none focus:shadow-outline"
         />
+        <button
+          type="button"
+          onClick={togglePasswordVisibility}
+          className="absolute right-0 top-0 mr-2 mt-[34px] text-[#868686]"
+        >
+          {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+        </button>
       </div>
       {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
       <div>
@@ -98,6 +114,11 @@ function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [logo, setLogo] = useState(null);
+
+  const [showPassword, setShowPassword] = useState(false);
+  const handleInputFocus = () => {
+    setErrorMessage("");
+  };
 
   const [defaultFileList, setDefaultFileList] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
@@ -150,24 +171,30 @@ function SignupForm() {
   // -------------------------------------- //
 
   const handleSubmit = (e) => {
-        e.preventDefault();
-        if (checkEmail(email)) {
-          register(username, email, password, logo);
-        } else {
-          setErrorMessage(
-            "Email non valide, merci d'utiliser une autre adresse e-mail"
-          );
-        }
+    e.preventDefault();
+    if (checkEmail(email)) {
+      register(username, email, password, logo);
+    } else {
+      setErrorMessage(
+        "Email non valide, merci d'utiliser une autre adresse e-mail"
+      );
+    }
   };
 
- const handleKeyDown = (event) => {
-   if (event.key === "Enter") {
-     if (event.preventDefault) {
-       event.preventDefault();
-     }
-     handleSubmit(event);
-   }
- };
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      if (event.preventDefault) {
+        event.preventDefault();
+      }
+      handleSubmit(event);
+    }
+  };
+
+  // Hide/Show Password
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div
       onKeyDown={handleKeyDown}
@@ -229,31 +256,33 @@ function SignupForm() {
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
         />
       </div>
-      <div className="mb-6">
-        <label
-          htmlFor="password"
-          className="block text-gray-700 font-bold mb-2"
-        >
+      <div className="mb-6 relative">
+      <label htmlFor="password" className="block text-black font-bold mb-2">
           Password:
         </label>
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onFocus={handleInputFocus}
           required
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10"
         />
-        {errorMessage && (
-          <div className="text-red-500 mb-4">{errorMessage}</div>
-        )}
+        <button
+          type="button"
+          onClick={togglePasswordVisibility}
+          className="absolute right-0 top-0 mr-2 mt-[34px] text-[#868686]"
+        >
+          {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+        </button>
       </div>
       {user.isAuthenticated ? (
         <p>Vous êtes connecté !</p>
       ) : (
         <button
           onClick={handleSubmit}
-          className="bg-white hover:bg-gray-300 border border-black focus:border-black active:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex justify-center items-center"
+          className="bg-white  hover:bg-gray-300 border border-black focus:border-black active:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex justify-center items-center"
         >
           Signup
         </button>

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../Auth/authContext";
 import { Helmet } from "react-helmet";
 import VideoPlayer from "../components/VideoPage/VideoPlayer";
+import PlyrPlayer from "../components/VideoPage/PlyrPlayer"
 import Avatar from "../components/Avatar";
 import LiveChat from "../components/VideoPage/LiveChat";
 import Commentaires from "../components/VideoPage/Commentaires";
@@ -236,7 +237,8 @@ function VideoPage() {
               </div>
             ) : (
               <div className="aspect-video align-top block m-auto w-full">
-                <VideoPlayer options={videoJsOptions} video={video} />
+                {/* <VideoPlayer options={videoJsOptions} video={video} /> */}
+                <PlyrPlayer video={video} />
               </div>
             )}
             <div className="space-y-5">
