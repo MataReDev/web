@@ -32,6 +32,7 @@ async function makeRequest(
   }
 
   const url = defaultUrl + path;
+  console.log("url : ",url);
 
   if (xsrfToken) {
     mergedHeaders["x-xsrf-token"] = localStorage.getItem("xsrfToken");
