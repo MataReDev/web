@@ -108,7 +108,7 @@ function LiveChat({ videoId }) {
 
   useEffect(() => {
     // Scroll to the bottom of the chat list whenever the messages state changes
-    chatListRef.current.scrollTop = chatListRef.current.scrollHeight;
+    chatListRef.current.scrollTop = chatListRef.current?.scrollHeight;
   }, [messages]);
 
   const handleNewMessageSubmit = (event) => {
@@ -163,7 +163,7 @@ function LiveChat({ videoId }) {
           </>
         ) : (
           <ChatBubbleBottomCenterIcon
-            className="h-5 w-5 mt-1 text-black cursor-pointer"
+            className="h-5 w-5 ml-4 mt-1 text-black cursor-pointer"
             onClick={() => {
               setMenu(!Menu);
             }}
