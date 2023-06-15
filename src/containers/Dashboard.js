@@ -16,12 +16,12 @@ function Dashboard() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "video":
+      case "videos":
         return <DashboardVideo />;
       case "users":
         return <DashboardUser />;
       case "home":
-        return <DashboardHome />;
+        return <DashboardHome setActiveTab={setActiveTab}/>;
       default:
         return (
           <div>
