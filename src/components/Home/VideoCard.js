@@ -6,7 +6,7 @@ function VideoCard({ video, onClick }) {
   const [redirect, setRedirect] = useState(false);
   const videoRef = useRef(null);
   const [hoverDuration, setHoverDuration] = useState(-1);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleMouseOver = () => {
     setHoverDuration(0);
   };
@@ -37,12 +37,12 @@ function VideoCard({ video, onClick }) {
       clearInterval(timer);
     };
   }, [hoverDuration]);
- const handleClick =
-   onClick ??
-   (() => {
-     // Fonction par défaut
-    navigate(`video/${video?._id}`, { replace: false });
-   });
+  const handleClick =
+    onClick ??
+    (() => {
+      // Fonction par défaut
+      navigate(`video/${video?._id}`, { replace: false });
+    });
   return (
     <div className="max-w-sm rounded-xl overflow-hidden shadow-lg m-4">
       <div
@@ -85,7 +85,9 @@ function VideoCard({ video, onClick }) {
           <Link to={`/channel/${video.user?.username}`}>
             <p className="text-gray-700 text-base">{video.user?.username}</p>
           </Link>
-          <p className="text-gray-700 text-base">{video?.views} vues</p>
+          {video?.views === 0 && (
+            <p className="text-gray-700 text-base">{video?.views} vues</p>
+          )}
         </div>
       </div>
     </div>
