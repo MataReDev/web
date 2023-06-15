@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Helmet } from "react-helmet";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -20,7 +20,6 @@ import HeaderBar from "./components/menu/HeaderBar";
 import NotFoundPage from "./containers/NotFoundPage";
 
 
-//import { getAuthToken } from "./Auth/authContext";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./Auth/authContext";
 import PrivateRoute from "./Auth/PrivateRoute";
@@ -28,8 +27,8 @@ import AdminRoute from "./Auth/AdminRoute"
 import { ToastContainer } from "react-toastify";
 import ScrollToTop from "./components/ScrollToTop";
 
-
 function App() {
+
   return (
     <div className="relative bg-gray-100 min-h-screen h-full">
       <Router>
@@ -54,6 +53,7 @@ function App() {
             <Route element={<AdminRoute />}>
               <Route exact path="/admin/dashboard" element={<Dashboard />} />
             </Route>
+            <Route exact path="/upload" element={<UploadVideoPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <ToastContainer />
