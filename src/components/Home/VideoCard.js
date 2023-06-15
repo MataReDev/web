@@ -85,9 +85,7 @@ function VideoCard({ video, onClick }) {
           <Link to={`/channel/${video.user?.username}`}>
             <p className="text-gray-700 text-base">{video.user?.username}</p>
           </Link>
-          {video?.views === 0 && (
-            <p className="text-gray-700 text-base">{video?.views} vues</p>
-          )}
+          <p className="text-gray-700 text-base">{video?.viewsCount} vues</p>
         </div>
       </div>
     </div>
