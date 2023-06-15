@@ -1,13 +1,12 @@
-import React, { useState,useContext } from "react";
+import React, { useState, useContext } from "react";
 import makeRequest from "../Utils/RequestUtils";
 import { toast } from "react-toastify";
 import { AuthContext } from "../Auth/authContext";
 import Axios from "axios";
 
 function UploadVideoPage() {
-
-    const [uploadPercentage, setUploadPercentage] = useState(0);
-    const [showProgressBar, setProgressBarVisibility] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [showProgressBar, setProgressBarVisibility] = useState(false);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -15,7 +14,7 @@ function UploadVideoPage() {
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [state, setState] = useState("Public"); // État pour la valeur sélectionnée
   const [progress, setProgress] = useState(0);
-  const {user} = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const toastOptions = {
     position: "top-right",
     autoClose: 3000,
@@ -49,6 +48,9 @@ function UploadVideoPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setProgressBarVisibility(true);
+
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
@@ -84,13 +86,13 @@ function UploadVideoPage() {
           "Une erreur est survenue durant l'enregistrement, veuillez réessayer dans quelques minutes.",
           toastOptions
         );
-      });
-
-
-  
+      })
+      .finally(() => {
+        // Masquer la barre de progression une fois la soumission terminée
+        setProgressBarVisibility(false);
+      });;
   };
 
-  
   const onUploadProgress = (progressEvent) => {
     const progress = Math.round(
       (progressEvent.loaded / progressEvent.total) * 100
@@ -186,7 +188,9 @@ function UploadVideoPage() {
           <p className="font-bold">Ajouter ma vidéo</p>
         </button>
       </form>
-      <progress value={progress} max="100" />
+      {showProgressBar && (
+        <progress value={progress} max="100" className="w-2/3 mx-auto block" />
+      )}
     </div>
   );
 }
