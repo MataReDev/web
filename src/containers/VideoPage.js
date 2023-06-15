@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../Auth/authContext";
 import { Helmet } from "react-helmet";
 import VideoPlayer from "../components/VideoPage/VideoPlayer";
-import PlyrPlayer from "../components/VideoPage/PlyrPlayer"
+import PlyrPlayer from "../components/VideoPage/PlyrPlayer";
 import Avatar from "../components/Avatar";
 import LiveChat from "../components/VideoPage/LiveChat";
 import Commentaires from "../components/VideoPage/Commentaires";
@@ -99,7 +99,7 @@ function VideoPage() {
 
   // Fonction pour récupérer le propriétaire de la vidéo
   useEffect(() => {
-   // setIsLoading(true); // Définir isLoading à true lors du chargement initial
+    // setIsLoading(true); // Définir isLoading à true lors du chargement initial
 
     makeRequest(`api/videos/${videoId}`, "GET", null, null, null, false)
       .then(async (data) => {
@@ -203,7 +203,8 @@ function VideoPage() {
     setElapsedTime(timeString);
   };
 
-  const [nbLinesDescriptionLimtited , setNbLinesDescriptionLimtited] = useState(3)
+  const [nbLinesDescriptionLimtited, setNbLinesDescriptionLimtited] =
+    useState(3);
   const [showFullDescription, setShowFullDescription] = useState(false);
 
   const handleToggleDescription = () => {
@@ -214,10 +215,12 @@ function VideoPage() {
 
   const fullDescription = descriptionLines?.join("\n");
 
-  if (descriptionLines?.[nbLinesDescriptionLimtited-1]?.trim() === "") {
-    setNbLinesDescriptionLimtited(2)
+  if (descriptionLines?.[nbLinesDescriptionLimtited - 1]?.trim() === "") {
+    setNbLinesDescriptionLimtited(2);
   }
-  const limitedDescription = descriptionLines?.slice(0, nbLinesDescriptionLimtited)?.join("\n");
+  const limitedDescription = descriptionLines
+    ?.slice(0, nbLinesDescriptionLimtited)
+    ?.join("\n");
 
   const hasMoreLines = descriptionLines?.length > nbLinesDescriptionLimtited;
 
@@ -244,7 +247,7 @@ function VideoPage() {
                   <div className="flex flex-row">
                     <div className="w-1/2">
                       <div className="flex flex-row space-x-5 align-middle">
-                        <div className="flex profile-icon">
+                        <div className="flex profile-icon w-8 h-8">
                           {video.user?.logo_path ? (
                             <img
                               className="rounded-full max-h-10 border"
@@ -307,9 +310,11 @@ function VideoPage() {
                     </div>
                   </div>
                   <div className="bg-gray-200 w-full rounded-xl p-5">
-                    <p className="font-bold">
-                      {video.views} vues {elapsedTime}
-                    </p>
+                    {video?.views === 0 && (
+                      <p className="font-bold">
+                        {video.views} vues {elapsedTime}
+                      </p>
+                    )}
                     <h2></h2>
                     <pre className="font-sans">
                       {showFullDescription
