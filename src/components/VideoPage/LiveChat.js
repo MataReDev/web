@@ -130,8 +130,6 @@ function LiveChat({ videoId }) {
 
   const [Menu, setMenu] = useState(false);
 
-  console.log(connectedUsers);
-
   return (
     <div className="bg-gray-200 border border-solid border-gray-300 shadow-lg p-3 rounded-xl h-96 relative flex flex-col">
       <div className="flex justify-start">
