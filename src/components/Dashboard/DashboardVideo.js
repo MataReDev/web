@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+
 import makeRequest from "../../Utils/RequestUtils";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLock,
@@ -166,15 +169,49 @@ function DashboardVideo() {
           <tr>
             <th className="py-2 px-4 bg-gray-200 border-b">Titre</th>
             <th className="py-2 px-4 bg-gray-200 border-b">Description</th>
+            <th className="py-2 px-4 bg-gray-200 border-b">Etat</th>
             <th className="py-2 px-4 bg-gray-200 border-b">Actions</th>
           </tr>
         </thead>
         <tbody>
           {videos?.map((video, index) => (
             <tr key={index}>
-              <td className="py-2 px-4">{video.title}</td>
-              <td className="py-2 px-4">{video.description}</td>
-              <td className="py-2 px-4 whitespace-no-wrap text-right text-sm leading-5 font-medium w-2/5">
+              <td className="py-2 px-4 w-1/5"><Link to={`/video/${video._id}`}>{video.title}</Link></td>
+              <td className="py-2 px-4 w-1/2 ">{video.description}</td>
+              <td className="py-2 px-4 w-1/12 text-center">
+                {(() => {
+                  switch (video.state) {
+                    case "Public":
+                      return (
+                        <span className="inline-block py-1 px-2 rounded bg-green-500 text-white">
+                          Publique
+                        </span>
+                      );
+                    case "Unlisted":
+                      return (
+                        <span className="inline-block py-1 px-2 rounded bg-yellow-500 text-white">
+                          Non répertoriée
+                        </span>
+                      );
+                    case "Private":
+                      return (
+                        <span className="inline-block py-1 px-2 rounded bg-red-500 text-white">
+                          Privé
+                        </span>
+                      );
+                    case "Blocked":
+                      return (
+                        <span className="inline-block py-1 px-2 rounded bg-gray-500 text-white">
+                          Bloquée
+                        </span>
+                      );
+                    default:
+                      return null;
+                  }
+                })()}
+              </td>
+
+              <td className="py-2 px-4 whitespace-no-wrap text-right text-sm leading-5 font-medium w-auto">
                 <button
                   className="mr-2 text-green-600 hover:text-green-900 border border-green-600 hover:border-green-900 rounded-md px-3 py-1 m-1 hover:bg-green-200"
                   onClick={() => {

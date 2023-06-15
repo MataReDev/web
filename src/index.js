@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Helmet } from "react-helmet";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -20,28 +20,14 @@ import HeaderBar from "./components/menu/HeaderBar";
 import NotFoundPage from "./containers/NotFoundPage";
 
 
-//import { getAuthToken } from "./Auth/authContext";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./Auth/authContext";
 import PrivateRoute from "./Auth/PrivateRoute";
+import AdminRoute from "./Auth/AdminRoute"
 import { ToastContainer } from "react-toastify";
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
-  const [user, setUser] = useState(null);
-
-  // function isAuth() {
-  //   if (getAuthToken() !== null) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  // const handleLogin = () => {};
-
-  // const handleLogout = () => {
-  // setUser(null);
-  // };
 
   return (
     <div className="relative bg-gray-100 min-h-screen h-full">
@@ -52,7 +38,7 @@ function App() {
             <meta charSet="utf-8" />
             <title>iSee</title>
           </Helmet>
-          <HeaderBar user={user} />
+          <HeaderBar />
           <Routes>
             <Route element={<PrivateRoute />}>
               <Route exact path="/profile" element={<ProfilePage />} />
@@ -64,7 +50,9 @@ function App() {
             <Route exact path="/channel/:id" element={<ChannelPage />} />
             <Route exact path="/params/:id" element={<ParamsPage />} />
             <Route exact path="/login" element={<LoginPage />} />{" "}
-            <Route exact path="/admin/dashboard" element={<Dashboard />} />
+            <Route element={<AdminRoute />}>
+              <Route exact path="/admin/dashboard" element={<Dashboard />} />
+            </Route>
             <Route exact path="/upload" element={<UploadVideoPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

@@ -4,9 +4,9 @@ import { AuthContext } from "./authContext";
 import makeRequest from "../Utils/RequestUtils";
 import { FaSpinner } from "react-icons/fa";
 
-const PrivateRoute = () => {
-  const { addToSecureLocalStorage, removeFromSecureLocalStorage } =
-    useContext(AuthContext);
+
+const AdminRoute = () => {
+  const { addToSecureLocalStorage } = useContext(AuthContext);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -16,17 +16,14 @@ const PrivateRoute = () => {
           const { user } = data;
           if (user) {
             addToSecureLocalStorage("user", user);
-            setIsAuthenticated(true);
-          } else 
-          {
-            removeFromSecureLocalStorage("user");
-            window.location.href = "/login";
-          }
+            if (!user.isAdmin) {
+              throw new Error("You don't have permission");
+            } else setIsAuthenticated(true);
+          } else window.location.href = "*";
         })
         .catch((error) => {
           console.error(error);
-          removeFromSecureLocalStorage("user");
-          window.location.href = "/login";
+          window.location.href = "*";
         });
     };
     checkAuthentication();
@@ -44,4 +41,4 @@ const PrivateRoute = () => {
   return <Outlet />;
 };
 
-export default PrivateRoute;
+export default AdminRoute;

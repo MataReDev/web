@@ -18,6 +18,8 @@ import {
   faThumbsDown as faThumbsDownEmpty,
 } from "@fortawesome/free-regular-svg-icons";
 
+import AnimatedLogo from "../components/Loading";
+
 function VideoPage() {
   const [video, setVideo] = useState("");
 
@@ -97,7 +99,7 @@ function VideoPage() {
 
   // Fonction pour récupérer le propriétaire de la vidéo
   useEffect(() => {
-    setIsLoading(true); // Définir isLoading à true lors du chargement initial
+   // setIsLoading(true); // Définir isLoading à true lors du chargement initial
 
     makeRequest(`api/videos/${videoId}`, "GET", null, null, null, false)
       .then(async (data) => {
@@ -220,138 +222,143 @@ function VideoPage() {
   const hasMoreLines = descriptionLines?.length > nbLinesDescriptionLimtited;
 
   return (
-    <div className="flex flex-col xl:flex-row w-full px-5 md:px-14 py-5 gap-5">
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>{`iSee - ${video.title}`}</title>
-      </Helmet>
-      {isVideoAvailable ? (
-        <>
-          <div className="flex flex-col w-full md:max-w-full gap-5 flex-grow">
-            {isLoading ? (
-              <div className="aspect-video align-top block m-auto w-full">
-                {/* Afficher le rond de chargement ici */}
-                <div className="w-full h-full flex justify-center items-center">
-                  <div className="loader"></div>
-                </div>
-              </div>
-            ) : (
-              <div className="aspect-video align-top block m-auto w-full">
-                {/* <VideoPlayer options={videoJsOptions} video={video} /> */}
-                <PlyrPlayer video={video} />
-              </div>
-            )}
-            <div className="space-y-5">
-              <p className="text-2xl font-bold">{video.title}</p>
-              <div className="flex flex-row">
-                <div className="w-1/2">
-                  <div className="flex flex-row space-x-5 align-middle">
-                    <div className="flex profile-icon">
-                      {video.user?.logo_path ? (
-                        <img
-                          className="rounded-full max-h-10 border"
-                          src={video.user?.logo_path}
-                          alt="Votre icône de profil"
-                        />
-                      ) : (
-                        <Avatar username={video.user?.username} />
-                      )}
+    <>
+      {!isLoading ? (
+        <div className="flex flex-col xl:flex-row w-full px-5 md:px-14 py-5 gap-5">
+          <Helmet>
+            <meta charSet="utf-8" />
+            <title>{`iSee - ${video.title}`}</title>
+          </Helmet>
+
+          {isVideoAvailable ? (
+            <>
+              <div className="flex flex-col w-full md:max-w-full gap-5 flex-grow">
+                {!isLoading && (
+                  <div className="aspect-video align-top block m-auto w-full">
+                    {/* <VideoPlayer options={videoJsOptions} video={video} /> */}
+                    <PlyrPlayer video={video} />
+                  </div>
+                )}
+                <div className="space-y-5">
+                  <p className="text-2xl font-bold">{video.title}</p>
+                  <div className="flex flex-row">
+                    <div className="w-1/2">
+                      <div className="flex flex-row space-x-5 align-middle">
+                        <div className="flex profile-icon">
+                          {video.user?.logo_path ? (
+                            <img
+                              className="rounded-full max-h-10 border"
+                              src={video.user?.logo_path}
+                              alt="Votre icône de profil"
+                            />
+                          ) : (
+                            <Avatar username={video.user?.username} />
+                          )}
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-lg font-bold">
+                            {video.user?.username}
+                          </p>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex flex-col">
-                      <p className="text-lg font-bold">
-                        {video.user?.username}
-                      </p>
+                    <div className="flex w-1/2 justify-end items-start">
+                      <div
+                        name="action-button"
+                        className="flex gap-2 text-sm font-bold bg-gray-200 p-4 rounded-xl align-top"
+                      >
+                        <button
+                          onClick={() => handleLikeVideo(video._id)}
+                          className="text-green-500 rounded-xl "
+                        >
+                          {likeList &&
+                          likeList.includes(user.currentUser?.id) ? (
+                            <FontAwesomeIcon
+                              icon={faThumbsUpFull}
+                              className="h-5"
+                            />
+                          ) : (
+                            <FontAwesomeIcon
+                              icon={faThumbsUpEmpty}
+                              className="h-5"
+                            />
+                          )}
+                          {likeCount}
+                        </button>
+                        <button
+                          onClick={() => handleDislikeVideo(video._id)}
+                          className="text-red-500 rounded-xl"
+                        >
+                          {dislikeList &&
+                          dislikeList.includes(user.currentUser?.id) ? (
+                            <FontAwesomeIcon
+                              icon={faThumbsDownFull}
+                              className="h-5"
+                            />
+                          ) : (
+                            <FontAwesomeIcon
+                              icon={faThumbsDownEmpty}
+                              className="h-5"
+                            />
+                          )}{" "}
+                          {dislikeCount}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex w-1/2 justify-end items-start">
-                  <div
-                    name="action-button"
-                    className="flex gap-2 text-sm font-bold bg-gray-200 p-4 rounded-xl align-top"
-                  >
-                    <button
-                      onClick={() => handleLikeVideo(video._id)}
-                      className="text-green-500 rounded-xl "
-                    >
-                      {likeList && likeList.includes(user.currentUser?.id) ? (
-                        <FontAwesomeIcon
-                          icon={faThumbsUpFull}
-                          className="h-5"
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={faThumbsUpEmpty}
-                          className="h-5"
-                        />
+                  <div className="bg-gray-200 w-full rounded-xl p-5">
+                    <p className="font-bold">
+                      {video.views} vues {elapsedTime}
+                    </p>
+                    <h2></h2>
+                    <pre className="font-sans">
+                      {showFullDescription
+                        ? fullDescription
+                        : limitedDescription}
+                      <br />
+                      {hasMoreLines && (
+                        <button
+                          className="text-blue-500 font-bold"
+                          onClick={handleToggleDescription}
+                        >
+                          {showFullDescription ? "Moins" : "Plus"}
+                        </button>
                       )}
-                      {likeCount}
-                    </button>
-                    <button
-                      onClick={() => handleDislikeVideo(video._id)}
-                      className="text-red-500 rounded-xl"
-                    >
-                      {dislikeList &&
-                      dislikeList.includes(user.currentUser?.id) ? (
-                        <FontAwesomeIcon
-                          icon={faThumbsDownFull}
-                          className="h-5"
-                        />
-                      ) : (
-                        <FontAwesomeIcon
-                          icon={faThumbsDownEmpty}
-                          className="h-5"
-                        />
-                      )}{" "}
-                      {dislikeCount}
-                    </button>
+                    </pre>
                   </div>
                 </div>
+                <div className="flex-grow">
+                  <Commentaires videoId={videoId} />
+                </div>
               </div>
-              <div className="bg-gray-200 w-full rounded-xl p-5">
-                <p className="font-bold">
-                  {video.views} vues {elapsedTime}
-                </p>
-                <h2></h2>
-                <pre className="font-sans">
-                  {showFullDescription ? fullDescription : limitedDescription}
-                  <br />
-                  {hasMoreLines && (
-                    <button
-                      className="text-blue-500 font-bold"
-                      onClick={handleToggleDescription}
-                    >
-                      {showFullDescription ? "Moins" : "Plus"}
-                    </button>
-                  )}
-                </pre>
+              <div className="flex flex-col w-full xl:w-1/4 gap-5">
+                <div className="w-full">
+                  <LiveChat videoId={videoId} />
+                </div>
+                <div className="w-full">
+                  <VideoSimilaires />
+                </div>
               </div>
+            </>
+          ) : (
+            <div className="w-full text-center">
+              <img
+                src="https://static.thenounproject.com/png/485920-200.png"
+                alt="Blocked Video Icon"
+                className="mx-auto w-32 h-32"
+              />
+              <p className="mt-2 text-xl font-semibold">
+                Cette vidéo n'est plus disponible
+              </p>
             </div>
-            <div className="flex-grow">
-              <Commentaires videoId={videoId} />
-            </div>
-          </div>
-          <div className="flex flex-col w-full xl:w-1/4 gap-5">
-            <div className="w-full">
-              <LiveChat videoId={videoId} />
-            </div>
-            <div className="w-full">
-              <VideoSimilaires />
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="w-full text-center">
-          <img
-            src="https://static.thenounproject.com/png/485920-200.png"
-            alt="Blocked Video Icon"
-            className="mx-auto w-32 h-32"
-          />
-          <p className="mt-2 text-xl font-semibold">
-            Cette vidéo n'est plus disponible
-          </p>
+          )}
         </div>
+      ) : (
+        <>
+          <AnimatedLogo text="Stay connected as the suspense builds while the video content loads."></AnimatedLogo>
+        </>
       )}
-    </div>
+    </>
   );
 }
 
