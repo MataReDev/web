@@ -125,8 +125,6 @@ function UploadVideoPage() {
     setPreview(file.url || file.preview);
     setPreviewOpen(true);
 
-    console.log(file);
-
     const isImage = file.type.startsWith("image/");
     setContentType(isImage ? "image" : "video");
 
