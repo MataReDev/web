@@ -71,8 +71,8 @@ function ProfilePage() {
 
     makeRequest(`api/users/update`, "PUT", null, formData, null, true)
       .then((data) => {
-        toast.error(
-          `Ton profil a bien été mit à jour ${data.username} :)`,
+        toast.success(
+          `Ton profil a bien été mit à jour ${username} :)`,
           toastOptions
         );
         setTimeout(() => {
