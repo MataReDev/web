@@ -7,7 +7,7 @@ const VideoPlayer2 = ({ options, video }) => {
   const playerRef = useRef(null);
 
   useEffect(() => {
-    const player = videoRef.current.plyr;
+    const player = videoRef.current?.plyr;
     const playerT = playerRef.current;
 
     // console.log(player);

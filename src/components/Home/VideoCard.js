@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, generatePath } from "react-router-dom";
 import Avatar from "../Avatar";
 
 function VideoCard({ video, onClick }) {
@@ -41,7 +41,7 @@ function VideoCard({ video, onClick }) {
     onClick ??
     (() => {
       // Fonction par défaut
-      navigate(`video/${video?._id}`, { replace: false });
+      navigate(`/video/${video?._id}`, { replace: false });
     });
   return (
     <div className="max-w-sm rounded-xl overflow-hidden shadow-lg m-4">

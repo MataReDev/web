@@ -50,7 +50,7 @@ const HomePage = () => {
 
         const targetDivRect = targetDiv.getBoundingClientRect();
 
-        if (targetDivRect.bottom <= window.innerHeight + 3) return;
+        if (targetDivRect.bottom <= window.innerHeight -2) return;
 
         if (!loading) {
           const state = { scrollPosition: scrollTop, videos: videos };
@@ -124,7 +124,7 @@ const handleClickVideo = (video_id) => {
   const state = { scrollPosition: scrollPosition, videos: videos };
 
   window.history.pushState(state, "", window.location.href);
-  navigate(`video/${video_id}`, {replace: false, relative: true});
+  navigate(`/video/${video_id}`, {replace: false, relative: true});
 
 };
 
