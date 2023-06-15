@@ -4,11 +4,7 @@ import { Link } from "react-router-dom";
 import makeRequest from "../../Utils/RequestUtils";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faLock,
-  faLockOpen,
-  faUserCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { faLock, faLockOpen } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { Button, Modal, Box, Typography } from "@mui/material";
 
@@ -31,6 +27,8 @@ function DashboardVideo() {
   const [actionType, setActionType] = useState("");
   const [open, setOpen] = useState(false);
   const [videos, setVideos] = useState([]);
+  const [page, setPage] = useState(1);
+  const [perPage, setPerPage] = useState(10);
 
   useEffect(() => {
     getVideos();
@@ -58,10 +56,17 @@ function DashboardVideo() {
         });
       }
     }
-  }, []);
+  }, [page, perPage]);
 
   const getVideos = () => {
-    makeRequest("api/videos/getAllAdmin", "GET", null, null, null, true)
+    makeRequest(
+      `api/videos/getAllAdmin?page=${page}&perPage=${perPage}`,
+      "get",
+      null,
+      null,
+      null,
+      true
+    )
       .then((data) => {
         setVideos(data);
       })
@@ -161,22 +166,38 @@ function DashboardVideo() {
     setOpen(false);
   };
 
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1) {
+      setPage(newPage);
+    }
+  };
+
+  const handlePerPageChange = (event) => {
+    const newPerPage = parseInt(event.target.value);
+    setPage(1);
+    setPerPage(newPerPage);
+  };
+
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Vidéos</h2>
       <table>
         <thead>
           <tr>
-            <th className="py-2 px-4 bg-gray-200 border-b">Titre</th>
-            <th className="py-2 px-4 bg-gray-200 border-b">Description</th>
-            <th className="py-2 px-4 bg-gray-200 border-b">Etat</th>
+            <th className="py-2 px-4 bg-gray-200 border-b w-1/5">Titre</th>
+            <th className="py-2 px-4 bg-gray-200 border-b w-1/2">
+              Description
+            </th>
+            <th className="py-2 px-4 bg-gray-200 border-b w-1/12">Etat</th>
             <th className="py-2 px-4 bg-gray-200 border-b">Actions</th>
           </tr>
         </thead>
         <tbody>
           {videos?.map((video, index) => (
             <tr key={index}>
-              <td className="py-2 px-4 w-1/5"><Link to={`/video/${video._id}`}>{video.title}</Link></td>
+              <td className="py-2 px-4 w-1/5">
+                <Link to={`/video/${video._id}`}>{video.title}</Link>
+              </td>
               <td className="py-2 px-4 w-1/2 ">{video.description}</td>
               <td className="py-2 px-4 w-1/12 text-center">
                 {(() => {
@@ -247,6 +268,38 @@ function DashboardVideo() {
           ))}
         </tbody>
       </table>
+      <div className="flex justify-center gap-5 mt-4">
+        <div>
+          <Button
+            variant="contained"
+            disabled={page === 1}
+            onClick={() => handlePageChange(page - 1)}
+          >
+            Page précédente
+          </Button>
+        </div>
+        <div>
+          <Button
+            variant="contained"
+            disabled={videos.length < perPage}
+            onClick={() => handlePageChange(page + 1)}
+          >
+            Page suivante
+          </Button>
+        </div>
+        <div className="flex items-center">
+          <span className="mr-2">Items par page:</span>
+          <select
+            className="p-2"
+            value={perPage}
+            onChange={handlePerPageChange}
+          >
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      </div>
       <Modal
         open={showConfirmModal}
         onClose={handleClose}
