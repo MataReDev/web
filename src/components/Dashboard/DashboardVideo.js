@@ -181,7 +181,7 @@ function DashboardVideo() {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Vidéos</h2>
-      <table>
+      <table className="border-collapse w-full">
         <thead>
           <tr>
             <th className="py-2 px-4 bg-gray-200 border-b w-1/5">Titre</th>

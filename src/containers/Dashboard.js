@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
-import makeRequest from "../Utils/RequestUtils";
 
 import DashboardUser from "../components/Dashboard/DashboardUser";
 import DashboardVideo from "../components/Dashboard/DashboardVideo";
