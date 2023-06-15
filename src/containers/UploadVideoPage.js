@@ -2,7 +2,8 @@ import React, { useState, useContext } from "react";
 import makeRequest from "../Utils/RequestUtils";
 import { toast } from "react-toastify";
 import { AuthContext } from "../Auth/authContext";
-import Axios from "axios";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Upload, Modal } from "antd";
 
 function UploadVideoPage() {
   const [uploadPercentage, setUploadPercentage] = useState(0);
@@ -90,7 +91,7 @@ function UploadVideoPage() {
       .finally(() => {
         // Masquer la barre de progression une fois la soumission terminée
         setProgressBarVisibility(false);
-      });;
+      });
   };
 
   const onUploadProgress = (progressEvent) => {
@@ -98,6 +99,72 @@ function UploadVideoPage() {
       (progressEvent.loaded / progressEvent.total) * 100
     );
     setProgress(progress);
+  };
+
+  // -------------- PREVIEW --------------- //
+
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [preview, setPreview] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
+  const [contentType, setContentType] = useState("");
+
+  const handleCancel = () => setPreviewOpen(false);
+
+  const getBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreview(file.url || file.preview);
+    setPreviewOpen(true);
+
+    console.log(file);
+
+    const isImage = file.type.startsWith("image/");
+    setContentType(isImage ? "image" : "video");
+
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
+  };
+  // -------------------------------------- //
+
+  const [defaultFileList, setDefaultFileList] = useState([]);
+  const handleOnChange = ({ file, fileList, event }) => {
+    setDefaultFileList(fileList);
+  };
+
+  const uploadThumbnail = async (options) => {
+    const { onSuccess, onError, file } = options;
+
+    try {
+      setThumbnailFile(file);
+      onSuccess("Ok");
+    } catch (err) {
+      console.log("Error: ", err);
+      const error = new Error("Some error");
+      onError({ err });
+    }
+  };
+
+  const uploadVideo = async (options) => {
+    const { onSuccess, onError, file } = options;
+
+    try {
+      setVideoFile(file);
+      onSuccess("Ok");
+    } catch (err) {
+      console.log("Error: ", err);
+      const error = new Error("Some error");
+      onError({ err });
+    }
   };
 
   return (
@@ -163,22 +230,53 @@ function UploadVideoPage() {
           />
         </label>
         <label className="block">
-          <p className="font-bold">Fichier Vidéo</p>
-          <input
-            type="file"
-            accept="video/*"
-            onChange={handleVideoChange}
-            className="mt-1"
-          />
+          <p className="font-bold mb-2">Fichier Vidéo</p>
+          <Upload
+            listType="picture"
+            accept="video/mp4, video/mov, video/wmv"
+            name="video"
+            showUploadList={true}
+            onPreview={handlePreview}
+            onChange={handleOnChange}
+            defaultFileList={defaultFileList}
+            customRequest={uploadVideo}
+            multiple={false}
+            maxCount={1}
+          >
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
         </label>
+        <Modal
+          open={previewOpen}
+          title={previewTitle}
+          footer={""}
+          onCancel={handleCancel}
+        >
+          {contentType === "image" && (
+            <img alt="example" style={{ width: "100%" }} src={preview} />
+          )}
+          {contentType === "video" && (
+            <video controls style={{ width: "100%" }}>
+              <source src={preview} type="video/mp4" />
+            </video>
+          )}
+        </Modal>
         <label className="block">
-          <p className="font-bold">Miniature</p>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleThumbnailChange}
-            className="mt-1"
-          />
+          <p className="font-bold mb-2">Miniature</p>
+          <Upload
+            listType="picture"
+            accept="image/png, image/jpeg, image/jpg"
+            name="thumbnail"
+            showUploadList={true}
+            onPreview={handlePreview}
+            onChange={handleOnChange}
+            defaultFileList={defaultFileList}
+            customRequest={uploadThumbnail}
+            multiple={false}
+            maxCount={1}
+          >
+            <Button icon={<UploadOutlined />}>Upload</Button>
+          </Upload>
         </label>
 
         <button
