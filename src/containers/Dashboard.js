@@ -48,9 +48,9 @@ function Dashboard() {
         </div>
         <div
           className={`rounded-md shadow-md p-5 w-full md:w-1/3 transition duration-300 ease-in-out hover:bg-gray-300 ${
-            activeTab === "video" ? "bg-gray-400" : "bg-white"
+            activeTab === "videos" ? "bg-gray-400" : "bg-white"
           }`}
-          onClick={() => changeTab("video")}
+          onClick={() => changeTab("videos")}
         >
           VIDEOS
         </div>
