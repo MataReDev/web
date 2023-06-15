@@ -13,14 +13,6 @@ let socketUrl = "https://iseevision.fr";
 if (process.env.REACT_APP_ENVIRONMENT === "localhost") {
   socketUrl = "http://localhost:3001/";
 }
-const socket = io(socketUrl, {
-  path: "/socket.io",
-  withCredentials: true,
-  extraHeaders: {
-    "X-XSRF-TOKEN": localStorage.getItem("xsrfToken"),
-  },
-});
-
 function LiveChat({ videoId }) {
   const { user, addToSecureLocalStorage, removeFromSecureLocalStorage } =
     useContext(AuthContext);
@@ -88,13 +80,12 @@ function LiveChat({ videoId }) {
       checkAuthentication();
     });
 
-
     //Handle for disconnect user when refreshing page
     const handleVisibilityChange = () => {
       socket.emit("leave video chat", videoId);
     };
     window.addEventListener("visibilitychange", handleVisibilityChange);
-  
+
     return () => {
       socket.emit("leave video chat", videoId);
       window.removeEventListener("visibilitychange", handleVisibilityChange);
@@ -102,13 +93,14 @@ function LiveChat({ videoId }) {
       socket.off("chat message");
       socket.off("user joined");
       socket.off("user left");
-      socket.disconnect()
+      socket.disconnect();
     };
   }, [user]);
 
   useEffect(() => {
-    // Scroll to the bottom of the chat list whenever the messages state changes
-    chatListRef.current.scrollTop = chatListRef.current?.scrollHeight;
+    if (chatListRef.current?.scrollTop)
+      // Scroll to the bottom of the chat list whenever the messages state changes
+      chatListRef.current.scrollTop = chatListRef.current?.scrollHeight;
   }, [messages]);
 
   const handleNewMessageSubmit = (event) => {
@@ -204,24 +196,26 @@ function LiveChat({ videoId }) {
           <h2 className="text-lg font-semibold mb-4">
             Utilisateurs connectés sur le Chat
           </h2>
-          <table className="min-w-full overflow-x-auto">
-            <tbody>
-              {connectedUsers.map((user) => (
-                <tr key={user.id}>
-                  <td className="border-b border-gray-300 py-2">
-                    <img
-                      className="rounded-full w-6 h-6"
-                      src={user.logo}
-                      alt={user.username + " Profile Picture "}
-                    />
-                  </td>
-                  <td className="border-b border-gray-300 py-2">
-                    {user.username}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="overflow-y-scroll h-64 mx-3">
+            <table className="min-w-full ">
+              <tbody>
+                {connectedUsers.map((user) => (
+                  <tr key={user.id}>
+                    <td className="border-b border-gray-300 py-2">
+                      <img
+                        className="rounded-full w-6 h-6"
+                        src={user.logo_path}
+                        alt={user.username + " Profile Picture "}
+                      />
+                    </td>
+                    <td className="border-b border-gray-300 py-2">
+                      {user.username}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
