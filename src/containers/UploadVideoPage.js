@@ -231,7 +231,7 @@ function UploadVideoPage() {
           <p className="font-bold mb-2">Fichier Vidéo</p>
           <Upload
             listType="picture"
-            accept="video/mp4, video/mov, video/wmv"
+            accept="video/*"
             name="video"
             showUploadList={true}
             onPreview={handlePreview}
