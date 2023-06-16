@@ -241,36 +241,41 @@ function DashboardUser() {
               <td className="w-1/12">{user.banReason}</td>
 
               <td className="py-2 px-4 whitespace-no-wrap text-right text-sm leading-5 font-medium w-2/5">
-                <button
-                  className="transition duration-300 ease-in-out text-green-600 hover:text-green-900 border border-green-600 hover:border-green-900 rounded-md px-3 py-1 m-1 hover:bg-green-200"
-                  onClick={() => {
-                    confirmUnBlock(user._id);
-                    handleOpen();
-                  }}
-                >
-                  <FontAwesomeIcon icon={faUserCheck} className="mr-1" />
-                  Débannir
-                </button>
-                <button
-                  className="transition duration-300 ease-in-out text-blue-600 hover:text-blue-900 border border-blue-600 hover:border-blue-900 rounded-md px-3 py-1 m-1 hover:bg-blue-200"
-                  onClick={() => {
-                    confirmBlockTemporarily(user._id);
-                    handleOpen();
-                  }}
-                >
-                  <FontAwesomeIcon icon={faClock} className="mr-1" />
-                  Ban temporairement
-                </button>
-                <button
-                  className="transition duration-300 ease-in-out text-gray-600 hover:text-gray-900 border border-gray-600 hover:border-gray-900 rounded-md px-3 py-1 m-1 hover:bg-gray-200"
-                  onClick={() => {
-                    confirmBlock(user._id);
-                    handleOpen();
-                  }}
-                >
-                  <FontAwesomeIcon icon={faLock} className="mr-1" />
-                  Bannir
-                </button>
+                {user.banReason ? (
+                  <button
+                    className="transition duration-300 ease-in-out text-green-600 hover:text-green-900 border border-green-600 hover:border-green-900 rounded-md px-3 py-1 m-1 hover:bg-green-200"
+                    onClick={() => {
+                      confirmUnBlock(user._id);
+                      handleOpen();
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faUserCheck} className="mr-1" />
+                    Débannir
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      className="transition duration-300 ease-in-out text-blue-600 hover:text-blue-900 border border-blue-600 hover:border-blue-900 rounded-md px-3 py-1 m-1 hover:bg-blue-200"
+                      onClick={() => {
+                        confirmBlockTemporarily(user._id);
+                        handleOpen();
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faClock} className="mr-1" />
+                      Ban temporairement
+                    </button>
+                    <button
+                      className="transition duration-300 ease-in-out text-gray-600 hover:text-gray-900 border border-gray-600 hover:border-gray-900 rounded-md px-3 py-1 m-1 hover:bg-gray-200"
+                      onClick={() => {
+                        confirmBlock(user._id);
+                        handleOpen();
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faLock} className="mr-1" />
+                      Bannir
+                    </button>
+                  </>
+                )}
                 <button
                   className="transition duration-300 ease-in-out text-red-600 hover:text-red-900 border border-red-600 hover:border-red-900 rounded-md px-3 py-1 m-1 hover:bg-red-200"
                   onClick={() => {

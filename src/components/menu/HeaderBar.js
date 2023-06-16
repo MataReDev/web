@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../../index.css";
 import ProfileMenu from "./ProfileMenu";
@@ -9,7 +9,6 @@ import { AuthContext } from "../../Auth/authContext";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import makeRequest from "../../Utils/RequestUtils";
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 
 library.add(faSearch);
