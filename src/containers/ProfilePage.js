@@ -23,6 +23,8 @@ function ProfilePage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [logo, setLogo] = useState(null);
+  const [banner, setBanner] = useState(null);
+
 
   const [defaultFileList, setDefaultFileList] = useState([]);
 
@@ -66,6 +68,7 @@ function ProfilePage() {
     formData.append("username", username);
     formData.append("email", email);
     formData.append("logo", logo);
+    formData.append("banner", banner);
 
     if (password) formData.password = password;
 
@@ -93,6 +96,21 @@ function ProfilePage() {
     try {
       console.log(file);
       setLogo(file);
+
+      onSuccess("Ok");
+    } catch (err) {
+      console.log("Eroor: ", err);
+      const error = new Error("Some error");
+      onError({ err });
+    }
+  };
+
+  const uploadBanner = async (options) => {
+    const { onSuccess, onError, file } = options;
+
+    try {
+      console.log(file);
+      setBanner(file);
 
       onSuccess("Ok");
     } catch (err) {
@@ -141,7 +159,7 @@ function ProfilePage() {
         <title>iSee - Profile</title>
       </Helmet>
       <h1 className="text-3xl font-bold mb-4">Profile Page</h1>
-      <div className="mb-4 text-center">
+      <div className="mb-4 text-center flex">
         <ImgCrop rotationSlider>
           <Upload
             accept="image/png, image/jpeg, image/jpg"
@@ -158,6 +176,25 @@ function ProfilePage() {
             <div>
               <PlusOutlined />
               <div style={{ marginTop: 8 }}>Avatar</div>
+            </div>
+          </Upload>
+        </ImgCrop>
+        <ImgCrop rotationSlider aspect={2560 / 1440} >
+          <Upload
+            accept="image/png, image/jpeg, image/jpg"
+            name="banner"
+            listType="picture-circle"
+            showUploadList={true}
+            onPreview={handlePreview}
+            onChange={handleOnChange}
+            defaultFileList={defaultFileList}
+            customRequest={uploadBanner}
+            multiple={false}
+            maxCount={1}
+          >
+            <div>
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Bannière</div>
             </div>
           </Upload>
         </ImgCrop>
