@@ -32,9 +32,7 @@ function LoginForm() {
     if (checkEmail(email)) {
       login(email, password);
     } else {
-      setErrorMessage(
-        "Invalid email, please use another email address"
-      );
+      setErrorMessage("Invalid email, please use another email address");
     }
   };
 
@@ -113,9 +111,11 @@ function SignupForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [logo, setLogo] = useState(null);
 
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const handleInputFocus = () => {
     setErrorMessage("");
   };
@@ -172,11 +172,13 @@ function SignupForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (checkEmail(email)) {
-      register(username, email, password, logo);
+       if (password !== confirmPassword) {
+      setErrorMessage("Passwords do not match");
     } else {
-      setErrorMessage(
-        "Invalid email, please use another email address"
-      );
+      register(username, email, password, logo);
+    }
+    } else {
+      setErrorMessage("Invalid email, please use another email address");
     }
   };
 
@@ -189,10 +191,6 @@ function SignupForm() {
     }
   };
 
-  // Hide/Show Password
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
 
   return (
     <div
@@ -256,7 +254,7 @@ function SignupForm() {
         />
       </div>
       <div className="mb-6 relative">
-      <label htmlFor="password" className="block text-black font-bold mb-2">
+        <label htmlFor="password" className="block text-black font-bold mb-2">
           Password :
         </label>
         <input
@@ -270,11 +268,35 @@ function SignupForm() {
         />
         <button
           type="button"
-          onClick={togglePasswordVisibility}
+          onClick={() => setShowPassword(!showPassword)}
           className="absolute right-0 top-0 mr-2 mt-[34px] text-[#868686]"
         >
           {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
         </button>
+      </div>
+      <div className="mb-6 relative">
+        <label htmlFor="password" className="block text-black font-bold mb-2">
+          Confirm password :
+        </label>
+        <input
+          type={showConfirmPassword ? "text" : "password"}
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          onFocus={handleInputFocus}
+          required
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10"
+        />
+        <button
+          type="button"
+          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          className="absolute right-0 top-0 mr-2 mt-[34px] text-[#868686]"
+        >
+          {showConfirmPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+        </button>
+        {errorMessage && (
+          <div className="text-red-500 mb-4">{errorMessage}</div>
+        )}
       </div>
       {user.isAuthenticated ? (
         <p>You're connected !</p>
