@@ -12,15 +12,15 @@ const DashboardHome = ({ setActiveTab }) => {
 
   const formatSize = (size) => {
     if (size < 1024) {
-      return size + " octets";
+      return size + " bytes";
     } else if (size < 1024 * 1024) {
-      return (size / 1024).toFixed(2) + " Ko";
+      return (size / 1024).toFixed(2) + " KB";
     } else if (size < 1024 * 1024 * 1024) {
-      return (size / (1024 * 1024)).toFixed(2) + " Mo";
+      return (size / (1024 * 1024)).toFixed(2) + " MB";
     } else if (size < 1024 * 1024 * 1024 * 1024) {
-      return (size / (1024 * 1024 * 1024)).toFixed(2) + " Go";
+      return (size / (1024 * 1024 * 1024)).toFixed(2) + " GB";
     } else {
-      return (size / (1024 * 1024 * 1024 * 1024)).toFixed(2) + " To";
+      return (size / (1024 * 1024 * 1024 * 1024)).toFixed(2) + " TB";
     }
   };
 
@@ -67,17 +67,17 @@ const DashboardHome = ({ setActiveTab }) => {
           className="bg-gray-100 rounded-lg shadow-lg p-5 w-full md:w-1/3 text-center"
           onClick={() => setActiveTab("users")}
         >
-          <h2 className="text-lg font-bold mb-3">Comptes utilisateurs</h2>
+          <h2 className="text-lg font-bold mb-3">User Accounts</h2>
           <p className="text-4xl font-bold">{userCount}</p>
         </div>
         <div className="bg-gray-100 rounded-lg shadow-lg p-5 w-full md:w-1/3 text-center"
           onClick={() => setActiveTab("videos")}>
-          <h2 className="text-lg font-bold mb-3">Vidéos</h2>
+          <h2 className="text-lg font-bold mb-3">Videos</h2>
           <p className="text-4xl font-bold">{videoCount}</p>
         </div>
         <div className="bg-gray-100 rounded-lg shadow-lg p-5 w-full md:w-1/3 text-center">
           <h2 className="text-lg font-bold mb-3">
-            Taille vidéo totale
+            Total Video Size
             <p className="text-4xl font-bold">{videoTotalSize}</p>
           </h2>
         </div>
