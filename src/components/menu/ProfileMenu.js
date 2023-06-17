@@ -1,11 +1,13 @@
-import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import { AuthContext } from "../../Auth/authContext";
 import Avatar from "../Avatar";
+
 function ProfileMenu() {
   const [showMenu, setShowMenu] = useState(false);
   const { logout, user } = useContext(AuthContext);
+  const location = useLocation();
 
   const handleMenuToggle = () => {
     setShowMenu(!showMenu);
@@ -14,6 +16,10 @@ function ProfileMenu() {
   const handleLogout = () => {
     logout();
   };
+
+  useEffect(() => {
+    setShowMenu(false);
+  }, [location]);
 
   return (
     <div className="relative" onClick={handleMenuToggle}>
@@ -28,9 +34,7 @@ function ProfileMenu() {
             alt={user.currentUser.username + "profile icon"}
           />
         ) : (
-          <Avatar
-            username={user.currentUser.username}
-          />
+          <Avatar username={user.currentUser.username} />
         )}
       </button>
       {showMenu && (
@@ -38,12 +42,12 @@ function ProfileMenu() {
           <div className="m-2">
             <Link to={`/channel/${user.currentUser.username}`}>
               <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
-              My Channel
+                My Channel
               </button>
             </Link>
             <Link to="/profile">
               <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
-              Account settings
+                Account settings
               </button>
             </Link>
             <hr className="border-gray-400" />

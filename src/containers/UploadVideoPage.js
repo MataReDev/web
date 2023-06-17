@@ -75,7 +75,7 @@ function UploadVideoPage() {
               "toastMessage",
               JSON.stringify({
                 status: "success",
-                message: `Vidéo upload avec succès ${user.currentUser?.username} ! `,
+                message: `Video upload with success ${user.currentUser?.username} ! `,
               })
             );
             // Redirigez l'utilisateur vers la chaine
