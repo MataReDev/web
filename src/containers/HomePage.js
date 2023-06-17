@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import VideoCard from "../components/Home/VideoCard";
 import makeRequest from "../Utils/RequestUtils";
 import ScrollArrow from "../components/ScrollArrow";
+
 const HomePage = () => {
   const [videos, setVideos] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
