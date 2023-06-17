@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faThumbsUp as faThumbsUpFull,
-  faThumbsDown as faThumbsDownFull
+  faThumbsDown as faThumbsDownFull,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faThumbsUp as faThumbsUpEmpty,
@@ -32,7 +32,7 @@ function Commentaires({ videoId }) {
       false
     )
       .then((data) => {
-        setCommentaires(data);
+        if (data !== null) setCommentaires(data);
       })
       .catch((error) => console.error(error));
   };
@@ -47,7 +47,7 @@ function Commentaires({ videoId }) {
 
       await makeRequest("api/comments/add", "POST", null, body, null, true)
         .then((data) => {
-          setCommentaires([...commentaires, data]);
+          if (data !== null) setCommentaires([...commentaires, data]);
         })
         .catch((error) => console.error(error));
     } else {
@@ -75,7 +75,7 @@ function Commentaires({ videoId }) {
         true
       )
         .then((data) => {
-          updateCommentaire(data);
+          if (data !== null) updateCommentaire(data);
         })
         .catch((error) => console.error(error));
     } else {
@@ -94,7 +94,7 @@ function Commentaires({ videoId }) {
         true
       )
         .then((data) => {
-          updateCommentaire(data);
+          if (data !== null) updateCommentaire(data);
         })
         .catch((error) => console.error(error));
     } else {
@@ -113,10 +113,12 @@ function Commentaires({ videoId }) {
         true
       )
         .then((data) => {
-          const updatedCommentaires = commentaires.filter(
-            (commentaire) => commentaire._id !== commentId
-          );
-          setCommentaires(updatedCommentaires);
+          if (data !== null) {
+            const updatedCommentaires = commentaires.filter(
+              (commentaire) => commentaire._id !== commentId
+            );
+            setCommentaires(updatedCommentaires);
+          }
         })
         .catch((error) => console.error(error));
     } else {
@@ -156,83 +158,65 @@ function Commentaires({ videoId }) {
       </div>
       <div className="flex flex-col gap-4 pt-2 mt-4 ">
         {commentaires &&
-          commentaires.map(
-            (commentaire, index) => (
-              (
-                <div
-                  key={`${commentaire._id}-${index}`}
-                  className="p-2 rounded-xl bg-gray-200"
-                >
-                  <div className="flex justify-between">
-                    <div className="flex text-sm gap-2">
-                      <div className="font-bold">
-                        {commentaire.userId.username}
-                      </div>
-                      {formatTimestamp(commentaire.createdAt)}
-                    </div>
-
-                    <div
-                      name="action-button"
-                      className="flex gap-2 text-sm font-bold h-5"
-                    >
-                      <button
-                        onClick={() => handleLikeCommentaire(commentaire._id)}
-                        className="text-green-500 rounded-xl"
-                      >
-                        {commentaire.likes.includes(user.currentUser?.id) ? (
-                          <FontAwesomeIcon
-                            icon={faThumbsUpFull}
-                            className="h-5"
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            icon={faThumbsUpEmpty}
-                            className="h-5"
-                          />
-                        )}
-
-                        {commentaire.likesCount}
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleDislikeCommentaire(commentaire._id)
-                        }
-                        className="text-red-500 rounded-xl"
-                      >
-                        {commentaire.dislikes.includes(user.currentUser?.id) ? (
-                          <FontAwesomeIcon
-                            icon={faThumbsDownFull}
-                            className="h-5"
-                          />
-                        ) : (
-                          <FontAwesomeIcon
-                            icon={faThumbsDownEmpty}
-                            className="h-5"
-                          />
-                        )}{" "}
-                        {commentaire.dislikesCount}
-                      </button>
-                      {(user.currentUser?.id === commentaire.userId._id || user.currentUser?.isAdmin === true) && (
-                        <button
-                          onClick={() =>
-                            handleDeleteCommentaire(commentaire._id)
-                          }
-                          className="text-gray-500 rounded-xl"
-                        >
-                          <FontAwesomeIcon
-                            icon={faTrashAltEmpty}
-                            className="h-5"
-                          />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  <hr className="border border-gray-400 m-2" />
-                  <div>{commentaire.content}</div>
+          commentaires.map((commentaire, index) => (
+            <div
+              key={`${commentaire._id}-${index}`}
+              className="p-2 rounded-xl bg-gray-200"
+            >
+              <div className="flex justify-between">
+                <div className="flex text-sm gap-2">
+                  <div className="font-bold">{commentaire.userId.username}</div>
+                  {formatTimestamp(commentaire.createdAt)}
                 </div>
-              )
-            )
-          )}
+
+                <div
+                  name="action-button"
+                  className="flex gap-2 text-sm font-bold h-5"
+                >
+                  <button
+                    onClick={() => handleLikeCommentaire(commentaire._id)}
+                    className="text-green-500 rounded-xl"
+                  >
+                    {commentaire.likes.includes(user.currentUser?.id) ? (
+                      <FontAwesomeIcon icon={faThumbsUpFull} className="h-5" />
+                    ) : (
+                      <FontAwesomeIcon icon={faThumbsUpEmpty} className="h-5" />
+                    )}
+
+                    {commentaire.likesCount}
+                  </button>
+                  <button
+                    onClick={() => handleDislikeCommentaire(commentaire._id)}
+                    className="text-red-500 rounded-xl"
+                  >
+                    {commentaire.dislikes.includes(user.currentUser?.id) ? (
+                      <FontAwesomeIcon
+                        icon={faThumbsDownFull}
+                        className="h-5"
+                      />
+                    ) : (
+                      <FontAwesomeIcon
+                        icon={faThumbsDownEmpty}
+                        className="h-5"
+                      />
+                    )}{" "}
+                    {commentaire.dislikesCount}
+                  </button>
+                  {(user.currentUser?.id === commentaire.userId._id ||
+                    user.currentUser?.isAdmin === true) && (
+                    <button
+                      onClick={() => handleDeleteCommentaire(commentaire._id)}
+                      className="text-gray-500 rounded-xl"
+                    >
+                      <FontAwesomeIcon icon={faTrashAltEmpty} className="h-5" />
+                    </button>
+                  )}
+                </div>
+              </div>
+              <hr className="border border-gray-400 m-2" />
+              <div>{commentaire.content}</div>
+            </div>
+          ))}
       </div>
     </div>
   );

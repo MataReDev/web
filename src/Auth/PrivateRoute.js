@@ -13,6 +13,7 @@ const PrivateRoute = () => {
     const checkAuthentication = async () => {
       makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
         .then((data) => {
+          if (data !== null) {
           const { user } = data;
           if (user) {
             addToSecureLocalStorage("user", user);
@@ -22,6 +23,10 @@ const PrivateRoute = () => {
             removeFromSecureLocalStorage("user");
             window.location.href = "/login";
           }
+        } else {
+            removeFromSecureLocalStorage("user");
+            window.location.href = "/login";
+        } 
         })
         .catch((error) => {
           console.error(error);

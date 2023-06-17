@@ -69,24 +69,26 @@ function UploadVideoPage() {
       onUploadProgress
     )
       .then((data) => {
-        if (user) {
-          localStorage.setItem(
-            "toastMessage",
-            JSON.stringify({
-              status: "success",
-              message: `Vidéo upload avec succès ${user.currentUser?.username} ! `,
-            })
-          );
-          // Redirigez l'utilisateur vers la chaine
-          window.location.href = `/channel/${user.currentUser?.username}`;
+        if (data !== null) {
+          if (user) {
+            localStorage.setItem(
+              "toastMessage",
+              JSON.stringify({
+                status: "success",
+                message: `Vidéo upload avec succès ${user.currentUser?.username} ! `,
+              })
+            );
+            // Redirigez l'utilisateur vers la chaine
+            window.location.href = `/channel/${user.currentUser?.username}`;
+          }
         }
       })
       .catch((error) => {
-        console.log("user : " + error);
-        toast.error(
-          "Une erreur est survenue durant l'enregistrement, veuillez réessayer dans quelques minutes.",
-          toastOptions
-        );
+        console.error( error);
+        // toast.error(
+        //   "Une erreur est survenue durant l'enregistrement, veuillez réessayer dans quelques minutes.",
+        //   toastOptions
+        // );
       })
       .finally(() => {
         // Masquer la barre de progression une fois la soumission terminée

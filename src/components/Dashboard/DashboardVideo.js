@@ -68,7 +68,9 @@ function DashboardVideo() {
       true
     )
       .then((data) => {
-        setVideos(data);
+        if (data !== null) {
+          setVideos(data);
+        }
       })
       .catch((error) => console.error(error));
   };
@@ -103,8 +105,10 @@ function DashboardVideo() {
           true
         )
           .then((data) => {
+            if (data !== null) {
             getVideos();
             toast.success(data.message);
+            }
           })
           .catch((error) => {
             console.error(error);
@@ -120,8 +124,10 @@ function DashboardVideo() {
           true
         )
           .then((data) => {
+            if (data !== null) {
             getVideos();
             toast.success(data.message);
+            }
           })
           .catch((error) => {
             console.error(error);
@@ -137,8 +143,10 @@ function DashboardVideo() {
           true
         )
           .then((data) => {
+            if (data !== null) {
             getVideos();
             toast.success(data.message);
+            }
           })
           .catch((error) => {
             console.error(error);

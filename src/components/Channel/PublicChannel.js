@@ -55,8 +55,10 @@ export default function PublicChannel({ username }) {
         false
       )
         .then((data) => {
+          if (data !== null) {
           setChannel(data);
           getUserVideo(data.id);
+          }
         })
         .catch((error) => console.error(error));
     }

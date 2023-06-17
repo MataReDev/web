@@ -25,12 +25,15 @@ export default function PrivateChannel({ username }) {
       null,
       true
     )
-      .then((data) => setVideos(data))
+      .then((data) => {
+        if (data !== null) 
+          setVideos(data);
+      } )
       .catch((error) => console.error(error));
   };
 
   const getUserInfo = async (username) => {
-    await makeRequest(
+     makeRequest(
       `api/users/channel/${username}`,
       "GET",
       null,
@@ -39,15 +42,25 @@ export default function PrivateChannel({ username }) {
       false
       )
       .then((data) => {
+        if (data !== null) {
+        console.log("get ",JSON.stringify(data));
         setChannel(data);
         getUserVideo(data.id);
+        }
       })
       .catch((error) => console.error(error));
     };
     
   // Fonction de suppression d'une vidéo
   const handleDelete = (videoId) => {
-    makeRequest(`api/videos/delete/${videoId}`,"DELETE",null,null,null,true)
+    makeRequest(
+      `api/videos/delete/${videoId}`,
+      "DELETE",
+      null,
+      null,
+      null,
+      true
+    ).catch((error) => console.error(error));
     
     getUserInfo(username)
   };
@@ -61,7 +74,7 @@ export default function PrivateChannel({ username }) {
       { state: newState },
       null,
       true
-    )
+    ).catch((error) => console.error(error));
     getUserInfo(username)
   };
 

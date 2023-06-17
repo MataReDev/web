@@ -28,13 +28,13 @@ const DashboardHome = ({ setActiveTab }) => {
     getVideos();
     makeRequest("api/dashboard/getNbUser", "GET", null, null, null, true)
       .then((data) => {
-        setUserCount(data.nbUsers);
+        if (data !== null) setUserCount(data.nbUsers);
       })
       .catch((error) => console.error(error));
 
     makeRequest("api/dashboard/getNbVideoUpload", "GET", null, null, null, true)
       .then((data) => {
-        setVideoCount(data.nbVideos);
+        if (data !== null) setVideoCount(data.nbVideos);
       })
       .catch((error) => console.error(error));
 
@@ -47,7 +47,7 @@ const DashboardHome = ({ setActiveTab }) => {
       true
     )
       .then((data) => {
-        setVideoTotalSize(formatSize(data.totalSize));
+        if (data !== null) setVideoTotalSize(formatSize(data.totalSize));
       })
       .catch((error) => console.error(error));
   }, []);
@@ -55,7 +55,7 @@ const DashboardHome = ({ setActiveTab }) => {
   const getVideos = () => {
     makeRequest("api/videos/getAllAdmin", "GET", null, null, null, true)
       .then((data) => {
-        setVideos(data);
+        if (data !== null) setVideos(data);
       })
       .catch((error) => console.error(error));
   };
@@ -70,8 +70,10 @@ const DashboardHome = ({ setActiveTab }) => {
           <h2 className="text-lg font-bold mb-3">Comptes utilisateurs</h2>
           <p className="text-4xl font-bold">{userCount}</p>
         </div>
-        <div className="bg-gray-100 rounded-lg shadow-lg p-5 w-full md:w-1/3 text-center"
-          onClick={() => setActiveTab("videos")}>
+        <div
+          className="bg-gray-100 rounded-lg shadow-lg p-5 w-full md:w-1/3 text-center"
+          onClick={() => setActiveTab("videos")}
+        >
           <h2 className="text-lg font-bold mb-3">Vidéos</h2>
           <p className="text-4xl font-bold">{videoCount}</p>
         </div>

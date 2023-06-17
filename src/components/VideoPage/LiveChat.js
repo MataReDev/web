@@ -37,15 +37,17 @@ function LiveChat({ videoId }) {
   const checkAuthentication = async () => {
     makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
       .then((data) => {
-        const { user } = data;
-        if (user) {
-          addToSecureLocalStorage("user", user);
+        if (data !== null) {
+          const { user } = data;
+          if (user) {
+            addToSecureLocalStorage("user", user);
+          }
         }
       })
       .catch((error) => {
         removeFromSecureLocalStorage("user");
 
-        toast.error("An error occurred, please reconnect", toastOptions);
+       // toast.error("An error occurred, please reconnect", toastOptions);
       });
   };
 

@@ -3,7 +3,12 @@ import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
 import makeRequest from "../Utils/RequestUtils";
 import secureLocalStorage from "react-secure-storage";
-import { PlusOutlined, LoadingOutlined, EyeOutlined, EyeInvisibleOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  LoadingOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+} from "@ant-design/icons";
 import { Upload, Modal } from "antd";
 import ImgCrop from "antd-img-crop";
 
@@ -71,19 +76,21 @@ function ProfilePage() {
 
     makeRequest(`api/users/update`, "PUT", null, formData, null, true)
       .then((data) => {
-        toast.success(
-          `Ton profil a bien été mit à jour ${username} :)`,
-          toastOptions
-        );
+        if (data !== null)
+          toast.success(
+            `Ton profil a bien été mit à jour ${username} :)`,
+            toastOptions
+          );
         setTimeout(() => {
           window.location.reload(); // Reload the page after 3 seconds
         }, 4000);
       })
       .catch((error) => {
-        toast.error(
-          `Une erreur est survenu lors de la mise à jour de ton profil, Veuillez réessayer.. ${error.message}`,
-          toastOptions
-        );
+        console.error(error);
+        // toast.error(
+        //   `Une erreur est survenu lors de la mise à jour de ton profil, Veuillez réessayer.. ${error.message}`,
+        //   toastOptions
+        // );
       });
   };
 

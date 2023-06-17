@@ -66,7 +66,7 @@ function DashboardUser() {
   const getUser = () => {
     makeRequest("api/users/getAll", "GET", null, null, null, true)
       .then((data) => {
-        setUsers(data);
+        if (data !== null) setUsers(data);
       })
       .catch((error) => console.error(error));
   };
@@ -111,8 +111,10 @@ function DashboardUser() {
           true
         )
           .then((data) => {
-            getUser();
-            toast.success(data.message);
+            if (data !== null) {
+              getUser();
+              toast.success(data.message);
+            }
           })
           .catch((error) => {
             console.error(error);
@@ -133,8 +135,10 @@ function DashboardUser() {
           true
         )
           .then((data) => {
-            getUser();
-            toast.success(data.message);
+            if (data !== null) {
+              getUser();
+              toast.success(data.message);
+            }
           })
           .catch((error) => console.error(error));
         break;
@@ -155,12 +159,12 @@ function DashboardUser() {
           true
         )
           .then((data) => {
-            console.log("ok");
+            if (data !== null) {
             getUser();
             toast.success(data.message);
+            }
           })
           .catch((error) => {
-            console.log("error");
             console.error(error);
           });
         break;
@@ -174,8 +178,10 @@ function DashboardUser() {
           true
         )
           .then((data) => {
+            if (data !== null) {
             getUser();
             toast.success(data.message);
+            }
           })
           .catch((error) => console.error(error));
         break;

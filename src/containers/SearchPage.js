@@ -18,7 +18,7 @@ export default function SearchPage() {
       false
     )
       .then((data) => {
-        setSearchResults(data);
+        if (data !== null) setSearchResults(data);
       })
       .catch((error) => console.error(error));
   };

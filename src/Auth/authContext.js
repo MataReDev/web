@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import { useLocation, useNavigate,redirect } from "react-router-dom";
+import { useLocation, navigate, redirect, Navigate } from "react-router-dom";
 import secureLocalStorage from "react-secure-storage";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -43,9 +43,9 @@ const AuthProvider = (props) => {
       };
     }
   }
+  const [isLoading, setIsLoading] = useState(true);
 
   const [user, setUser] = useState(initialUser);
-
 
   const location = useLocation();
 
@@ -67,29 +67,57 @@ const AuthProvider = (props) => {
   };
 
   useEffect(() => {
-    const checkAuthentication = async () => {
-      makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
-        .then((data) => {
-          const { user } = data;
-          if (user) {
-            addToSecureLocalStorage("user", user);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    };
+    const isRestrictedRoute =
+      location.pathname.includes("/admin") ||
+      location.pathname.includes("/profile");
 
-    if (user.currentUser?.expiresAt) {
-      const currentTime = Date.now();
-      const expiresAtDate = new Date(user.currentUser?.expiresAt);
-      const refreshTokenExpired =
-        expiresAtDate && currentTime > expiresAtDate.getTime();
-      const refreshTokenExpiringSoon =
-        expiresAtDate && currentTime > expiresAtDate.getTime() - 19 * 60 * 1000;
-      if (refreshTokenExpired || refreshTokenExpiringSoon) {
+    if (!isRestrictedRoute) {
+      const checkAuthentication = async () => {
+        console.log("checkAuthentication");
+        makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
+          .then((data) => {
+            if (data !== null) {
+              const { user } = data;
+              if (user) {
+                addToSecureLocalStorage("user", user);
+                // setIsLoading(false);
+              }
+              setIsLoading(false);
+            }
+          })
+          .catch((error) => console.error(error))
+          .finally(() => {
+            setIsLoading(false);
+          });
+      };
+
+      console.log("current user", user.currentUser);
+      if (user.currentUser) {
         checkAuthentication();
+      } else {
+        setIsLoading(false);
       }
+
+      // if (user.currentUser?.expiresAt) {
+      //   const currentTime = Date.now();
+      //   const expiresAtDate = new Date(user.currentUser?.expiresAt);
+      //   const refreshTokenExpired =
+      //     expiresAtDate && currentTime > expiresAtDate.getTime();
+      //   const refreshTokenExpiringSoon =
+      //     expiresAtDate &&
+      //     currentTime > expiresAtDate.getTime() - 19 * 60 * 1000;
+      //   if (refreshTokenExpired || refreshTokenExpiringSoon) {
+      //     checkAuthentication();
+      //   }
+      //   else{
+      //     setIsLoading(false);
+      //   }
+      // }else
+      // {
+      //   setIsLoading(false);
+      // }
+    } else {
+      setIsLoading(false);
     }
   }, [location]);
 
@@ -98,7 +126,7 @@ const AuthProvider = (props) => {
 
     //Affichage d'un toast
     const toastMessage = localStorage.getItem("toastMessage");
-
+    console.log("toastMessage", toastMessage);
     if (toastMessage) {
       const { status, message } = JSON.parse(toastMessage);
 
@@ -108,6 +136,7 @@ const AuthProvider = (props) => {
         success: toast.success,
         warning: toast.warning,
         info: toast.info,
+        error: toast.error,
       };
 
       if (message && status && toastOptionsMap[status]) {
@@ -160,37 +189,43 @@ const AuthProvider = (props) => {
 
     makeRequest("api/users/login", "POST", null, body, null, false)
       .then((tokens) => {
-        const { xsrfToken, user } = tokens;
+        if (tokens !== null) {
+          const { xsrfToken, user } = tokens;
 
-        if (user.isValidated) {
-          localStorage.setItem("xsrfToken", xsrfToken);
-          addToSecureLocalStorage("user", user);
+          if (user.isValidated) {
+            localStorage.setItem("xsrfToken", xsrfToken);
+            addToSecureLocalStorage("user", user);
 
-          localStorage.setItem(
-            "toastMessage",
-            JSON.stringify({
-              status: "success",
-              message: `Content de te revoir ${user.username} 👋`,
-            })
-          );
-          if (location.state?.data && location.state?.data !== "/login") {
-            window.location.replace(location.state?.data);
+            localStorage.setItem(
+              "toastMessage",
+              JSON.stringify({
+                status: "success",
+                message: `Content de te revoir ${user.username} 👋`,
+              })
+            );
+            if (location.state?.data && location.state?.data !== "/login") {
+              window.location.replace(location.state?.data);
+            } else {
+              window.location.replace("/");
+            }
           } else {
-             window.location.replace("/");
+            toast.warning(
+              "Veuillez vérifier votre compte, si vous n'avez pas reçu de mail veuillez nous contacter !",
+              toastOptions
+            );
           }
-        } else {
-          toast.warning(
-            "Veuillez vérifier votre compte, si vous n'avez pas reçu de mail veuillez nous contacter !",
-            toastOptions
-          );
         }
       })
       .catch((error) => {
-        console.log("erreur ",error)
-        toast.error(
-          "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes.",
-          toastOptions
-        );
+        console.error("erreur ", error.message);
+        // if (error.message?.includes("You're banned")) {
+        //   toast.error(error.message, toastOptions);
+        // } else {
+        //   toast.error(
+        //     "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes.",
+        //     toastOptions
+        //   );
+        // }
       });
   };
 
@@ -229,25 +264,23 @@ const AuthProvider = (props) => {
 
     makeRequest("api/users/register", "POST", null, formData, null, false)
       .then((data) => {
-        const { user } = data;
-        if (user) {
-          localStorage.setItem(
-            "toastMessage",
-            JSON.stringify({
-              status: "success",
-              message: `Bienvenue parmis nous ${user.username} 👋 N'oublie pas de valider ton inscription ! `,
-            })
-          );
-          // Redirigez l'utilisateur vers la page de login
-          window.location.href = "/login";
+        if (data !== null) {
+          const { user } = data;
+          if (user) {
+            localStorage.setItem(
+              "toastMessage",
+              JSON.stringify({
+                status: "success",
+                message: `Bienvenue parmis nous ${user.username} 👋 N'oublie pas de valider ton inscription ! `,
+              })
+            );
+            // Redirigez l'utilisateur vers la page de login
+            window.location.href = "/login";
+          }
         }
       })
       .catch((error) => {
-        console.log("user : " + error);
-        toast.error(
-          "Une erreur est survenu durant l'enregistrement, veuillez retentez dans quelques minutes.",
-          toastOptions
-        );
+        console.error(error);
       });
   };
 
@@ -259,16 +292,19 @@ const AuthProvider = (props) => {
         toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
       })
       .catch((error) => {
-        console.log(error.message);
+        console.error(error.message);
         removeFromSecureLocalStorage("user");
         localStorage.removeItem("xsrfToken");
-        toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
-        toast.error(
-          "Une erreur est survenu durant la déconexion, nous avons tout de même réussi à te déconnecter à bientôt.",
+        toast.info(
+          "malgré l'erreur, nous avons tout de même réussi à te déconnecter à bientôt.",
           toastOptions
         );
       });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Affichez un indicateur de chargement pendant que le contexte est en cours de chargement
+  }
 
   return (
     <AuthContext.Provider
@@ -279,6 +315,7 @@ const AuthProvider = (props) => {
         user,
         addToSecureLocalStorage,
         removeFromSecureLocalStorage,
+        isLoading,
       }}
     >
       {props.children}

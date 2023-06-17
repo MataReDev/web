@@ -1,3 +1,7 @@
+import secureLocalStorage from "react-secure-storage";
+import react, { useContext } from "react";
+import { toast } from "react-toastify";
+
 async function makeRequest(
   path,
   method = "GET",
@@ -7,6 +11,17 @@ async function makeRequest(
   xsrfToken = false,
   onUploadProgress = null
 ) {
+  let toastOptions = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "colored",
+  };
+
   let defaultHeaders = {};
 
   if (body) {
@@ -62,11 +77,19 @@ async function makeRequest(
               : xhr.responseText;
           resolve(response);
         } else {
+           toast.error(
+             "Une erreur s'est produite ! merci de ressayer dans quelques instants ou de contacter un Administrateur",
+             toastOptions
+           );
           reject(new Error(`Request failed with status ${xhr.status}`));
         }
       };
 
       xhr.onerror = function () {
+        toast.error(
+          "Une erreur s'est produite ! merci de ressayer dans quelques instants ou de contacter un Administrateur",
+          toastOptions
+        );
         reject(new Error("Request failed"));
       };
     });
@@ -78,27 +101,57 @@ async function makeRequest(
       ...options,
     };
 
-
-
-
     if (body) {
       requestOptions.body =
         typeof body === "object" ? JSON.stringify(body) : body;
     }
+    try {
+      const response = await fetch(url, requestOptions);
+      const contentType = response.headers.get("content-type");
+      console.log("response.statusCode", response.status);
 
-    return await fetch(url, requestOptions).then((response) => {
       if (response.ok) {
-        const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
           return response.json();
         } else {
           return response.text();
         }
+      } else if (response.status === 403 || response.status === 401) {
+        const data = await response.json();
+        const message = data.error;
+        console.log("message", message);
+        const toastOptionsWithRedirect = {
+          ...toastOptions,
+          onClose: () => {
+            secureLocalStorage.removeItem("user");
+            window.location.replace("/");
+          },
+        };
+
+        if (message.includes("You're banned")) {
+          toast.error(message, toastOptionsWithRedirect);
+          return null;
+        } else {
+          toast.error(
+            "Une erreur s'est produite, veuillez vous déconnecter et reconnecter, si le problème persiste merci de contacter un administrateur.",
+            toastOptions
+          );
+          return null;
+        }
+      } else if (response.status === 404) {
+        toast.info("Il semblerait que ça soit vide ici :(", toastOptions);
+        return null;
       } else {
-        console.error(response)
         throw new Error(`Request failed with status ${response.status}`);
       }
-    });
+    } catch (e) {
+      console.log("toas error: " + e.message)
+      toast.error(
+        "Une erreur s'est produite ! merci de ressayer dans quelques instants ou de contacter un Administrateur",
+        toastOptions
+      );
+      throw e;
+    }
   }
 }
 

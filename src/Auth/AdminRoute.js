@@ -4,26 +4,27 @@ import { AuthContext } from "./authContext";
 import makeRequest from "../Utils/RequestUtils";
 import { FaSpinner } from "react-icons/fa";
 
-
 const AdminRoute = () => {
-  const { addToSecureLocalStorage } = useContext(AuthContext);
+  const { addToSecureLocalStorage, user } = useContext(AuthContext);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const checkAuthentication = async () => {
-      makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
+      await makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
         .then((data) => {
-          const { user } = data;
-          if (user) {
-            addToSecureLocalStorage("user", user);
-            if (!user.isAdmin) {
-              throw new Error("You don't have permission");
-            } else setIsAuthenticated(true);
-          } else window.location.href = "*";
+          if (data !== null) {
+            const { user } = data;
+            if (user) {
+              addToSecureLocalStorage("user", user);
+              if (!user.isAdmin) {
+                throw new Error("You don't have permission");
+              } else setIsAuthenticated(true);
+            } else window.location.href = "/404";
+          } else window.location.href = "/404";
         })
         .catch((error) => {
           console.error(error);
-          window.location.href = "*";
+          window.location.href = "/404";
         });
     };
     checkAuthentication();

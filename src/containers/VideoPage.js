@@ -61,11 +61,13 @@ function VideoPage() {
     if (user.isAuthenticated) {
       makeRequest(`api/videos/like/${videoId}`, "PUT", null, null, null, true)
         .then((data) => {
-          setLikeCount(data.likesCount);
-          setLikeList(data.likes);
+          if (data !== null) {
+            setLikeCount(data.likesCount);
+            setLikeList(data.likes);
 
-          setDislikeCount(data.dislikesCount);
-          setDislikeList(data.dislikes);
+            setDislikeCount(data.dislikesCount);
+            setDislikeList(data.dislikes);
+          }
         })
         .catch((error) => console.error(error));
     } else {
@@ -85,11 +87,13 @@ function VideoPage() {
         true
       )
         .then((data) => {
+          if (data !== null) {
           setLikeCount(data.likesCount);
           setLikeList(data.likes);
 
           setDislikeCount(data.dislikesCount);
           setDislikeList(data.dislikes);
+          }
         })
         .catch((error) => console.error(error));
     } else {
@@ -103,6 +107,7 @@ function VideoPage() {
 
     makeRequest(`api/videos/${videoId}`, "GET", null, null, null, false)
       .then(async (data) => {
+        if (data !== null) {
         setVideo(data);
         // setvideoJsOptions(videoJsOptions.sources[0].src = video.video_path)
         setvideoJsOptions((prevOptions) => {
@@ -125,12 +130,12 @@ function VideoPage() {
         setDislikeCount(data.dislikesCount);
         setDislikeList(data.dislikes);
 
-        console.log(data);
-
         getElapsedTime(data.uploadAt);
+      }
       })
       .catch((error) => {
         setIsVideoAvailable(false);
+        console.error(error);
       })
       .finally(() => {
         setIsLoading(false); // Définir isLoading à false une fois le fetch terminé
@@ -144,7 +149,7 @@ function VideoPage() {
         null,
         null,
         false
-      );
+      ) .catch((error) => console.error(error));
     };
 
     const timer = setTimeout(() => {
@@ -310,9 +315,9 @@ function VideoPage() {
                     </div>
                   </div>
                   <div className="bg-gray-200 w-full rounded-xl p-5">
-                      <p className="font-bold">
-                        {video.viewsCount} vues {elapsedTime}
-                      </p>
+                    <p className="font-bold">
+                      {video.viewsCount} vues {elapsedTime}
+                    </p>
                     <h2></h2>
                     <pre className="font-sans">
                       {showFullDescription
