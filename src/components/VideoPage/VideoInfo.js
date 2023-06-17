@@ -88,31 +88,31 @@ function VideoInfo({ video }) {
     let timeString = "";
 
     switch (true) {
-        case years > 0:
-          timeString = `${years} ${years === 1 ? "year" : "years"} ago`;
-          break;
-        case months > 0:
-          timeString = `${months} ${months === 1 ? "month" : "months"} ago`;
-          break;
-        case weeks > 0:
-          timeString = `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
-          break;
-        case days > 0:
-          timeString = `${days} ${days === 1 ? "day" : "days"} ago`;
-          break;
-        case hours > 0:
-          timeString = `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
-          break;
-        case minutes > 0:
-          timeString = `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
-          break;
-        case seconds > 0:
-          timeString = `${seconds} ${seconds === 1 ? "second" : "seconds"} ago`;
-          break;
-        default:
-          timeString = "Just now";
-          break;
-      }      
+      case years > 0:
+        timeString = `${years} ${years === 1 ? "year" : "years"} ago`;
+        break;
+      case months > 0:
+        timeString = `${months} ${months === 1 ? "month" : "months"} ago`;
+        break;
+      case weeks > 0:
+        timeString = `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
+        break;
+      case days > 0:
+        timeString = `${days} ${days === 1 ? "day" : "days"} ago`;
+        break;
+      case hours > 0:
+        timeString = `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+        break;
+      case minutes > 0:
+        timeString = `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+        break;
+      case seconds > 0:
+        timeString = `${seconds} ${seconds === 1 ? "second" : "seconds"} ago`;
+        break;
+      default:
+        timeString = "Just now";
+        break;
+    }
 
     setElapsedTime(timeString);
   };
@@ -193,24 +193,28 @@ function VideoInfo({ video }) {
       <p className="text-2xl font-bold">{video?.title}</p>
       <div className="flex flex-row">
         <div className="w-1/2">
-          <Link to={`/channel/${video?.user?.username}`}>
-            <div className="flex flex-row space-x-5 align-middle">
-              <div className="flex my-custom-profile-icon w-8 h-8">
-                {video?.user?.logo_path ? (
+          <div className="flex flex-row space-x-5 align-middle">
+            <div className="flex w-8 h-8">
+              {video?.user?.logo_path ? (
+                <Link to={`/channel/${video?.user?.username}`}>
                   <img
                     className="rounded-full max-h-10 border"
                     src={video?.user?.logo_path}
                     alt="Votre icône de profil"
                   />
-                ) : (
+                </Link>
+              ) : (
+                <Link to={`/channel/${video?.user?.username}`}>
                   <Avatar username={video?.user?.username} />
-                )}
-              </div>
-              <div className="flex flex-col">
-                <p className="text-lg font-bold">{video?.user?.username}</p>
-              </div>
+                </Link>
+              )}
             </div>
-          </Link>
+            <div className="flex flex-col">
+              <Link to={`/channel/${video?.user?.username}`}>
+                <p className="text-lg font-bold">{video?.user?.username}</p>
+              </Link>
+            </div>
+          </div>
         </div>
         <div className="flex w-1/2 justify-end items-start">
           <div
