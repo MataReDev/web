@@ -246,16 +246,16 @@ function DashboardUser() {
                 {user.banReason && user.banUntil ? (
                   new Date() > new Date(user.banUntil) ? (
                     <span className="inline-block py-1 px-2 rounded bg-green-500 text-white">
-                      Actif : Banissement fini
+                      Active : Ban finished
                     </span>
                   ) : (
                     <span className="inline-block py-1 px-2 rounded bg-red-500 text-white">
-                      Banni jusqu'au {new Date(user.banUntil).toLocaleString()}
+                      Ban until {new Date(user.banUntil).toLocaleString()}
                     </span>
                   )
                 ) : (
                   <span className="inline-block py-1 px-2 rounded bg-green-500 text-white">
-                    Actif
+                    Active
                   </span>
                 )}
               </td>
