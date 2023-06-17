@@ -307,7 +307,7 @@ function VideoPage() {
                   </div>
                   <div className="bg-gray-200 w-full rounded-xl p-5">
                     <p className="font-bold">
-                      {video.viewsCount} views {elapsedTime}
+                      {video.viewsCount} views, {elapsedTime}
                     </p>
                     <h2></h2>
                     <pre className="font-sans">
