@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import io from "socket.io-client";
 import makeRequest from "../../Utils/RequestUtils";
+import { useLocation } from "react-router-dom";
 import { AuthContext } from "../../Auth/authContext";
 import { toast } from "react-toastify";
 import {
@@ -20,6 +21,7 @@ function LiveChat({ videoId }) {
   const [draftMessage, setDraftMessage] = useState("");
   const [connectedUsers, setConnectedUsers] = useState([]);
   const socketRef = useRef(null);
+  const location = useLocation();
 
   const chatListRef = useRef(null);
 
@@ -50,6 +52,17 @@ function LiveChat({ videoId }) {
        // toast.error("An error occurred, please reconnect", toastOptions);
       });
   };
+function handlePageUnload() {
+  console.log("socket")
+  socketRef.current.emit("leave video chat", videoId);
+}
+
+
+useEffect(() => {
+  window.addEventListener("beforeunload", handlePageUnload);
+
+  return () => window.removeEventListener("beforeunload", handlePageUnload);
+}, [location]);
 
   useEffect(() => {
     socketRef.current = io(socketUrl, {
@@ -82,16 +95,9 @@ function LiveChat({ videoId }) {
       checkAuthentication();
     });
 
-    //Handle for disconnect user when refreshing page
-    const handleVisibilityChange = () => {
-      socket.emit("leave video chat", videoId);
-    };
-    window.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       socket.emit("leave video chat", videoId);
-      window.removeEventListener("visibilitychange", handleVisibilityChange);
-
       socket.off("chat message");
       socket.off("user joined");
       socket.off("user left");

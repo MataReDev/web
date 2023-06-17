@@ -133,15 +133,23 @@ async function makeRequest(
           return null;
         } else {
           toast.error(
-            "Une erreur s'est produite, veuillez vous déconnecter et reconnecter, si le problème persiste merci de contacter un administrateur.",
+            message,
             toastOptions
           );
           return null;
         }
       } else if (response.status === 404) {
-        toast.info("Il semblerait que ça soit vide ici :(", toastOptions);
+          const data = await response.json();
+        const message = data.error;
+        toast.info(message, toastOptions);
         return null;
-      } else {
+      } else if (response.status === 400)
+      {
+        const data = await response.json();
+        const message = data.error;
+        toast.error(message, toastOptions);
+      }
+      else {
         throw new Error(`Request failed with status ${response.status}`);
       }
     } catch (e) {
