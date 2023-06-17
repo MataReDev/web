@@ -28,7 +28,7 @@ const VideoPlayer2 = ({ options, video }) => {
       sources: [
         {
           src: videoPath,
-          type: "video/*",
+          type: "video/mp4",
         },
         // Ajoutez d'autres sources si nécessaire (par exemple, différents formats de vidéo)
       ],

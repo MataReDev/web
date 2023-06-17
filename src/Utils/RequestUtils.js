@@ -77,10 +77,10 @@ async function makeRequest(
               : xhr.responseText;
           resolve(response);
         } else {
-           toast.error(
-             "Une erreur s'est produite ! merci de ressayer dans quelques instants ou de contacter un Administrateur",
-             toastOptions
-           );
+          toast.error(
+            "Une erreur s'est produite ! merci de ressayer dans quelques instants ou de contacter un Administrateur",
+            toastOptions
+          );
           reject(new Error(`Request failed with status ${xhr.status}`));
         }
       };
@@ -122,7 +122,8 @@ async function makeRequest(
           ...toastOptions,
           onClose: () => {
             secureLocalStorage.removeItem("user");
-            window.location.replace("/");
+            if (window.location.pathname !== "/login")
+                window.location.replace("/");
           },
         };
 
@@ -130,24 +131,35 @@ async function makeRequest(
           toast.error(message, toastOptionsWithRedirect);
           return null;
         } else {
-          toast.error(
-            message,
-            toastOptions
+          const specificErrors = [
+            { error: "refresh_token" },
+            { error: "Bad xsrf token" },
+            { error: "Missing XSRF token in headers",},
+            {error: "Missing token in cookie"}, 
+            { error: "Refresh token is not valid !"}
+          ];
+
+          const matchedError = specificErrors.find((specificError) =>
+            data.error.includes(specificError.error)
           );
+          if (matchedError) {
+            message = "An error occured please reconnect :(";
+          }
+
+          toast.error(message, toastOptionsWithRedirect);
           return null;
         }
       } else if (response.status === 404) {
-          const data = await response.json();
+        const data = await response.json();
         const message = data.error;
         toast.info(message, toastOptions);
         return null;
-      } else if (response.status === 400)
-      {
+      } else if (response.status === 400) {
         const data = await response.json();
         const message = data.error;
         toast.error(message, toastOptions);
-      }
-      else {
+        return null;
+      } else {
         throw new Error(`Request failed with status ${response.status}`);
       }
     } catch (e) {
