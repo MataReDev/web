@@ -18,7 +18,7 @@ function VideoSimilaires() {
 
   return (
     <div className="p-3 rounded-xl h-fit bg-gray-100">
-      <h2 className="text-xl font-bold mb-4">Vidéos similaires</h2>
+      <h2 className="text-xl font-bold mb-4">Similar videos</h2>
       <div className="flex flex-wrap gap-2 justify-center">
         {videos &&
         videos.map((video) => (

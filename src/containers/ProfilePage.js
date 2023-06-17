@@ -94,12 +94,10 @@ function ProfilePage() {
     const { onSuccess, onError, file } = options;
 
     try {
-      console.log(file);
       setLogo(file);
 
       onSuccess("Ok");
     } catch (err) {
-      console.log("Eroor: ", err);
       const error = new Error("Some error");
       onError({ err });
     }
@@ -109,12 +107,10 @@ function ProfilePage() {
     const { onSuccess, onError, file } = options;
 
     try {
-      console.log(file);
       setBanner(file);
 
       onSuccess("Ok");
     } catch (err) {
-      console.log("Eroor: ", err);
       const error = new Error("Some error");
       onError({ err });
     }
@@ -194,7 +190,7 @@ function ProfilePage() {
           >
             <div>
               <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Bannière</div>
+              <div style={{ marginTop: 8 }}>Banner</div>
             </div>
           </Upload>
         </ImgCrop>
@@ -208,7 +204,7 @@ function ProfilePage() {
         </Modal>
       </div>
       <div className="mb-4">
-        <label className="block font-medium mb-2">Username:</label>
+        <label className="block font-medium mb-2">Username :</label>
         <input
           className="px-4 py-2 rounded-lg border border-gray-300 w-full"
           type="text"
@@ -217,7 +213,7 @@ function ProfilePage() {
         />
       </div>
       <div className="mb-4">
-        <label className="block font-medium mb-2">Email:</label>
+        <label className="block font-medium mb-2">Email :</label>
         <input
           className="px-4 py-2 rounded-lg border border-gray-300 w-full"
           type="email"
@@ -226,7 +222,7 @@ function ProfilePage() {
         />
       </div>
       <div className="mb-4 relative">
-        <label className="block font-medium mb-2">Password:</label>
+        <label className="block font-medium mb-2">Password :</label>
         <input
           className="px-4 py-2 rounded-lg border border-gray-300 w-full"
           type={showPassword ? "text" : "password"}

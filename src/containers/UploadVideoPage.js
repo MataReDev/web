@@ -171,9 +171,9 @@ function UploadVideoPage() {
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 p-5 mx-auto w-2/3"
       >
-        <h1 className="text-2xl font-bold mb-4">Ajouter une vidéo</h1>
+        <h1 className="text-2xl font-bold mb-4">Add a video</h1>
         <label className="block">
-          <p className="font-bold">Confidentialité</p>
+          <p className="font-bold">Privacy</p>
           <div className="flex gap-2 mt-1">
             <button
               type="button"
@@ -195,7 +195,7 @@ function UploadVideoPage() {
                   : "bg-white text-yellow-500 border border-yellow-500"
               }`}
             >
-              Non répertorié
+              Unlisted
             </button>
             <button
               type="button"
@@ -206,12 +206,12 @@ function UploadVideoPage() {
                   : "bg-white text-red-500 border border-red-500"
               }`}
             >
-              Privé
+              Private
             </button>
           </div>
         </label>
         <label className="block">
-          <p className="font-bold">Titre</p>
+          <p className="font-bold">Title</p>
           <input
             type="text"
             value={title}
@@ -228,7 +228,7 @@ function UploadVideoPage() {
           />
         </label>
         <label className="block">
-          <p className="font-bold mb-2">Fichier Vidéo</p>
+          <p className="font-bold mb-2">Video file</p>
           <Upload
             listType="picture"
             accept="video/*"
@@ -260,7 +260,7 @@ function UploadVideoPage() {
           )}
         </Modal>
         <label className="block">
-          <p className="font-bold mb-2">Miniature</p>
+          <p className="font-bold mb-2">Thumbnail</p>
           <Upload
             listType="picture"
             accept="image/png, image/jpeg, image/jpg"
@@ -281,7 +281,7 @@ function UploadVideoPage() {
           type="submit"
           className="bg-white border border-black text-black rounded-md py-2 px-4 mt-3 hover:bg-gray-300"
         >
-          <p className="font-bold">Ajouter ma vidéo</p>
+          <p className="font-bold">Add my video</p>
         </button>
       </form>
       {showProgressBar && (

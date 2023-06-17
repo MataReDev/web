@@ -37,7 +37,7 @@ function VideoPage() {
 
   const [videoJsOptions, setvideoJsOptions] = useState({
     controls: true,
-    notSupportedMessage: "Cette vidéo n'est pas disponible pour le moment",
+    notSupportedMessage: "This video is currently unavailable",
     sources: [
       {
         src: `${video.video_path}`,
@@ -69,7 +69,7 @@ function VideoPage() {
         })
         .catch((error) => console.error(error));
     } else {
-      alert("Veuillez vous connectez !");
+      alert("Please Log In !");
     }
   };
 
@@ -93,7 +93,7 @@ function VideoPage() {
         })
         .catch((error) => console.error(error));
     } else {
-      alert("Veuillez vous connectez !");
+      alert("Please Log In !");
     }
   };
 
@@ -170,32 +170,28 @@ function VideoPage() {
 
     switch (true) {
       case years > 0:
-        timeString = `${years} ${years === 1 ? "an" : "ans"}`;
+        timeString = `${years} ${years === 1 ? "year" : "years"} ago`;
         break;
       case months > 0:
-        timeString = `il y a ${months} mois`;
+        timeString = `${months} months ago`;
         break;
       case weeks > 0:
-        timeString = `il y a ${weeks} ${weeks === 1 ? "semaine" : "semaines"}`;
+        timeString = `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
         break;
       case days > 0:
-        timeString = `il y a ${days} ${days === 1 ? "jour" : "jours"}`;
+        timeString = `${days} ${days === 1 ? "day" : "days"} ago`;
         break;
       case hours > 0:
-        timeString = `il y a ${hours} ${hours === 1 ? "heure" : "heures"}`;
+        timeString = `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
         break;
       case minutes > 0:
-        timeString = `il y a ${minutes} ${
-          minutes === 1 ? "minute" : "minutes"
-        }`;
+        timeString = `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
         break;
       case seconds > 0:
-        timeString = `il y a  ${seconds} ${
-          seconds === 1 ? "seconde" : "secondes"
-        }`;
+        timeString = ` ${seconds} ${seconds === 1 ? "second" : "seconds"} ago`;
         break;
       default:
-        timeString = "À l'instant";
+        timeString = "Just now";
         break;
     }
 
@@ -310,9 +306,9 @@ function VideoPage() {
                     </div>
                   </div>
                   <div className="bg-gray-200 w-full rounded-xl p-5">
-                      <p className="font-bold">
-                        {video.viewsCount} vues {elapsedTime}
-                      </p>
+                    <p className="font-bold">
+                      {video.viewsCount} views {elapsedTime}
+                    </p>
                     <h2></h2>
                     <pre className="font-sans">
                       {showFullDescription
@@ -324,7 +320,7 @@ function VideoPage() {
                           className="text-blue-500 font-bold"
                           onClick={handleToggleDescription}
                         >
-                          {showFullDescription ? "Moins" : "Plus"}
+                          {showFullDescription ? "Less" : "More"}
                         </button>
                       )}
                     </pre>
@@ -351,7 +347,7 @@ function VideoPage() {
                 className="mx-auto w-32 h-32"
               />
               <p className="mt-2 text-xl font-semibold">
-                Cette vidéo n'est plus disponible
+                This video is no longer available
               </p>
             </div>
           )}

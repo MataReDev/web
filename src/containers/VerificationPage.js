@@ -34,20 +34,20 @@ const VerificationPage =  () => {
        ).then((data) => { 
             localStorage.setItem("toastMessage",  JSON.stringify({
               status:"success",
-              message: `Ton addresse mail a bien été validée ! tu peux maintenant te connecter !`
+              message: `Your e-mail address has been validated ! You can now connect !`
             }));      
                  window.location.href = "/login";
          })
          .catch((error) => {
 
 toast.error(
-  "Une erreur est survenu lors de la vérification, Veuillez réessayer..",
+  "An error occurred during verification, Please try again.",
   toastOptions
 )});
 
     } else {
         toast.error(
-          "Url Invalide",
+          "Invalid Url",
           toastOptions
         );
     }

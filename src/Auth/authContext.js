@@ -170,7 +170,7 @@ const AuthProvider = (props) => {
             "toastMessage",
             JSON.stringify({
               status: "success",
-              message: `Content de te revoir ${user.username} 👋`,
+              message: `Welcome back ${user.username} 👋`,
             })
           );
           if (location.state?.data && location.state?.data !== "/login") {
@@ -180,7 +180,7 @@ const AuthProvider = (props) => {
           }
         } else {
           toast.warning(
-            "Veuillez vérifier votre compte, si vous n'avez pas reçu de mail veuillez nous contacter !",
+            "Please check your account, if you have not received an email please contact us !",
             toastOptions
           );
         }
@@ -188,7 +188,7 @@ const AuthProvider = (props) => {
       .catch((error) => {
         console.log("erreur ",error)
         toast.error(
-          "Une erreur est survenu durant l'authentification, vérifier vos identifiants ou veuillez retentez dans quelques minutes.",
+          "An error has occurred during authentication, please check your credentials or try again in a few minutes.",
           toastOptions
         );
       });
@@ -235,7 +235,7 @@ const AuthProvider = (props) => {
             "toastMessage",
             JSON.stringify({
               status: "success",
-              message: `Bienvenue parmis nous ${user.username} 👋 N'oublie pas de valider ton inscription ! `,
+              message: `Welcome ${user.username} 👋 Don't forget to confirm your registration !`,
             })
           );
           // Redirigez l'utilisateur vers la page de login
@@ -245,8 +245,7 @@ const AuthProvider = (props) => {
       .catch((error) => {
         console.log("user : " + error);
         toast.error(
-          "Une erreur est survenu durant l'enregistrement, veuillez retentez dans quelques minutes.",
-          toastOptions
+          "An error occurred during registration, please try again in a few minutes",          toastOptions
         );
       });
   };
@@ -256,15 +255,14 @@ const AuthProvider = (props) => {
       .then(() => {
         removeFromSecureLocalStorage("user");
         localStorage.removeItem("xsrfToken");
-        toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
+        toast("Come back soon, we miss you already 👋 ");
       })
       .catch((error) => {
         console.log(error.message);
         removeFromSecureLocalStorage("user");
         localStorage.removeItem("xsrfToken");
-        toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
         toast.error(
-          "Une erreur est survenu durant la déconexion, nous avons tout de même réussi à te déconnecter à bientôt.",
+          "An error occurred during the disconnection, we still managed to disconnect you soon.",
           toastOptions
         );
       });

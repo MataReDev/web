@@ -32,7 +32,7 @@ export default function SearchPage() {
 
   return (
     <div>
-      <div className="text-center text-2xl font-bold my-4">{`Résultat pour : "${searchValue}"`}</div>
+      <div className="text-center text-2xl font-bold my-4">{`Result for : "${searchValue}"`}</div>
 
       <div className="flex flex-wrap justify-center">
         {searchResults.size !== 0 ? (
@@ -40,7 +40,7 @@ export default function SearchPage() {
             <VideoCard key={index} video={video} />
           ))
         ) : (
-          <div>{`Aucun resultat pour ${searchValue}`}</div>
+          <div>{`No results for ${searchValue}`}</div>
         )}
       </div>
     </div>
