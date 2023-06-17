@@ -57,7 +57,6 @@ function VideoPage() {
   // };
 
   const handleLikeVideo = (videoId) => {
-    console.log(videoId);
     if (user.isAuthenticated) {
       makeRequest(`api/videos/like/${videoId}`, "PUT", null, null, null, true)
         .then((data) => {
@@ -74,7 +73,6 @@ function VideoPage() {
   };
 
   const handleDislikeVideo = (videoId) => {
-    console.log(videoId);
     if (user.isAuthenticated) {
       makeRequest(
         `api/videos/dislike/${videoId}`,
@@ -125,8 +123,6 @@ function VideoPage() {
         setDislikeCount(data.dislikesCount);
         setDislikeList(data.dislikes);
 
-        console.log(data);
-
         getElapsedTime(data.uploadAt);
       })
       .catch((error) => {
@@ -152,7 +148,7 @@ function VideoPage() {
     }, 5000);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [likeCount, dislikeCount]);
 
   const getElapsedTime = (dateUpload) => {
     const uploadAt = new Date(dateUpload);
@@ -194,8 +190,6 @@ function VideoPage() {
         timeString = "Just now";
         break;
     }
-
-    console.log(days, months, years);
     setElapsedTime(timeString);
   };
 
@@ -233,9 +227,9 @@ function VideoPage() {
             <>
               <div className="flex flex-col w-full md:max-w-full gap-5 flex-grow">
                 {!isLoading && (
-                  <div className="aspect-video align-top block m-auto w-full">
+                  <div className="aspect-video align-top block m w-full">
                     {/* <VideoPlayer options={videoJsOptions} video={video} /> */}
-                    <PlyrPlayer video={video} />
+                    {<PlyrPlayer video={video} />}
                   </div>
                 )}
                 <div className="space-y-5">
