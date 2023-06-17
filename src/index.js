@@ -18,7 +18,7 @@ import Dashboard from "./containers/Dashboard";
 import VerificationPage from "./containers/VerificationPage";
 import HeaderBar from "./components/menu/HeaderBar";
 import NotFoundPage from "./containers/NotFoundPage";
-
+import ResetPasswordPage from './containers/ResetPasswordPage';
 
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./Auth/authContext";
@@ -46,6 +46,7 @@ function App() {
             </Route>
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="/verification" element={<VerificationPage />} />
+            <Route exact path="/resetpassword" element ={<ResetPasswordPage/>} />
             <Route exact path="/search" element={<SearchPage />} />
             <Route exact path="/video/:id" element={<VideoPage />} />
             <Route exact path="/channel/:id" element={<ChannelPage />} />
