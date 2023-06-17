@@ -261,18 +261,6 @@ const AuthProvider = (props) => {
 
     makeRequest("api/users/register", "POST", null, formData, null, false)
       .then((data) => {
-        const { user } = data;
-        if (user) {
-          localStorage.setItem(
-            "toastMessage",
-            JSON.stringify({
-              status: "success",
-              message: `Welcome ${user.username} 👋 Don't forget to confirm your registration !`,
-            })
-          );
-          // Redirigez l'utilisateur vers la page de login
-          window.location.href = "/login";
-        }
         if (data !== null) {
           const { user } = data;
           if (user) {
