@@ -50,6 +50,7 @@ function Commentaires({ videoId }) {
           if (data !== null) setCommentaires([...commentaires, data]);
         })
         .catch((error) => console.error(error));
+      setCommentaire(""); // Réinitialise la valeur de l'input à une chaîne vide
     } else {
       alert("Please Log In !");
     }
@@ -139,7 +140,7 @@ function Commentaires({ videoId }) {
     <div className="p-2 rounded-xl h-full">
       <h1 className="font-bold">Comments</h1>
       <div className="flex flex-col gap-2">
-      Add a Comment :
+        Add a Comment :
         <div className="flex gap-5">
           <input
             type="text"
