@@ -38,7 +38,7 @@ function ProfileMenu() {
           <div className="m-2">
             <Link to={`/channel/${user.currentUser.username}`}>
               <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
-              My channel
+              My Channel
               </button>
             </Link>
             <Link to="/profile">
