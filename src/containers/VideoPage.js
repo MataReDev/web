@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faThumbsUp as faThumbsUpFull,
   faThumbsDown as faThumbsDownFull,
+  faShareAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import {
   faThumbsUp as faThumbsUpEmpty,
@@ -60,13 +61,11 @@ function VideoPage() {
     if (user.isAuthenticated) {
       makeRequest(`api/videos/like/${videoId}`, "PUT", null, null, null, true)
         .then((data) => {
-          if (data !== null) {
-            setLikeCount(data.likesCount);
-            setLikeList(data.likes);
+          setLikeCount(data.likesCount);
+          setLikeList(data.likes);
 
-            setDislikeCount(data.dislikesCount);
-            setDislikeList(data.dislikes);
-          }
+          setDislikeCount(data.dislikesCount);
+          setDislikeList(data.dislikes);
         })
         .catch((error) => console.error(error));
     } else {
@@ -85,13 +84,11 @@ function VideoPage() {
         true
       )
         .then((data) => {
-          if (data !== null) {
           setLikeCount(data.likesCount);
           setLikeList(data.likes);
 
           setDislikeCount(data.dislikesCount);
           setDislikeList(data.dislikes);
-          }
         })
         .catch((error) => console.error(error));
     } else {
@@ -105,7 +102,6 @@ function VideoPage() {
 
     makeRequest(`api/videos/${videoId}`, "GET", null, null, null, false)
       .then(async (data) => {
-        if (data !== null) {
         setVideo(data);
         // setvideoJsOptions(videoJsOptions.sources[0].src = video.video_path)
         setvideoJsOptions((prevOptions) => {
@@ -129,11 +125,9 @@ function VideoPage() {
         setDislikeList(data.dislikes);
 
         getElapsedTime(data.uploadAt);
-      }
       })
       .catch((error) => {
         setIsVideoAvailable(false);
-        console.error(error);
       })
       .finally(() => {
         setIsLoading(false); // Définir isLoading à false une fois le fetch terminé
@@ -147,7 +141,7 @@ function VideoPage() {
         null,
         null,
         false
-      ) .catch((error) => console.error(error));
+      );
     };
 
     const timer = setTimeout(() => {
@@ -220,6 +214,19 @@ function VideoPage() {
     ?.join("\n");
 
   const hasMoreLines = descriptionLines?.length > nbLinesDescriptionLimtited;
+
+  const handleShareVideo = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: video.title,
+        url: window.location.href,
+      })
+        .then(() => console.log("Video shared successfully"))
+        .catch((error) => console.error("Error sharing video:", error));
+    } else {
+      alert("Video sharing is not supported on this browser.");
+    }
+  };
 
   return (
     <>
@@ -302,6 +309,13 @@ function VideoPage() {
                             />
                           )}{" "}
                           {dislikeCount}
+                        </button>
+                        <button
+                          onClick={handleShareVideo}
+                          className="btn btn-light btn-sm"
+                        >
+                          <FontAwesomeIcon icon={faShareAlt} />
+                          <span className="ml-2">Share</span>
                         </button>
                       </div>
                     </div>
