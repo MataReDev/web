@@ -137,7 +137,7 @@ const handleClickVideo = (video_id) => {
       >
         <Helmet>
           <meta charSet="utf-8" />
-          <title>iSee - Accueil</title>
+          <title>iSee - Home</title>
         </Helmet>
 
         {videos?.map((item, index) => (

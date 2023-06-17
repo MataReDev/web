@@ -33,7 +33,7 @@ function LoginForm() {
       login(email, password);
     } else {
       setErrorMessage(
-        "Email non valide, merci d'utiliser une autre adresse e-mail"
+        "Invalid email, please use another email address"
       );
     }
   };
@@ -57,7 +57,7 @@ function LoginForm() {
     >
       <div className="mb-4">
         <label htmlFor="email" className="block text-black font-bold mb-2">
-          Email:
+          Email :
         </label>
         <input
           type="email"
@@ -71,7 +71,7 @@ function LoginForm() {
       </div>
       <div className="mb-6 relative">
         <label htmlFor="password" className="block text-black font-bold mb-2">
-          Password:
+          Password :
         </label>
         <input
           type={showPassword ? "text" : "password"}
@@ -93,7 +93,7 @@ function LoginForm() {
       {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
       <div>
         {user.isAuthenticated ? (
-          <p>Vous êtes connecté !</p>
+          <p>You're connected!</p>
         ) : (
           <button
             onClick={handleSubmit}
@@ -176,7 +176,7 @@ function SignupForm() {
       register(username, email, password, logo);
     } else {
       setErrorMessage(
-        "Email non valide, merci d'utiliser une autre adresse e-mail"
+        "Invalid email, please use another email address"
       );
     }
   };
@@ -232,7 +232,7 @@ function SignupForm() {
 
       <div className="mb-4">
         <label htmlFor="name" className="block text-gray-700 font-bold mb-2">
-          Name:
+          Name :
         </label>
         <input
           type="text"
@@ -245,7 +245,7 @@ function SignupForm() {
       </div>
       <div className="mb-4">
         <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
-          Email:
+          Email :
         </label>
         <input
           type="email"
@@ -258,7 +258,7 @@ function SignupForm() {
       </div>
       <div className="mb-6 relative">
       <label htmlFor="password" className="block text-black font-bold mb-2">
-          Password:
+          Password :
         </label>
         <input
           type={showPassword ? "text" : "password"}
@@ -278,7 +278,7 @@ function SignupForm() {
         </button>
       </div>
       {user.isAuthenticated ? (
-        <p>Vous êtes connecté !</p>
+        <p>You're connected !</p>
       ) : (
         <button
           onClick={handleSubmit}

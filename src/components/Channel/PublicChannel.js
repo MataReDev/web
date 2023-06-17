@@ -156,7 +156,7 @@ export default function PublicChannel({ username }) {
   return (
     <div className="bg-gray-100 h-full-win" id="Cards-elements">
       <img
-        className="w-full h-36 bg-cover bg-center"
+        className="w-full h-[220px] bg-cover bg-center"
         src={`${
           channel.banner
             ? channel.banner
@@ -169,7 +169,7 @@ export default function PublicChannel({ username }) {
         <h1 className="text-black text-2xl">{channel.username}</h1>
       </div>
       <div className="video-list">
-        <h2 className="text-black">Vidéos de {channel.username}</h2>
+        <h2 className="text-black">Videos from {channel.username}</h2>
         <div className="flex flex-wrap justify-center" ref={containerRef}>
           {videos &&
             videos.map((video, index) => (

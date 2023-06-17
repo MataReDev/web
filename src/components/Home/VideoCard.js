@@ -68,7 +68,7 @@ function VideoCard({ video, onClick }) {
               <img
                 className="rounded-full max-h-10"
                 src={video.user?.logo_path}
-                alt="Votre icône de profil"
+                alt="Your profile icon"
               />
             ) : (
               <Avatar username={video.user?.username} />
@@ -85,7 +85,7 @@ function VideoCard({ video, onClick }) {
           <Link to={`/channel/${video.user?.username}`}>
             <p className="text-gray-700 text-base">{video.user?.username}</p>
           </Link>
-          <p className="text-gray-700 text-base">{video?.viewsCount} vues</p>
+          <p className="text-gray-700 text-base">{video?.viewsCount} views</p>
         </div>
       </div>
     </div>

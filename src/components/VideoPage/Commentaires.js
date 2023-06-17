@@ -51,7 +51,7 @@ function Commentaires({ videoId }) {
         })
         .catch((error) => console.error(error));
     } else {
-      alert("Veuillez vous connecter !");
+      alert("Please Log In !");
     }
   };
 
@@ -79,7 +79,7 @@ function Commentaires({ videoId }) {
         })
         .catch((error) => console.error(error));
     } else {
-      alert("Veuillez vous connectez !");
+      alert("Please Log In !");
     }
   };
 
@@ -98,7 +98,7 @@ function Commentaires({ videoId }) {
         })
         .catch((error) => console.error(error));
     } else {
-      alert("Veuillez vous connectez !");
+      alert("Please Log In !");
     }
   };
 
@@ -122,7 +122,7 @@ function Commentaires({ videoId }) {
         })
         .catch((error) => console.error(error));
     } else {
-      alert("Veuillez vous connectez !");
+      alert("Please Log In !");
     }
   };
 
@@ -137,19 +137,19 @@ function Commentaires({ videoId }) {
 
   return (
     <div className="p-2 rounded-xl h-full">
-      <h1 className="font-bold">Commentaires</h1>
+      <h1 className="font-bold">Comments</h1>
       <div className="flex flex-col gap-2">
-        Ajouter un Commentaire :
+      Add a Comment :
         <div className="flex gap-5">
           <input
             type="text"
             value={commentaire}
             onChange={(event) => setCommentaire(event.target.value)}
             className="bg-gray-200 w-3/4 rounded-xl p-2"
-            placeholder="Ecrivez du texte ici ..."
+            placeholder="Write text here ..."
           />
           <input
-            value="Envoyer"
+            value="Send"
             type="submit"
             onClick={(event) => handleCommentaireSubmit(event)}
             className="w-1/4 rounded-xl border border-black hover:bg-gray-200"

@@ -187,14 +187,14 @@ function LiveChat({ videoId }) {
               onClick={handleNewMessageSubmit}
               className="flex border border-black p-2 bg-gray-200 rounded-lg w-auto"
             >
-              Envoyer
+              Send
             </button>
           </div>
         </>
       ) : (
         <div className="mt-2">
           <h2 className="text-lg font-semibold mb-4">
-            Utilisateurs connectés sur le Chat
+          Chat users
           </h2>
           <div className="overflow-y-scroll h-64 mx-3">
             <table className="min-w-full ">
@@ -230,7 +230,7 @@ function ConditionalLiveChat({ videoId }) {
     return (
       <div className="bg-gray-100 p-3 rounded-xl h-96 relative flex flex-col">
         <h2 className="text-xl font-bold mb-4">Chat</h2>
-        <p>Veuillez vous connecter pour accéder au chat en direct.</p>
+        <p>Please log in to access the live chat.</p>
       </div>
     );
   }

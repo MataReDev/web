@@ -11,10 +11,10 @@ const VideoTable = ({ videos, handleDelete, handleStateChange }) => {
         <thead>
           <tr>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              Nom de la vidéo
+              Video name
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-              État
+              State
             </th>
             <th className="px-6 py-3 bg-gray-50">Actions</th>
           </tr>
@@ -57,14 +57,14 @@ const VideoTable = ({ videos, handleDelete, handleStateChange }) => {
                   onClick={() => handleStateChange(video._id, "Unlisted")}
                 >
                   <FontAwesomeIcon icon={faEyeSlash} className="mr-1" />
-                  Masquer (non repetorié)
+                  Hide (Unlisted)
                 </button>
                 <button
                   className="text-gray-600 hover:text-gray-900 border border-gray-600 hover:border-gray-900 rounded-md px-3 py-1 m-1 hover:bg-gray-100"
                   onClick={() => handleStateChange(video._id, "Private")}
                 >
                   <FontAwesomeIcon icon={faLock} className="mr-1" />
-                  Bloquer (privé)
+                  Block (private)
                 </button>
 
                 <button
@@ -72,7 +72,7 @@ const VideoTable = ({ videos, handleDelete, handleStateChange }) => {
                   onClick={() => handleDelete(video._id)}
                 >
                   <FontAwesomeIcon icon={faTrashAlt} className="mr-1" />
-                  Supprimer
+                  Delete
                 </button>
               </td>
             </tr>

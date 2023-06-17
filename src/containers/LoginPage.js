@@ -11,7 +11,7 @@ class LoginPage extends Component {
           <meta charSet="utf-8" />
           <title>iSee - Login / Register</title>
         </Helmet>
-        <h1 className="text-2xl font-bold mb-4">Connexion / Inscription</h1>
+        <h1 className="text-2xl font-bold mb-4">Login / Register</h1>
         <LoginSignupForm />
       </div>
     );

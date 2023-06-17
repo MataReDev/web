@@ -36,7 +36,7 @@ const VerificationPage = () => {
               "toastMessage",
               JSON.stringify({
                 status: "success",
-                message: `Ton addresse mail a bien été validée ! tu peux maintenant te connecter !`,
+                message: `Your e-mail address has been validated ! You can now connect !`,
               })
             );
             window.location.href = "/login";

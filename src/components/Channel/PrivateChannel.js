@@ -80,7 +80,7 @@ export default function PrivateChannel({ username }) {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold m-8">Mes Vidéos</h1>
+      <h1 className="text-2xl font-bold m-8">My Videos</h1>
       <VideoTable
         videos={videos}
         handleDelete={handleDelete}

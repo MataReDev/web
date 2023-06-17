@@ -21,6 +21,7 @@ const toastOptions = {
   progress: undefined,
   theme: "colored",
 };
+
 function DashboardVideo() {
   const [selectedVideoId, setSelectedVideoId] = useState(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -188,15 +189,15 @@ function DashboardVideo() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Vidéos</h2>
+      <h2 className="text-2xl font-bold mb-4">Videos</h2>
       <table className="border-collapse w-full">
         <thead>
           <tr>
-            <th className="py-2 px-4 bg-gray-200 border-b w-1/5">Titre</th>
+            <th className="py-2 px-4 bg-gray-200 border-b w-1/5">Title</th>
             <th className="py-2 px-4 bg-gray-200 border-b w-1/2">
               Description
             </th>
-            <th className="py-2 px-4 bg-gray-200 border-b w-1/12">Etat</th>
+            <th className="py-2 px-4 bg-gray-200 border-b w-1/12">Status</th>
             <th className="py-2 px-4 bg-gray-200 border-b">Actions</th>
           </tr>
         </thead>
@@ -213,25 +214,25 @@ function DashboardVideo() {
                     case "Public":
                       return (
                         <span className="inline-block py-1 px-2 rounded bg-green-500 text-white">
-                          Publique
+                          Public
                         </span>
                       );
                     case "Unlisted":
                       return (
                         <span className="inline-block py-1 px-2 rounded bg-yellow-500 text-white">
-                          Non répertoriée
+                          Unlisted
                         </span>
                       );
                     case "Private":
                       return (
                         <span className="inline-block py-1 px-2 rounded bg-red-500 text-white">
-                          Privé
+                          Private
                         </span>
                       );
                     case "Blocked":
                       return (
                         <span className="inline-block py-1 px-2 rounded bg-gray-500 text-white">
-                          Bloquée
+                          Blocked
                         </span>
                       );
                     default:
@@ -249,7 +250,7 @@ function DashboardVideo() {
                   }}
                 >
                   <FontAwesomeIcon icon={faLockOpen} className="mr-1" />
-                  Débloquer
+                  Unblock
                 </button>
                 <button
                   className="text-gray-600 hover:text-gray-900 border border-gray-600 hover:border-gray-900 rounded-md px-3 py-1 m-1 hover:bg-gray-200"
@@ -259,7 +260,7 @@ function DashboardVideo() {
                   }}
                 >
                   <FontAwesomeIcon icon={faLock} className="mr-1" />
-                  Bloquer
+                  Block
                 </button>
                 <button
                   className="text-red-600 hover:text-red-900 border border-red-600 hover:border-red-900 rounded-md px-3 py-1 m-1 hover:bg-red-200"
@@ -269,7 +270,7 @@ function DashboardVideo() {
                   }}
                 >
                   <FontAwesomeIcon icon={faTrashAlt} className="mr-1" />
-                  Supprimer
+                  Delete
                 </button>
               </td>
             </tr>
@@ -283,7 +284,7 @@ function DashboardVideo() {
             disabled={page === 1}
             onClick={() => handlePageChange(page - 1)}
           >
-            Page précédente
+            Previous Page
           </Button>
         </div>
         <div>
@@ -292,11 +293,11 @@ function DashboardVideo() {
             disabled={videos.length < perPage}
             onClick={() => handlePageChange(page + 1)}
           >
-            Page suivante
+            Next Page
           </Button>
         </div>
         <div className="flex items-center">
-          <span className="mr-2">Items par page:</span>
+          <span className="mr-2">Items per page:</span>
           <select
             className="p-2"
             value={perPage}
@@ -332,13 +333,13 @@ function DashboardVideo() {
             component="h2"
             sx={{ mb: 2 }}
           >
-            Confirmer l'action
+            Confirm Action
           </Typography>
           <Typography id="modal-modal-description" sx={{ mb: 2 }}>
-            Êtes-vous sûr de vouloir
-            {actionType === "unblock" && " débloquer"}
-            {actionType === "block" && " bloquer"}
-            {actionType === "delete" && " supprimer"} la vidéo ?
+            Are you sure you want to
+            {actionType === "unblock" && " unblock"}
+            {actionType === "block" && " block"}
+            {actionType === "delete" && " delete"} the video?
           </Typography>
           <div className="mt-6 flex justify-end">
             <Button
@@ -347,10 +348,10 @@ function DashboardVideo() {
               onClick={handleConfirmAction}
               sx={{ mr: 2 }}
             >
-              Confirmer
+              Confirm
             </Button>
             <Button variant="contained" onClick={handleCancelAction}>
-              Annuler
+              Cancel
             </Button>
           </div>
         </Box>

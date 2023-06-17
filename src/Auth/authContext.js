@@ -196,25 +196,25 @@ const AuthProvider = (props) => {
             localStorage.setItem("xsrfToken", xsrfToken);
             addToSecureLocalStorage("user", user);
 
-            localStorage.setItem(
-              "toastMessage",
-              JSON.stringify({
-                status: "success",
-                message: `Content de te revoir ${user.username} 👋`,
-              })
-            );
-            if (location.state?.data && location.state?.data !== "/login") {
-              window.location.replace(location.state?.data);
-            } else {
-              window.location.replace("/");
-            }
+          localStorage.setItem(
+            "toastMessage",
+            JSON.stringify({
+              status: "success",
+              message: `Welcome back ${user.username} 👋`,
+            })
+          );
+          if (location.state?.data && location.state?.data !== "/login") {
+            window.location.replace(location.state?.data);
           } else {
-            toast.warning(
-              "Veuillez vérifier votre compte, si vous n'avez pas reçu de mail veuillez nous contacter !",
-              toastOptions
-            );
+             window.location.replace("/");
           }
+        } else {
+          toast.warning(
+            "Please check your account, if you have not received an email please contact us !",
+            toastOptions
+          );
         }
+      }
       })
       .catch((error) => {
         console.error("erreur ", error.message);
@@ -264,6 +264,18 @@ const AuthProvider = (props) => {
 
     makeRequest("api/users/register", "POST", null, formData, null, false)
       .then((data) => {
+        const { user } = data;
+        if (user) {
+          localStorage.setItem(
+            "toastMessage",
+            JSON.stringify({
+              status: "success",
+              message: `Welcome ${user.username} 👋 Don't forget to confirm your registration !`,
+            })
+          );
+          // Redirigez l'utilisateur vers la page de login
+          window.location.href = "/login";
+        }
         if (data !== null) {
           const { user } = data;
           if (user) {
@@ -289,7 +301,7 @@ const AuthProvider = (props) => {
       .then(() => {
         removeFromSecureLocalStorage("user");
         localStorage.removeItem("xsrfToken");
-        toast("Reviens vite nous voir, tu nous manque déjà 👋 ");
+        toast("Come back soon, we miss you already 👋 ");
       })
       .catch((error) => {
         console.error(error.message);

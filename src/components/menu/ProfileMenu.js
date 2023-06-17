@@ -25,7 +25,7 @@ function ProfileMenu() {
           <img
             className="rounded-full max-h-10"
             src={user.currentUser.logo}
-            alt="Votre icône de profil"
+            alt={user.currentUser.username + "profile icon"}
           />
         ) : (
           <Avatar
@@ -38,12 +38,12 @@ function ProfileMenu() {
           <div className="m-2">
             <Link to={`/channel/${user.currentUser.username}`}>
               <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
-                Ma chaine
+              My Channel
               </button>
             </Link>
             <Link to="/profile">
               <button className="w-full text-left hover:bg-gray-100 p-2 rounded-lg">
-                Paramètres du compte
+              Account settings
               </button>
             </Link>
             <hr className="border-gray-400" />
@@ -51,7 +51,7 @@ function ProfileMenu() {
               onClick={handleLogout}
               className="w-full text-left hover:bg-gray-100 p-2 rounded-lg"
             >
-              Se déconnecter
+              Log Out
             </button>
           </div>
         </div>
