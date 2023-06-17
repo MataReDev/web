@@ -148,7 +148,7 @@ function UploadVideoPage() {
       setThumbnailFile(file);
       onSuccess("Ok");
     } catch (err) {
-      console.log("Error: ", err);
+      console.error("Error: ", err);
       const error = new Error("Some error");
       onError({ err });
     }
@@ -161,7 +161,7 @@ function UploadVideoPage() {
       setVideoFile(file);
       onSuccess("Ok");
     } catch (err) {
-      console.log("Error: ", err);
+      console.error("Error: ", err);
       const error = new Error("Some error");
       onError({ err });
     }

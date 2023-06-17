@@ -21,7 +21,6 @@ function VideoCard({ video, onClick }) {
     let timer = null;
 
     if (hoverDuration >= 2) {
-      console.log("playing hover duration");
       if (videoRef.current) {
         videoRef.current.play();
       }

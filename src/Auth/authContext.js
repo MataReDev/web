@@ -73,7 +73,6 @@ const AuthProvider = (props) => {
 
     if (!isRestrictedRoute) {
       const checkAuthentication = async () => {
-        console.log("checkAuthentication");
         makeRequest("api/users/checkIsAuth", "GET", null, null, null, true)
           .then((data) => {
             if (data !== null) {
@@ -91,7 +90,6 @@ const AuthProvider = (props) => {
           });
       };
 
-      console.log("current user", user.currentUser);
       if (user.currentUser) {
         checkAuthentication();
       } else {
@@ -126,7 +124,6 @@ const AuthProvider = (props) => {
 
     //Affichage d'un toast
     const toastMessage = localStorage.getItem("toastMessage");
-    console.log("toastMessage", toastMessage);
     if (toastMessage) {
       const { status, message } = JSON.parse(toastMessage);
 

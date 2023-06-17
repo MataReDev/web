@@ -127,12 +127,11 @@ function SignupForm() {
     const { onSuccess, onError, file } = options;
 
     try {
-      console.log(file);
       setLogo(file);
 
       onSuccess("Ok");
     } catch (err) {
-      console.log("Eroor: ", err);
+      console.error("Error: ", err);
       const error = new Error("Some error");
       onError({ err });
     }

@@ -156,7 +156,6 @@ function DashboardUser() {
           banUntil: "9999-12-31",
           banReason: blockReason,
         };
-        console.log(defBlockValues);
         makeRequest(
           "api/dashboard/banUser",
           "POST",

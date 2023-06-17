@@ -10,7 +10,6 @@ export default function ChannelPage() {
 
   const { user } = useContext(AuthContext);
 
-  console.log(user);
   return (
     <div>
       {channelName === user.currentUser?.username ? (

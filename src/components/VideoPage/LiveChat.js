@@ -53,7 +53,6 @@ function LiveChat({ videoId }) {
       });
   };
 function handlePageUnload() {
-  console.log("socket")
   socketRef.current.emit("leave video chat", videoId);
 }
 

@@ -108,7 +108,6 @@ async function makeRequest(
     try {
       const response = await fetch(url, requestOptions);
       const contentType = response.headers.get("content-type");
-      console.log("response.statusCode", response.status);
 
       if (response.ok) {
         if (contentType && contentType.includes("application/json")) {
@@ -119,7 +118,6 @@ async function makeRequest(
       } else if (response.status === 403 || response.status === 401) {
         const data = await response.json();
         const message = data.error;
-        console.log("message", message);
         const toastOptionsWithRedirect = {
           ...toastOptions,
           onClose: () => {
@@ -153,7 +151,6 @@ async function makeRequest(
         throw new Error(`Request failed with status ${response.status}`);
       }
     } catch (e) {
-      console.log("toas error: " + e.message)
       toast.error(
         "Une erreur s'est produite ! merci de ressayer dans quelques instants ou de contacter un Administrateur",
         toastOptions
