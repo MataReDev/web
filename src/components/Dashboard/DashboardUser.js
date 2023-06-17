@@ -5,6 +5,7 @@ import {
   faLock,
   faClock,
   faUserCheck,
+  faEnvelope
 } from "@fortawesome/free-solid-svg-icons";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { Button, Modal, Box, Typography, TextField } from "@mui/material";
@@ -85,6 +86,12 @@ function DashboardUser() {
     setShowConfirmModal(true);
   };
 
+  const confirmSendVerificationMail = (userId) => {
+    setSelectedUserId(userId);
+    setActionType("resendMail");
+    setShowConfirmModal(true);
+  };
+
   const confirmBlock = (userId) => {
     setSelectedUserId(userId);
     setActionType("block");
@@ -103,7 +110,7 @@ function DashboardUser() {
     switch (actionType) {
       case "unban":
         makeRequest(
-          `api/users/unbanUser/${selectedUserId}`,
+          `api/dashboard/unbanUser/${selectedUserId}`,
           "put",
           null,
           null,
@@ -125,7 +132,7 @@ function DashboardUser() {
           banReason: blockReason,
         };
         makeRequest(
-          "api/users/banUser",
+          "api/dashboard/banUser",
           "POST",
           null,
           tempBlockValues,
@@ -147,7 +154,7 @@ function DashboardUser() {
         };
         console.log(defBlockValues);
         makeRequest(
-          "api/users/banUser",
+          "api/dashboard/banUser",
           "POST",
           null,
           defBlockValues,
@@ -179,6 +186,20 @@ function DashboardUser() {
           })
           .catch((error) => console.error(error));
         break;
+      case "resendMail":
+        makeRequest(
+          `api/dashboard/resendMail/${selectedUserId}`,
+          "GET",
+          null,
+          null,
+          null,
+          true
+        )
+          .then((data) => {
+            getUser();
+            toast.success(data.message);
+          })
+          .catch((error) => console.error(error));
       default:
     }
 
@@ -205,14 +226,14 @@ function DashboardUser() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Utilisateurs</h2>
+      <h2 className="text-2xl font-bold mb-4">Users</h2>
       <table className="border-collapse w-full">
         <thead>
           <tr>
-            <th className="py-2 px-4 bg-gray-200 border-b">Nom</th>
-            <th className="py-2 px-4 bg-gray-200 border-b">Email</th>
-            <th className="py-2 px-4 bg-gray-200 border-b">Etat</th>
-            <th className="py-2 px-4 bg-gray-200 border-b">Raison</th>
+            <th className="py-2 px-4 bg-gray-200 border-b">Username</th>
+            <th className="py-2 px-4 bg-gray-200 border-b">Mail</th>
+            <th className="py-2 px-4 bg-gray-200 border-b">State</th>
+            <th className="py-2 px-4 bg-gray-200 border-b">Ban Reason</th>
             <th className="py-2 px-4 bg-gray-200 border-b">Actions</th>
           </tr>
         </thead>
@@ -225,22 +246,34 @@ function DashboardUser() {
                 {user.banReason && user.banUntil ? (
                   new Date() > new Date(user.banUntil) ? (
                     <span className="inline-block py-1 px-2 rounded bg-green-500 text-white">
-                      Actif : Banissement fini
+                      Active : Ban finished
                     </span>
                   ) : (
                     <span className="inline-block py-1 px-2 rounded bg-red-500 text-white">
-                      Banni jusqu'au {new Date(user.banUntil).toLocaleString()}
+                      Ban until {new Date(user.banUntil).toLocaleString()}
                     </span>
                   )
                 ) : (
                   <span className="inline-block py-1 px-2 rounded bg-green-500 text-white">
-                    Actif
+                    Active
                   </span>
                 )}
               </td>
               <td className="w-1/12">{user.banReason}</td>
 
               <td className="py-2 px-4 whitespace-no-wrap text-right text-sm leading-5 font-medium w-2/5">
+                {!user.isValidated && (
+                  <button
+                    className="transition duration-300 ease-in-out text-blue-600 hover:text-blue-900 border border-blue-600 hover:blue-green-900 rounded-md px-3 py-1 m-1 hover:bg-blue-200"
+                    onClick={() => {
+                      confirmSendVerificationMail(user._id);
+                      handleOpen();
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faEnvelope} className="mr-1" />
+                    Send Email
+                  </button>
+                )}
                 {user.banReason ? (
                   <button
                     className="transition duration-300 ease-in-out text-green-600 hover:text-green-900 border border-green-600 hover:border-green-900 rounded-md px-3 py-1 m-1 hover:bg-green-200"
@@ -250,19 +283,19 @@ function DashboardUser() {
                     }}
                   >
                     <FontAwesomeIcon icon={faUserCheck} className="mr-1" />
-                    Débannir
+                    Unban
                   </button>
                 ) : (
                   <>
                     <button
-                      className="transition duration-300 ease-in-out text-blue-600 hover:text-blue-900 border border-blue-600 hover:border-blue-900 rounded-md px-3 py-1 m-1 hover:bg-blue-200"
+                      className="transition duration-300 ease-in-out text-yellow-600 hover:text-yellow-900 border border-yellow-600 hover:border-yellow-900 rounded-md px-3 py-1 m-1 hover:bg-yellow-200"
                       onClick={() => {
                         confirmBlockTemporarily(user._id);
                         handleOpen();
                       }}
                     >
                       <FontAwesomeIcon icon={faClock} className="mr-1" />
-                      Ban temporairement
+                      Ban temp
                     </button>
                     <button
                       className="transition duration-300 ease-in-out text-gray-600 hover:text-gray-900 border border-gray-600 hover:border-gray-900 rounded-md px-3 py-1 m-1 hover:bg-gray-200"
@@ -272,7 +305,7 @@ function DashboardUser() {
                       }}
                     >
                       <FontAwesomeIcon icon={faLock} className="mr-1" />
-                      Bannir
+                      Ban Def
                     </button>
                   </>
                 )}
@@ -284,7 +317,7 @@ function DashboardUser() {
                   }}
                 >
                   <FontAwesomeIcon icon={faTrashAlt} className="mr-1" />
-                  Supprimer
+                  Delete
                 </button>
               </td>
             </tr>
@@ -315,13 +348,14 @@ function DashboardUser() {
             component="h2"
             sx={{ mb: 2 }}
           >
-            Confirmer l'action
+            Confirm action
           </Typography>
           <Typography id="modal-modal-description" sx={{ mb: 2 }}>
-            Êtes-vous sûr de vouloir {actionType === "unban" && "débannir"}
-            {actionType === "block_temporarily" && "bloquer temporairement"}
-            {actionType === "block" && "bloquer"}
-            {actionType === "delete" && "supprimer"} l'utilisateur ?
+            Are you sur, you want to {actionType === "unban" && "unbann"}
+            {actionType === "block_temporarily" && "ban temp"}
+            {actionType === "block" && "ban def"}
+            {actionType === "resendMail" && "send an email to"}
+            {actionType === "delete" && "delete"} the user ?
           </Typography>
           {(actionType === "block_temporarily" || actionType === "block") && (
             <>
@@ -350,10 +384,10 @@ function DashboardUser() {
               onClick={handleConfirmAction}
               sx={{ mr: 2 }}
             >
-              Confirmer
+              Confirm
             </Button>
             <Button variant="contained" onClick={handleCancelAction}>
-              Annuler
+              Cancel
             </Button>
           </div>
         </Box>

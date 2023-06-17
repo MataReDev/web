@@ -86,13 +86,13 @@ export default function VideoChart() {
 
   function getDurationLabel(duration) {
     if (duration === "7days") {
-      return "7 jours";
+      return "7 days";
     } else if (duration === "30days") {
-      return "30 jours";
+      return "30 days";
     } else if (duration === "3months") {
-      return "3 mois";
+      return "3 months";
     } else if (duration === "year") {
-      return "1 an";
+      return "1 year";
     } else {
       return "";
     }
@@ -118,7 +118,7 @@ export default function VideoChart() {
               setChartType(event.target.value === "area");
             }}
           >
-            <option value="line">Curve</option>
+            <option value="line">Line</option>
             <option value="area">Area</option>
           </select>
         </div>
