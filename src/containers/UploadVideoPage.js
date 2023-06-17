@@ -8,6 +8,8 @@ import { Button, Upload, Modal } from "antd";
 function UploadVideoPage() {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [showProgressBar, setProgressBarVisibility] = useState(false);
+  const [submitDisabled, setSubmitDisabled] = useState(false); // Add state for submit button
+
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -51,6 +53,7 @@ function UploadVideoPage() {
     e.preventDefault();
 
     setProgressBarVisibility(true);
+    setSubmitDisabled(true); // Disable submit button
 
     const formData = new FormData();
     formData.append("title", title);
@@ -93,6 +96,7 @@ function UploadVideoPage() {
       .finally(() => {
         // Masquer la barre de progression une fois la soumission terminée
         setProgressBarVisibility(false);
+        setSubmitDisabled(false); // Enable submit button after submission
       });
   };
 
@@ -281,7 +285,10 @@ function UploadVideoPage() {
 
         <button
           type="submit"
-          className="bg-white border border-black text-black rounded-md py-2 px-4 mt-3 hover:bg-gray-300"
+          className={`border border-black text-black rounded-md py-2 px-4 mt-3 hover:bg-gray-300 ${
+            submitDisabled ? "bg-gray-300" : "bg-white " }`} // Add conditional class for button color"
+          disabled={submitDisabled} // Disable the button based on the state
+
         >
           <p className="font-bold">Add my video</p>
         </button>
