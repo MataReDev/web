@@ -28,32 +28,6 @@ const toastOptions = {
 };
 
 const VideoTable = ({ videos, handleDelete, handleStateChange }) => {
-  useEffect(() => {
-    const toastMessage = localStorage.getItem("toastMessage");
-
-    if (toastMessage) {
-      const { status, message } = JSON.parse(toastMessage);
-
-      //const status = localStorage.getItem("status");
-
-      const toastOptionsMap = {
-        success: toast.success,
-        warning: toast.warning,
-        info: toast.info,
-      };
-
-      if (message && status && toastOptionsMap[status]) {
-        const toastFunction = toastOptionsMap[status];
-        toastFunction(message, {
-          ...toastOptions,
-          onClose: () => {
-            localStorage.removeItem("toastMessage");
-          },
-        });
-      }
-    }
-  });
-
   const handleShareVideo = (videoId, videoTitle) => {
     const defaultUrl = getUrl();
 
