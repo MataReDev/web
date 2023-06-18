@@ -57,30 +57,9 @@ function UploadVideoPage() {
     reader.readAsDataURL(blob);
   }
 
-  //  function uploadChunk(data) {
-  //    const file = files[currentFileIndex];
-  //    const params = new URLSearchParams();
-  //    params.set("name", file.name);
-  //    params.set("size", file.size);
-  //    params.set("currentChunkIndex", currentChunkIndex);
-  //    params.set("totalChunks", Math.ceil(file.size / chunkSize));
-  //    const headers = { "Content-Type": "application/octet-stream" };
-  //    const url = "https://iseevision.fr/api/upload?" + params.toString();
-  //    axios.post(url, data, { headers }).then((response) => {
-  //      const filesize = files[currentFileIndex].size;
-  //      const chunks = Math.ceil(filesize / chunkSize) - 1;
-  //      const isLastChunk = currentChunkIndex === chunks;
-  //      if (isLastChunk) {
-  //        file.finalFilename = response.data.finalFilename;
-  //        setLastUploadedFileIndex(currentFileIndex);
-  //        setCurrentChunkIndex(null);
-  //      } else {
-  //        setCurrentChunkIndex(currentChunkIndex + 1);
-  //      }
-  //    });
-  //  }
-
   function uploadChunk(data) {
+    setProgressBarVisibility(true);
+    setSubmitDisabled(true); // Disable submit button
     const file = files[currentFileIndex];
     const params = new URLSearchParams();
     params.set("name", file.name);
@@ -90,39 +69,34 @@ function UploadVideoPage() {
     const headers = { "Content-Type": "application/octet-stream" };
     const url = "api/videos/uploadVideo?" + params.toString();
 
-    makeRequest(url, "POST", headers, data,null,true).then((data) => {
+    makeRequest(url, "POST", headers, data, null, true).then((data) => {
       const file = files[currentFileIndex];
       const filesize = files[currentFileIndex].size;
       const chunks = Math.ceil(filesize / chunkSize) - 1;
       const isLastChunk = currentChunkIndex === chunks;
-        setProgress(0);
-        if (file.finalFilename) {
-          setProgress(100);
-        } else {
-          const chunks = Math.ceil(file.size / chunkSize);
+      setProgress(0);
+      if (file.finalFilename) {
+        setProgress(100);
+      } else {
+        const chunks = Math.ceil(file.size / chunkSize);
 
-            setProgress(Math.round((currentChunkIndex / chunks) * 100));
-
-        }
+        setProgress(Math.round((currentChunkIndex / chunks) * 100));
+      }
       if (isLastChunk) {
-       
         setLastUploadedFileIndex(currentFileIndex);
         setCurrentChunkIndex(null);
-        //Continue upload if upload video is already uploaded
         if (data !== null) {
-        file.finalFilename = data.finalFileName;
-         upload(data.path + data.finalFileName, filesize);
-        }
-        else{
-          console.error("Error uploading video")
+          file.finalFilename = data.finalFileName;
+          upload(data.path + data.finalFileName, filesize);
+        } else {
+          console.error("Error uploading video");
           setLastUploadedFileIndex(null);
-           setCurrentChunkIndex(null);
-           setFiles([])
+          setCurrentChunkIndex(null);
+          setFiles([]);
         }
       } else {
         setCurrentChunkIndex(currentChunkIndex + 1);
       }
-
     });
   }
 
@@ -168,7 +142,6 @@ function UploadVideoPage() {
     formData.append("description", description);
     formData.append("video_path", videoPath);
     formData.append("video_size", videoSize);
-    //formData.append("video", videoFile);
     formData.append("thumbnail", thumbnailFile);
     formData.append("state", state);
 
@@ -198,10 +171,6 @@ function UploadVideoPage() {
       })
       .catch((error) => {
         console.error(error);
-        // toast.error(
-        //   "Une erreur est survenue durant l'enregistrement, veuillez réessayer dans quelques minutes.",
-        //   toastOptions
-        // );
       })
       .finally(() => {
         // Masquer la barre de progression une fois la soumission terminée
@@ -230,56 +199,6 @@ function UploadVideoPage() {
     setState(value);
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   setProgressBarVisibility(true);
-  //   setSubmitDisabled(true); // Disable submit button
-
-  //   const formData = new FormData();
-  //   formData.append("title", title);
-  //   formData.append("description", description);
-  //   formData.append("video", videoFile);
-  //   formData.append("thumbnail", thumbnailFile);
-  //   formData.append("state", state);
-
-  //   await makeRequest(
-  //     "api/videos/upload",
-  //     "POST",
-  //     null,
-  //     formData,
-  //     null,
-  //     true,
-  //     onUploadProgress
-  //   )
-  //     .then((data) => {
-  //       if (data !== null) {
-  //         if (user) {
-  //           localStorage.setItem(
-  //             "toastMessage",
-  //             JSON.stringify({
-  //               status: "success",
-  //               message: `Video upload with success ${user.currentUser?.username} ! `,
-  //             })
-  //           );
-  //           // Redirigez l'utilisateur vers la chaine
-  //           window.location.href = `/channel/${user.currentUser?.username}`;
-  //         }
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       // toast.error(
-  //       //   "Une erreur est survenue durant l'enregistrement, veuillez réessayer dans quelques minutes.",
-  //       //   toastOptions
-  //       // );
-  //     })
-  //     .finally(() => {
-  //       // Masquer la barre de progression une fois la soumission terminée
-  //       setProgressBarVisibility(false);
-  //       setSubmitDisabled(false); // Enable submit button after submission
-  //     });
-  // };
 
   const onUploadProgress = (progressEvent) => {
     const progress = Math.round(
@@ -484,7 +403,6 @@ function UploadVideoPage() {
             max="100"
             className="w-2/3 mx-auto block"
           />
-          ;
         </>
       )}
     </div>

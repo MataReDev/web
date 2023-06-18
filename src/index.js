@@ -17,22 +17,22 @@ import Dashboard from "./containers/Dashboard";
 import VerificationPage from "./containers/VerificationPage";
 import HeaderBar from "./components/menu/HeaderBar";
 import NotFoundPage from "./containers/NotFoundPage";
-import ResetPasswordPage from './containers/ResetPasswordPage';
+import ResetPasswordPage from "./containers/ResetPasswordPage";
+import ResendVerificationPage from "./containers/ResendVerificationPage";
 
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./Auth/authContext";
 
 import PrivateRoute from "./Auth/PrivateRoute";
-import AdminRoute from "./Auth/AdminRoute"
+import AdminRoute from "./Auth/AdminRoute";
 import { ToastContainer } from "react-toastify";
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
-  
   return (
     <div className="relative bg-gray-100 min-h-screen h-full">
       <Router>
-        <ScrollToTop/>
+        <ScrollToTop />
         <AuthProvider>
           <Helmet>
             <meta charSet="utf-8" />
@@ -45,7 +45,15 @@ function App() {
             </Route>
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="/verification" element={<VerificationPage />} />
-            <Route exact path="/resetpassword" element ={<ResetPasswordPage/>} />
+            <Route
+              exact
+              path="/resetpassword"
+              element={<ResetPasswordPage />}
+            />
+            <Route
+              exact
+              path="/resendvericationemail"
+              element={<ResendVerificationPage />}/>
             <Route exact path="/search" element={<SearchPage />} />
             <Route exact path="/video/:id" element={<VideoPage />} />
             <Route exact path="/channel/:id" element={<ChannelPage />} />
@@ -54,7 +62,7 @@ function App() {
               <Route exact path="/admin/dashboard" element={<Dashboard />} />
             </Route>
             <Route exact path="/upload" element={<UploadVideoPage />} />
-            <Route path="*" element={<NotFoundPage />} />    
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <ToastContainer />
         </AuthProvider>

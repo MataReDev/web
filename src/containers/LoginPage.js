@@ -13,6 +13,21 @@ class LoginPage extends Component {
         </Helmet>
         <h1 className="text-2xl font-bold mb-4">Login / Register</h1>
         <LoginSignupForm />
+
+        <div className="text-center">
+          <a
+            href="/resetpassword"
+            className="ml-4 inline-block hover:bg-gray-300 border border-black text-black py-2 px-4 rounded"
+          >
+            Forgot Password ?
+          </a>
+          <a
+            href="/resendvericationemail"
+            className="ml-4 inline-block hover:bg-gray-300 border border-black text-black py-2 px-4 rounded"
+          >
+            Resend Email
+          </a>
+        </div>
       </div>
     );
   }
