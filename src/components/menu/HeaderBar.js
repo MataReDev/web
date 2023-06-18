@@ -9,7 +9,7 @@ import { AuthContext } from "../../Auth/authContext";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import VideoCallIcon from '@mui/icons-material/VideoCall';
+import VideoCallIcon from "@mui/icons-material/VideoCall";
 
 library.add(faSearch);
 
@@ -59,7 +59,7 @@ function HeaderBar() {
             {isAdmin && (
               <Link
                 to={"admin/dashboard"}
-                className="px-4 py-2 h-10 m-1 font-bold hover:bg-gray-300 border border-black active:bg-gray-500 text-black rounded-lg"
+                className="px-4 py-2 h-10 m-auto text-xs sm:text-base font-bold hover:bg-gray-300 border border-black active:bg-gray-500 text-black rounded-lg flex items-center justify-center whitespace-nowrap" // Ajoutez la classe "whitespace-nowrap" ici
               >
                 Admin Dashboard
               </Link>
@@ -72,13 +72,14 @@ function HeaderBar() {
             </Link>
           </div>
           <div className="my-auto">
-          <ProfileMenu handleLogout={logout} />
+            <ProfileMenu handleLogout={logout} />
           </div>
         </div>
       ) : (
         <div className="login-button flex-grow justify-end flex items-center">
           <Link
-            to={{ pathname: "/login"}} state={{ data: location.pathname }}  
+            to={{ pathname: "/login" }}
+            state={{ data: location.pathname }}
             className="px-4 py-2 border border-black hover:bg-gray-300 focus:border focus:border-black active:bg-gray-500 text-black rounded-lg"
           >
             Login
