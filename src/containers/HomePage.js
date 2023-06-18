@@ -31,7 +31,7 @@ const HomePage = () => {
         setVideos((prevVideos) => [...prevVideos, ...response]);
       } else setHasMore(false);
     } catch (error) {
-      console.erro(error);
+      console.error(error);
     }
 
     setLoading(false);

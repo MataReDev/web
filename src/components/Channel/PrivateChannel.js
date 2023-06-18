@@ -43,7 +43,6 @@ export default function PrivateChannel({ username }) {
       )
       .then((data) => {
         if (data !== null) {
-        console.log("get ",JSON.stringify(data));
         setChannel(data);
         getUserVideo(data.id);
         }

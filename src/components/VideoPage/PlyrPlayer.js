@@ -10,9 +10,6 @@ const VideoPlayer2 = ({ options, video }) => {
     const player = videoRef.current?.plyr;
     const playerT = playerRef.current;
 
-    // console.log(player);
-    // console.log(playerT);
-
     // if (player) {
     //   // Vous pouvez personnaliser le lecteur Plyr ici
     //   // Exemple: player.play() pour lire automatiquement la vidéo
