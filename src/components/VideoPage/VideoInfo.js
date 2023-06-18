@@ -157,7 +157,7 @@ function VideoInfo({ video }) {
           title: video.title,
           url: window.location.href,
         })
-        .then(() => console.log("Video shared successfully"))
+        .then(() => toast.success("Video shared successfully"))
         .catch((error) => console.error("Error sharing video:", error));
     } else {
       alert("Video sharing is not supported on this browser.");
