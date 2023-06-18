@@ -117,7 +117,7 @@ async function makeRequest(
         }
       } else if (response.status === 403 || response.status === 401) {
         const data = await response.json();
-        const message = data.error;
+        let message = data.error;
         const toastOptionsWithRedirect = {
           ...toastOptions,
           onClose: () => {

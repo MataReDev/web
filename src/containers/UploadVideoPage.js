@@ -1,11 +1,10 @@
-import React, { useState, useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import makeRequest from "../Utils/RequestUtils";
 import { toast } from "react-toastify";
 import { AuthContext } from "../Auth/authContext";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Upload, Modal } from "antd";
-import ImgCrop from "antd-img-crop"
-import axios from "axios";
+import ImgCrop from "antd-img-crop";
 const chunkSize = 50 * 1024;
 
 function UploadVideoPage() {
@@ -31,156 +30,149 @@ function UploadVideoPage() {
     theme: "colored",
   };
 
-
-//-----------------------------UPLOAD VIDEO FILE ----------------
+  //-----------------------------UPLOAD VIDEO FILE ----------------
 
   const [files, setFiles] = useState([]);
   const [currentFileIndex, setCurrentFileIndex] = useState(null);
   const [lastUploadedFileIndex, setLastUploadedFileIndex] = useState(null);
   const [currentChunkIndex, setCurrentChunkIndex] = useState(null);
 
-
-
-
-
-  const handleSubmitTest = (e) => {
-  e.preventDefault();
-  setProgressBarVisibility(true);
-  
-  setFiles([...files, videoFile]); 
-  };
-
-
- function readAndUploadCurrentChunk() {
-   const file = files[currentFileIndex];
-   if (!file) {
-     return;
-   }
-   const from = currentChunkIndex * chunkSize;
-   const to = from + chunkSize;
-   const blob = file.slice(from, to);
-   const reader = new FileReader();
-   reader.onload = (e) => uploadChunk(e.target.result);
-   reader.readAsDataURL(blob);
- }
-
- function uploadChunk(data) {
-   const file = files[currentFileIndex];
-   const params = new URLSearchParams();
-   params.set("name", file.name);
-   params.set("size", file.size);
-   params.set("currentChunkIndex", currentChunkIndex);
-   params.set("totalChunks", Math.ceil(file.size / chunkSize));
-   const headers = { "Content-Type": "application/octet-stream" };
-   const url = "https://iseevision.fr/api/upload?" + params.toString();
-   axios.post(url, data, { headers }).then((response) => {
-     const filesize = files[currentFileIndex].size;
-     const chunks = Math.ceil(filesize / chunkSize) - 1;
-     const isLastChunk = currentChunkIndex === chunks;
-     if (isLastChunk) {
-       file.finalFilename = response.data.finalFilename;
-       setLastUploadedFileIndex(currentFileIndex);
-       setCurrentChunkIndex(null);
-     } else {
-       setCurrentChunkIndex(currentChunkIndex + 1);
-     }
-   });
- }
-
- useEffect(() => {
-   if (lastUploadedFileIndex === null) {
-     return;
-   }
-   const isLastFile = lastUploadedFileIndex === files.length - 1;
-   const nextFileIndex = isLastFile ? null : currentFileIndex + 1;
-   setCurrentFileIndex(nextFileIndex);
- }, [lastUploadedFileIndex]);
-
- useEffect(() => {
-   if (files.length > 0) {
-     if (currentFileIndex === null) {
-       setCurrentFileIndex(
-         lastUploadedFileIndex === null ? 0 : lastUploadedFileIndex + 1
-       );
-     }
-   }
- }, [files.length]);
-
- useEffect(() => {
-   if (currentFileIndex !== null) {
-     setCurrentChunkIndex(0);
-   }
- }, [currentFileIndex]);
-
- useEffect(() => {
-   if (currentChunkIndex !== null) {
-     readAndUploadCurrentChunk();
-   }
- }, [currentChunkIndex]);
-
-
- //---------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
-  };
-
-  const handleVideoChange = (e) => {
-    setVideoFile(e.target.files[0]);
-  };
-
-  const handleThumbnailChange = (e) => {
-    setThumbnailFile(e.target.files[0]);
-  };
-
-  const handleStateChange = (value) => {
-    setState(value);
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    setProgressBarVisibility(true);
 
+    setFiles([...files, videoFile]);
+  };
+
+  function readAndUploadCurrentChunk() {
+    const file = files[currentFileIndex];
+    if (!file) {
+      return;
+    }
+    const from = currentChunkIndex * chunkSize;
+    const to = from + chunkSize;
+    const blob = file.slice(from, to);
+    const reader = new FileReader();
+    reader.onload = (e) => uploadChunk(e.target.result);
+    reader.readAsDataURL(blob);
+  }
+
+  //  function uploadChunk(data) {
+  //    const file = files[currentFileIndex];
+  //    const params = new URLSearchParams();
+  //    params.set("name", file.name);
+  //    params.set("size", file.size);
+  //    params.set("currentChunkIndex", currentChunkIndex);
+  //    params.set("totalChunks", Math.ceil(file.size / chunkSize));
+  //    const headers = { "Content-Type": "application/octet-stream" };
+  //    const url = "https://iseevision.fr/api/upload?" + params.toString();
+  //    axios.post(url, data, { headers }).then((response) => {
+  //      const filesize = files[currentFileIndex].size;
+  //      const chunks = Math.ceil(filesize / chunkSize) - 1;
+  //      const isLastChunk = currentChunkIndex === chunks;
+  //      if (isLastChunk) {
+  //        file.finalFilename = response.data.finalFilename;
+  //        setLastUploadedFileIndex(currentFileIndex);
+  //        setCurrentChunkIndex(null);
+  //      } else {
+  //        setCurrentChunkIndex(currentChunkIndex + 1);
+  //      }
+  //    });
+  //  }
+
+  function uploadChunk(data) {
+    const file = files[currentFileIndex];
+    const params = new URLSearchParams();
+    params.set("name", file.name);
+    params.set("size", file.size);
+    params.set("currentChunkIndex", currentChunkIndex);
+    params.set("totalChunks", Math.ceil(file.size / chunkSize));
+    const headers = { "Content-Type": "application/octet-stream" };
+    const url = "api/videos/uploadVideo?" + params.toString();
+
+    makeRequest(url, "POST", headers, data,null,true).then((data) => {
+      const file = files[currentFileIndex];
+      const filesize = files[currentFileIndex].size;
+      const chunks = Math.ceil(filesize / chunkSize) - 1;
+      const isLastChunk = currentChunkIndex === chunks;
+        setProgress(0);
+        if (file.finalFilename) {
+          setProgress(100);
+        } else {
+          const chunks = Math.ceil(file.size / chunkSize);
+
+            setProgress(Math.round((currentChunkIndex / chunks) * 100));
+
+        }
+      if (isLastChunk) {
+       
+        setLastUploadedFileIndex(currentFileIndex);
+        setCurrentChunkIndex(null);
+        //Continue upload if upload video is already uploaded
+        if (data !== null) {
+        file.finalFilename = data.finalFileName;
+         upload(data.path + data.finalFileName, filesize);
+        }
+        else{
+          console.error("Error uploading video")
+          setLastUploadedFileIndex(null);
+           setCurrentChunkIndex(null);
+           setFiles([])
+        }
+      } else {
+        setCurrentChunkIndex(currentChunkIndex + 1);
+      }
+
+    });
+  }
+
+  useEffect(() => {
+    if (lastUploadedFileIndex === null) {
+      return;
+    }
+    const isLastFile = lastUploadedFileIndex === files.length - 1;
+    const nextFileIndex = isLastFile ? null : currentFileIndex + 1;
+    setCurrentFileIndex(nextFileIndex);
+  }, [lastUploadedFileIndex]);
+
+  useEffect(() => {
+    if (files.length > 0) {
+      if (currentFileIndex === null) {
+        setCurrentFileIndex(
+          lastUploadedFileIndex === null ? 0 : lastUploadedFileIndex + 1
+        );
+      }
+    }
+  }, [files.length]);
+
+  useEffect(() => {
+    if (currentFileIndex !== null) {
+      setCurrentChunkIndex(0);
+    }
+  }, [currentFileIndex]);
+
+  useEffect(() => {
+    if (currentChunkIndex !== null) {
+      readAndUploadCurrentChunk();
+    }
+  }, [currentChunkIndex]);
+
+  //---------------------------------------------------------------------------------------
+
+  const upload = (videoPath, videoSize) => {
     setProgressBarVisibility(true);
     setSubmitDisabled(true); // Disable submit button
 
     const formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
-    formData.append("video", videoFile);
+    formData.append("video_path", videoPath);
+    formData.append("video_size", videoSize);
+    //formData.append("video", videoFile);
     formData.append("thumbnail", thumbnailFile);
     formData.append("state", state);
 
-    await makeRequest(
+    makeRequest(
       "api/videos/upload",
       "POST",
       null,
@@ -205,7 +197,7 @@ function UploadVideoPage() {
         }
       })
       .catch((error) => {
-        console.error( error);
+        console.error(error);
         // toast.error(
         //   "Une erreur est survenue durant l'enregistrement, veuillez réessayer dans quelques minutes.",
         //   toastOptions
@@ -217,6 +209,77 @@ function UploadVideoPage() {
         setSubmitDisabled(false); // Enable submit button after submission
       });
   };
+
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
+
+  const handleDescriptionChange = (e) => {
+    setDescription(e.target.value);
+  };
+
+  const handleVideoChange = (e) => {
+    setVideoFile(e.target.files[0]);
+  };
+
+  const handleThumbnailChange = (e) => {
+    setThumbnailFile(e.target.files[0]);
+  };
+
+  const handleStateChange = (value) => {
+    setState(value);
+  };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   setProgressBarVisibility(true);
+  //   setSubmitDisabled(true); // Disable submit button
+
+  //   const formData = new FormData();
+  //   formData.append("title", title);
+  //   formData.append("description", description);
+  //   formData.append("video", videoFile);
+  //   formData.append("thumbnail", thumbnailFile);
+  //   formData.append("state", state);
+
+  //   await makeRequest(
+  //     "api/videos/upload",
+  //     "POST",
+  //     null,
+  //     formData,
+  //     null,
+  //     true,
+  //     onUploadProgress
+  //   )
+  //     .then((data) => {
+  //       if (data !== null) {
+  //         if (user) {
+  //           localStorage.setItem(
+  //             "toastMessage",
+  //             JSON.stringify({
+  //               status: "success",
+  //               message: `Video upload with success ${user.currentUser?.username} ! `,
+  //             })
+  //           );
+  //           // Redirigez l'utilisateur vers la chaine
+  //           window.location.href = `/channel/${user.currentUser?.username}`;
+  //         }
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //       // toast.error(
+  //       //   "Une erreur est survenue durant l'enregistrement, veuillez réessayer dans quelques minutes.",
+  //       //   toastOptions
+  //       // );
+  //     })
+  //     .finally(() => {
+  //       // Masquer la barre de progression une fois la soumission terminée
+  //       setProgressBarVisibility(false);
+  //       setSubmitDisabled(false); // Enable submit button after submission
+  //     });
+  // };
 
   const onUploadProgress = (progressEvent) => {
     const progress = Math.round(
@@ -292,7 +355,7 @@ function UploadVideoPage() {
   return (
     <div className="p-5">
       <form
-        onSubmit={handleSubmitTest}
+        onSubmit={handleSubmit}
         className="flex flex-col gap-4 p-5 mx-auto w-2/3"
       >
         <h1 className="text-2xl font-bold mb-4">Add a video</h1>
@@ -364,8 +427,7 @@ function UploadVideoPage() {
             customRequest={uploadVideo}
             multiple={false}
             maxCount={1}
-            //-------------------UPLOAD FILE 
-
+            //-------------------UPLOAD FILE
           >
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
@@ -387,7 +449,7 @@ function UploadVideoPage() {
         </Modal>
         <label className="block">
           <p className="font-bold mb-2">Thumbnail</p>
-          <ImgCrop rotationSlider aspect={16/9}>
+          <ImgCrop rotationSlider aspect={16 / 9}>
             <Upload
               listType="picture"
               accept="image/png, image/jpeg, image/jpg"
@@ -414,42 +476,16 @@ function UploadVideoPage() {
         >
           <p className="font-bold">Add my video</p>
         </button>
-
-        <button
-          type="submit"
-          className={`border border-black text-black rounded-md py-2 px-4 mt-3 hover:bg-gray-300  bg-white `}
-          // Add conditional class for button color"
-        >
-          <p className="font-bold">Add my video 2 </p>
-        </button>
       </form>
-      {showProgressBar && (<>
-         {files.map((file,fileIndex) => {
-          let progress = 0;
-          if (file.finalFilename) {
-            progress = 100;
-          } else {
-            const uploading = fileIndex === currentFileIndex;
-            const chunks = Math.ceil(file.size / chunkSize);
-            if (uploading) {
-              progress = Math.round(currentChunkIndex / chunks * 100);
-            } else {
-              progress = 0;
-            }
-          }
-          return (
-          <>
-              <div className="name">{file.name}</div>
-              <progress
-                value={progress}
-                max="100"
-                className="w-2/3 mx-auto block"
-              />
-            </>
-          );
-        })}
+      {showProgressBar && (
+        <>
+          <progress
+            value={progress}
+            max="100"
+            className="w-2/3 mx-auto block"
+          />
+          ;
         </>
-       
       )}
     </div>
   );
