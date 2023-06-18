@@ -10,7 +10,6 @@ import HomePage from "./containers/HomePage";
 import SearchPage from "./containers/SearchPage";
 import VideoPage from "./containers/VideoPage";
 import ChannelPage from "./containers/ChannelPage";
-import ParamsPage from "./containers/ParamsPage";
 import LoginPage from "./containers/LoginPage";
 import ProfilePage from "./containers/ProfilePage";
 import UploadVideoPage from "./containers/UploadVideoPage";
@@ -50,7 +49,6 @@ function App() {
             <Route exact path="/search" element={<SearchPage />} />
             <Route exact path="/video/:id" element={<VideoPage />} />
             <Route exact path="/channel/:id" element={<ChannelPage />} />
-            <Route exact path="/params/:id" element={<ParamsPage />} />
             <Route exact path="/login" element={<LoginPage />} />{" "}
             <Route element={<AdminRoute />}>
               <Route exact path="/admin/dashboard" element={<Dashboard />} />
