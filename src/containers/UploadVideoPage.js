@@ -72,7 +72,7 @@ function UploadVideoPage() {
    params.set("currentChunkIndex", currentChunkIndex);
    params.set("totalChunks", Math.ceil(file.size / chunkSize));
    const headers = { "Content-Type": "application/octet-stream" };
-   const url = "/api/upload?" + params.toString();
+   const url = "https://iseevision.fr/api/upload?" + params.toString();
    axios.post(url, data, { headers }).then((response) => {
      const filesize = files[currentFileIndex].size;
      const chunks = Math.ceil(filesize / chunkSize) - 1;
@@ -181,7 +181,7 @@ function UploadVideoPage() {
     formData.append("state", state);
 
     await makeRequest(
-      "https://iseevision.fr/api/videos/upload",
+      "api/videos/upload",
       "POST",
       null,
       formData,
@@ -205,7 +205,7 @@ function UploadVideoPage() {
         }
       })
       .catch((error) => {
-        console.error(error);
+        console.error( error);
         // toast.error(
         //   "Une erreur est survenue durant l'enregistrement, veuillez réessayer dans quelques minutes.",
         //   toastOptions
