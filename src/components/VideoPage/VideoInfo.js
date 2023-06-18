@@ -139,30 +139,6 @@ function VideoInfo({ video }) {
   const hasMoreLines = descriptionLines?.length > nbLinesDescriptionLimtited;
 
   useEffect(() => {
-    const toastMessage = localStorage.getItem("toastMessage");
-
-    if (toastMessage) {
-      const { status, message } = JSON.parse(toastMessage);
-
-      //const status = localStorage.getItem("status");
-
-      const toastOptionsMap = {
-        success: toast.success,
-        warning: toast.warning,
-        info: toast.info,
-      };
-
-      if (message && status && toastOptionsMap[status]) {
-        const toastFunction = toastOptionsMap[status];
-        toastFunction(message, {
-          ...toastOptions,
-          onClose: () => {
-            localStorage.removeItem("toastMessage");
-          },
-        });
-      }
-    }
-
     makeRequest(`api/videos/${video._id}`, "GET", null, null, null, false)
       .then(async (data) => {
         setLikeCount(data.likesCount);
