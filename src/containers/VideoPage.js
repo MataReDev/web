@@ -116,7 +116,7 @@ function VideoPage() {
                   <LiveChat videoId={videoId} />
                 </div>
                 <div className="w-full">
-                  <VideoSimilaires userId={video.user.ownerId}/>
+                  <VideoSimilaires userId={video.user.ownerId} videoId={videoId}/>
                 </div>
               </div>
             </>

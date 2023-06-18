@@ -3,8 +3,8 @@ import VideoCard from "../Home/VideoCard";
 import { useNavigate } from "react-router-dom";
 import makeRequest from "../../Utils/RequestUtils";
 
-function VideoSimilaires(userId) {
-  userId = userId.userId;
+function VideoSimilaires({userId, videoId}) {
+
   const [similarVideos, setsimilarVideos] = useState([]);
   const navigate = useNavigate();
 
@@ -14,14 +14,13 @@ function VideoSimilaires(userId) {
 
   const similarVideo = () => {
     makeRequest(
-      `api/videos/similarVideo/${userId}`,
+      `api/videos/similarVideo/${userId}?videoId=${videoId}`,
       "GET",
       null,
       null,
       null,
       false
     ).then((data) => {
-      console.log(data);
       setsimilarVideos(data);
     });
   };
