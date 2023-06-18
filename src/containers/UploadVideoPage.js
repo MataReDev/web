@@ -4,12 +4,12 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../Auth/authContext";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Upload, Modal } from "antd";
+import ImgCrop from "antd-img-crop"
 
 function UploadVideoPage() {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [showProgressBar, setProgressBarVisibility] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(false); // Add state for submit button
-
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -87,7 +87,7 @@ function UploadVideoPage() {
         }
       })
       .catch((error) => {
-        console.error( error);
+        console.error(error);
         // toast.error(
         //   "Une erreur est survenue durant l'enregistrement, veuillez réessayer dans quelques minutes.",
         //   toastOptions
@@ -267,28 +267,30 @@ function UploadVideoPage() {
         </Modal>
         <label className="block">
           <p className="font-bold mb-2">Thumbnail</p>
-          <Upload
-            listType="picture"
-            accept="image/png, image/jpeg, image/jpg"
-            name="thumbnail"
-            showUploadList={true}
-            onPreview={handlePreview}
-            onChange={handleOnChange}
-            defaultFileList={defaultFileList}
-            customRequest={uploadThumbnail}
-            multiple={false}
-            maxCount={1}
-          >
-            <Button icon={<UploadOutlined />}>Upload</Button>
-          </Upload>
+          <ImgCrop rotationSlider aspect={16/9}>
+            <Upload
+              listType="picture"
+              accept="image/png, image/jpeg, image/jpg"
+              name="thumbnail"
+              showUploadList={true}
+              onPreview={handlePreview}
+              onChange={handleOnChange}
+              defaultFileList={defaultFileList}
+              customRequest={uploadThumbnail}
+              multiple={false}
+              maxCount={1}
+            >
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
+          </ImgCrop>
         </label>
 
         <button
           type="submit"
           className={`border border-black text-black rounded-md py-2 px-4 mt-3 hover:bg-gray-300 ${
-            submitDisabled ? "bg-gray-300" : "bg-white " }`} // Add conditional class for button color"
+            submitDisabled ? "bg-gray-300" : "bg-white "
+          }`} // Add conditional class for button color"
           disabled={submitDisabled} // Disable the button based on the state
-
         >
           <p className="font-bold">Add my video</p>
         </button>
