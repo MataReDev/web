@@ -5,7 +5,7 @@ import { AuthContext } from "../Auth/authContext";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Upload, Modal } from "antd";
 import ImgCrop from "antd-img-crop";
-const chunkSize = 40 * 1048576; // 40 mo en octets
+const chunkSize = 10 * 1048576; // 10 mo en octets
 
 function UploadVideoPage() {
   const [uploadPercentage, setUploadPercentage] = useState(0);
