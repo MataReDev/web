@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "../Auth/authContext";
 import { UploadOutlined } from "@ant-design/icons";
 import { Button, Upload, Modal } from "antd";
+import ImgCrop from "antd-img-crop"
 import axios from "axios";
 const chunkSize = 50 * 1024;
 
@@ -11,7 +12,6 @@ function UploadVideoPage() {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [showProgressBar, setProgressBarVisibility] = useState(false);
   const [submitDisabled, setSubmitDisabled] = useState(false); // Add state for submit button
-
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -387,20 +387,22 @@ function UploadVideoPage() {
         </Modal>
         <label className="block">
           <p className="font-bold mb-2">Thumbnail</p>
-          <Upload
-            listType="picture"
-            accept="image/png, image/jpeg, image/jpg"
-            name="thumbnail"
-            showUploadList={true}
-            onPreview={handlePreview}
-            onChange={handleOnChange}
-            defaultFileList={defaultFileList}
-            customRequest={uploadThumbnail}
-            multiple={false}
-            maxCount={1}
-          >
-            <Button icon={<UploadOutlined />}>Upload</Button>
-          </Upload>
+          <ImgCrop rotationSlider aspect={16/9}>
+            <Upload
+              listType="picture"
+              accept="image/png, image/jpeg, image/jpg"
+              name="thumbnail"
+              showUploadList={true}
+              onPreview={handlePreview}
+              onChange={handleOnChange}
+              defaultFileList={defaultFileList}
+              customRequest={uploadThumbnail}
+              multiple={false}
+              maxCount={1}
+            >
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
+          </ImgCrop>
         </label>
 
         <button
