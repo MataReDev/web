@@ -129,7 +129,7 @@ export const SendNewPassword = (props) => {
   return (
     <div className="flex justify-center items-center h-full pt-10">
       <form onSubmit={handleSubmit} className="w-1/2">
-        <div className="mb-6 relative">
+        <div className="bg-white shadow-lg rounded px-8 pt-6 pb-8 my-4">
           <label htmlFor="password" className="block text-black font-bold mb-2">
             New Password :
           </label>
@@ -148,8 +148,6 @@ export const SendNewPassword = (props) => {
           >
             {showPassword ? <EyeOutlined /> : <EyeInvisibleOutlined />}
           </button>
-        </div>
-        <div className="mb-6 relative">
           <label htmlFor="password" className="block text-black font-bold mb-2">
             Confirm password :
           </label>
@@ -172,9 +170,9 @@ export const SendNewPassword = (props) => {
         <div className="flex items-center justify-between">
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-white hover:bg-gray-300 border border-black focus:border-black active:bg-gray-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full flex justify-center items-center"
           >
-            Réinitialiser le mot de passe
+            Reset Password
           </button>
         </div>
       </form>
