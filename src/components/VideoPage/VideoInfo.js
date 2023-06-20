@@ -230,8 +230,7 @@ function VideoInfo({ video }) {
         <p className="font-bold">
           {video?.viewsCount} views {elapsedTime}
         </p>
-        <h2></h2>
-        <pre className="font-sans">
+        <pre className="font-sans whitespace-pre-wrap">
           {showFullDescription ? fullDescription : limitedDescription}
           <br />
           {hasMoreLines && (

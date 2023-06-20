@@ -99,7 +99,7 @@ function VideoPage() {
 
           {isVideoAvailable ? (
             <>
-              <div className="flex flex-col w-full md:max-w-full gap-5 flex-grow">
+              <div className="flex flex-col md:max-w-full gap-5">
                 {!isLoading && (
                   <div className="aspect-video align-top block m-auto w-full">
                     {/* <VideoPlayer options={videoJsOptions} video={video} /> */}
@@ -111,7 +111,7 @@ function VideoPage() {
                   <Commentaires videoId={videoId} />
                 </div>
               </div>
-              <div className="flex flex-col w-full xl:w-1/4 gap-5">
+              <div className="flex flex-col xl:w-1/4 gap-5">
                 <div className="w-full">
                   <LiveChat videoId={videoId} />
                 </div>
