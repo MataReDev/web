@@ -26,8 +26,7 @@ function VideoSimilaires({userId, videoId}) {
   };
 
   const handleClickVideo = (videoId) => {
-    window.history.pushState(null, "", window.location.href);
-    navigate(`/video/${videoId}`, { replace: false, relative: true });
+    window.location.replace(`/video/${videoId}`);
   };
   
 
