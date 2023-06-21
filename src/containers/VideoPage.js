@@ -15,7 +15,6 @@ function VideoPage() {
   const [isVideoAvailable, setIsVideoAvailable] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
-
   const [videoJsOptions, setvideoJsOptions] = useState({
     controls: true,
     notSupportedMessage: "Cette vidéo n'est pas disponible pour le moment",
@@ -36,8 +35,6 @@ function VideoPage() {
   //     },
   //   ],
   // };
-
-
 
   // Fonction pour récupérer le propriétaire de la vidéo
   useEffect(() => {
@@ -87,7 +84,6 @@ function VideoPage() {
     return () => clearTimeout(timer);
   }, []);
 
-
   return (
     <>
       {!isLoading ? (
@@ -99,14 +95,14 @@ function VideoPage() {
 
           {isVideoAvailable ? (
             <>
-              <div className="flex flex-col md:max-w-full gap-5">
+              <div className="flex flex-col flex-grow md:max-w-full gap-5 max-w-screen-sm">
                 {!isLoading && (
-                  <div className="aspect-video align-top block m-auto w-full">
+                  <div className="aspect-video align-top block">
                     {/* <VideoPlayer options={videoJsOptions} video={video} /> */}
                     <PlyrPlayer video={video} />
                   </div>
                 )}
-                <VideoInfo video={video}/>
+                <VideoInfo video={video} />
                 <div className="flex-grow">
                   <Commentaires videoId={videoId} />
                 </div>
@@ -116,7 +112,10 @@ function VideoPage() {
                   <LiveChat videoId={videoId} />
                 </div>
                 <div className="w-full">
-                  <VideoSimilaires userId={video.user.ownerId} videoId={videoId}/>
+                  <VideoSimilaires
+                    userId={video.user.ownerId}
+                    videoId={videoId}
+                  />
                 </div>
               </div>
             </>
